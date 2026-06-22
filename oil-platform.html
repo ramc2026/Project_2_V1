@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offshore Oil Platform Simulation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --sky: #8ec5ff;
+      --sky-deep: #5a9be4;
+      --sea: #1a5f8d;
+      --sea-dark: #18456b;
+      --deck: #b7884f;
+      --steel: #3a4d62;
+      --pipe: #d98b28;
+      --panel: #f6efdd;
+      --text: #1a2028;
+      --btn: #2a6b90;
+      --btn-hover: #184f6d;
+      --outline: #1f212a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Press Start 2P", monospace;
+      color: var(--text);
+      background:
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0 3px, transparent 3px 6px),
+        linear-gradient(var(--sky), var(--sky-deep) 48%, var(--sea) 48%, var(--sea-dark));
+      padding: 18px;
+      display: grid;
+      place-items: center;
+      image-rendering: pixelated;
+      letter-spacing: 0.2px;
+    }
+
+    .home-link {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      display: inline-block;
+      background: var(--btn);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 10px 14px;
+      border: 3px solid var(--outline);
+      box-shadow: 4px 4px 0 var(--outline);
+      font-size: 0.56rem;
+      transition: transform 0.08s steps(2), background-color 0.08s steps(2);
+    }
+
+    .home-link:hover,
+    .home-link:focus-visible {
+      background: var(--btn-hover);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 var(--outline);
+    }
+
+    .layout {
+      width: min(980px, 100%);
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .scene {
+      position: relative;
+      min-height: 500px;
+      border: 4px solid var(--outline);
+      overflow: hidden;
+      box-shadow: 8px 8px 0 var(--outline);
+      background: linear-gradient(transparent 55%, rgba(4, 51, 71, 0.28));
+    }
+
+    .waterline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 45%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.14) 0 6px,
+        transparent 6px 14px
+      );
+      animation: wave 0.8s steps(4) infinite;
+    }
+
+    @keyframes wave {
+      from { transform: translateX(0); }
+      to { transform: translateX(-28px); }
+    }
+
+    .platform {
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      bottom: 38%;
+      height: 90px;
+      background: var(--deck);
+      border: 4px solid #7a5a34;
+      box-shadow: inset 0 -10px 0 rgba(0, 0, 0, 0.16);
+    }
+
+    .legs {
+      position: absolute;
+      left: 14%;
+      right: 14%;
+      bottom: 0;
+      height: 60%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12%;
+      pointer-events: none;
+    }
+
+    .leg {
+      background: linear-gradient(var(--steel), #1f2c36);
+      border: 2px solid #233240;
+      opacity: 0.9;
+    }
+
+    .derrick {
+      position: absolute;
+      left: 18%;
+      bottom: calc(38% + 65px);
+      width: 100px;
+      height: 170px;
+      border: 8px solid var(--steel);
+      border-bottom: 10px solid var(--steel);
+      clip-path: polygon(15% 100%, 85% 100%, 58% 0, 42% 0);
+      background: repeating-linear-gradient(
+        -55deg,
+        transparent 0 12px,
+        rgba(49, 68, 85, 0.36) 12px 22px
+      );
+    }
+
+    .pipe {
+      position: absolute;
+      left: 34%;
+      right: 20%;
+      bottom: calc(38% + 36px);
+      height: 16px;
+      background: #b56f17;
+      overflow: hidden;
+      border: 3px solid #8e570f;
+    }
+
+    .pipe-flow {
+      height: 100%;
+      width: 0%;
+      background: repeating-linear-gradient(
+        45deg,
+        var(--pipe) 0 9px,
+        #f6b358 9px 18px
+      );
+      transition: width 0.2s linear;
+    }
+
+    .flare {
+      position: absolute;
+      right: 12%;
+      bottom: calc(38% + 88px);
+      width: 10px;
+      height: 90px;
+      background: #465666;
+      border: 2px solid #263746;
+    }
+
+    .flame {
+      position: absolute;
+      left: 50%;
+      bottom: 100%;
+      width: 16px;
+      height: 22px;
+      transform: translateX(-50%);
+      border-radius: 0;
+      background: radial-gradient(circle at 50% 65%, #ffed9a 10%, #ff9322 52%, #f04f13 85%);
+      opacity: 0.25;
+      transition: opacity 0.2s linear;
+      filter: drop-shadow(0 0 8px rgba(255, 163, 58, 0.75));
+    }
+
+    .storage {
+      position: absolute;
+      right: 16%;
+      bottom: calc(38% + 24px);
+      width: 90px;
+      height: 82px;
+      border: 6px solid var(--steel);
+      background: #e8edf2;
+      overflow: hidden;
+    }
+
+    .storage-fill {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 0%;
+      background: linear-gradient(#272727, #464646);
+      transition: height 0.2s linear;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 4px solid var(--outline);
+      padding: 18px;
+      box-shadow: 8px 8px 0 var(--outline);
+      align-self: start;
+      line-height: 1.7;
+      font-size: 0.56rem;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .controls {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .controls label {
+      font-weight: 700;
+    }
+
+    .controls input[type="range"] {
+      width: 100%;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    button {
+      border: 3px solid var(--outline);
+      padding: 10px 12px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: var(--btn);
+      font-size: 0.56rem;
+      box-shadow: 4px 4px 0 var(--outline);
+      transition: transform 0.08s steps(2), background-color 0.08s steps(2);
+    }
+
+    button:hover,
+    button:focus-visible {
+      background: var(--btn-hover);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 var(--outline);
+    }
+
+    button.secondary {
+      background: #7f8f9b;
+    }
+
+    .stats p {
+      margin: 8px 0;
+    }
+
+    .warning {
+      margin-top: 12px;
+      border: 3px solid #5b1a11;
+      background: #f6b29a;
+      color: #3b0d08;
+      padding: 10px;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .warning.active {
+      display: block;
+    }
+
+    @media (max-width: 940px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .scene {
+        min-height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="home-link">Home</a>
+
+  <main class="layout">
+    <section class="scene" aria-label="Oil platform animation">
+      <div class="waterline" aria-hidden="true"></div>
+      <div class="legs" aria-hidden="true">
+        <div class="leg"></div>
+        <div class="leg"></div>
+        <div class="leg"></div>
+        <div class="leg"></div>
+      </div>
+      <div class="platform" aria-hidden="true"></div>
+      <div class="derrick" aria-hidden="true"></div>
+      <div class="pipe" aria-hidden="true"><div class="pipe-flow" id="pipeFlow"></div></div>
+      <div class="flare" aria-hidden="true"><div class="flame" id="flame"></div></div>
+      <div class="storage" aria-hidden="true"><div class="storage-fill" id="storageFill"></div></div>
+    </section>
+
+    <aside class="panel">
+      <h2>Platform Operations</h2>
+      <p>Simulate extraction flow on an offshore platform.</p>
+
+      <div class="controls">
+        <label for="speed">Drilling Rate: <span id="speedValue">50</span>%</label>
+        <input id="speed" type="range" min="10" max="100" value="50" />
+        <div class="button-row">
+          <button id="toggleRun" type="button">Start</button>
+          <button id="reset" type="button" class="secondary">Reset</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <p><strong>Status:</strong> <span id="status">Idle</span></p>
+        <p><strong>Flow Rate:</strong> <span id="flowRate">0</span> bbl/min</p>
+        <p><strong>Total Produced:</strong> <span id="produced">0.0</span> barrels</p>
+        <p><strong>Storage Fill:</strong> <span id="storagePct">0</span>%</p>
+      </div>
+
+      <p id="warning" class="warning" role="alert" aria-live="assertive"></p>
+    </aside>
+  </main>
+
+  <script>
+    const speedInput = document.getElementById("speed");
+    const speedValue = document.getElementById("speedValue");
+    const toggleRun = document.getElementById("toggleRun");
+    const resetBtn = document.getElementById("reset");
+
+    const statusEl = document.getElementById("status");
+    const flowRateEl = document.getElementById("flowRate");
+    const producedEl = document.getElementById("produced");
+    const storagePctEl = document.getElementById("storagePct");
+    const warningEl = document.getElementById("warning");
+
+    const pipeFlow = document.getElementById("pipeFlow");
+    const storageFill = document.getElementById("storageFill");
+    const flame = document.getElementById("flame");
+
+    let running = false;
+    let produced = 0;
+    let lastTick = 0;
+    let warnedNearOverflow = false;
+    let warnedCritical = false;
+
+    function setWarning(message) {
+      if (!message) {
+        warningEl.textContent = "";
+        warningEl.classList.remove("active");
+        return;
+      }
+
+      warningEl.textContent = message;
+      warningEl.classList.add("active");
+    }
+
+    function getFlowRate() {
+      return Number(speedInput.value) * 1.8;
+    }
+
+    function render() {
+      const rate = running ? getFlowRate() : 0;
+      const storagePercent = Math.min(100, produced / 8);
+
+      if (storagePercent >= 100) {
+        setWarning("Storage overflow. Extraction has been auto-stopped.");
+      } else if (storagePercent >= 85) {
+        setWarning("Warning: Storage almost full. Slow down or pause now.");
+      } else {
+        setWarning("");
+      }
+
+      speedValue.textContent = speedInput.value;
+      statusEl.textContent = running ? "Running" : "Idle";
+      flowRateEl.textContent = rate.toFixed(1);
+      producedEl.textContent = produced.toFixed(1);
+      storagePctEl.textContent = storagePercent.toFixed(0);
+
+      pipeFlow.style.width = `${running ? speedInput.value : 0}%`;
+      storageFill.style.height = `${storagePercent}%`;
+      flame.style.opacity = running ? "1" : "0.25";
+    }
+
+    function tick(timestamp) {
+      if (!lastTick) {
+        lastTick = timestamp;
+      }
+
+      const dt = (timestamp - lastTick) / 1000;
+      lastTick = timestamp;
+
+      if (running) {
+        const barrelsPerSecond = getFlowRate() / 60;
+        produced += barrelsPerSecond * dt;
+
+        const projectedStorage = Math.min(100, produced / 8);
+
+        if (projectedStorage >= 95 && !warnedCritical) {
+          warnedCritical = true;
+          const continueDrilling = window.confirm(
+            "Storage is at critical level (95%+). Continue drilling and risk overflow?"
+          );
+
+          if (!continueDrilling) {
+            running = false;
+            toggleRun.textContent = "Start";
+          }
+        }
+
+        if (projectedStorage >= 85 && !warnedNearOverflow) {
+          warnedNearOverflow = true;
+        }
+
+        if (projectedStorage >= 100) {
+          running = false;
+          toggleRun.textContent = "Start";
+        }
+      }
+
+      render();
+      requestAnimationFrame(tick);
+    }
+
+    speedInput.addEventListener("input", render);
+
+    toggleRun.addEventListener("click", () => {
+      running = !running;
+      toggleRun.textContent = running ? "Pause" : "Start";
+      render();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      running = false;
+      produced = 0;
+      warnedNearOverflow = false;
+      warnedCritical = false;
+      toggleRun.textContent = "Start";
+      render();
+    });
+
+    render();
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

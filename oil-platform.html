@@ -54,6 +54,7 @@
       box-shadow: 4px 4px 0 var(--outline);
       font-size: 0.56rem;
       transition: transform 0.08s steps(2), background-color 0.08s steps(2);
+      z-index: 1000;
     }
 
     .home-link:hover,
@@ -385,7 +386,7 @@
       const storagePercent = Math.min(100, produced / 8);
 
       if (storagePercent >= 100) {
-        setWarning("Storage overflow. Extraction has been auto-stopped.");
+        setWarning("CRITICAL: STOP OVERDRILLING! Storage exceeds capacity. Platform integrity at risk. Cease extraction immediately or the platform will disrupt!");
       } else if (storagePercent >= 85) {
         setWarning("Warning: Storage almost full. Slow down or pause now.");
       } else {

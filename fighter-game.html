@@ -155,6 +155,24 @@
       height: 100%;
     }
 
+    .card-sprite img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+
+    #supermanSpriteImage,
+    #flashSpriteImage,
+    #batmanSpriteImage,
+    #glSpriteImage {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      transform: none;
+    }
+
     .card-text {
       display: grid;
       gap: 4px;
@@ -618,36 +636,7 @@
       <div class="character-grid">
         <button class="character-card" type="button" data-character="superman">
           <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="sup-body" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style="stop-color:#c41e3a;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#8a1428;stop-opacity:1" />
-                </linearGradient>
-              </defs>
-              <!-- Head -->
-              <circle cx="40" cy="18" r="15" fill="#ffd6ae" stroke="#081116" stroke-width="1.5" />
-              <!-- Hair -->
-              <path d="M 25 12 Q 25 4 40 2 Q 55 4 55 12" fill="#2d2d2d" stroke="#081116" stroke-width="1" />
-              <!-- Eyes -->
-              <circle cx="35" cy="16" r="2" fill="#000" />
-              <circle cx="45" cy="16" r="2" fill="#000" />
-              <circle cx="35.5" cy="15" r="0.8" fill="#fff" />
-              <circle cx="45.5" cy="15" r="0.8" fill="#fff" />
-              <!-- Determined expression -->
-              <path d="M 33 21 Q 40 22 47 21" stroke="#081116" stroke-width="0.8" fill="none" stroke-linecap="round" />
-              <!-- Body -->
-              <rect x="24" y="35" width="32" height="42" rx="5" fill="url(#sup-body)" stroke="#081116" stroke-width="2" />
-              <!-- S Logo -->
-              <path d="M 38 48 L 42 48 L 40 52 L 44 52" stroke="#ffd166" stroke-width="1.5" fill="none" stroke-linecap="round" />
-              <!-- Left arm (bent) -->
-              <path d="M 24 40 L 16 50 L 18 56" stroke="#1a3a7f" stroke-width="6" fill="none" stroke-linecap="round" />
-              <!-- Right arm (flexed) -->
-              <path d="M 56 40 L 64 48 L 62 55" stroke="#1a3a7f" stroke-width="6" fill="none" stroke-linecap="round" />
-              <!-- Legs -->
-              <rect x="30" y="82" width="6" height="35" rx="3" fill="#1a3a7f" stroke="#081116" stroke-width="1" />
-              <rect x="44" y="82" width="6" height="35" rx="3" fill="#1a3a7f" stroke="#081116" stroke-width="1" />
-            </svg>
+            <img id="supermanSpriteImage" src="images/superman-placeholder.backup.PNG" alt="Superman sprite" />
           </div>
           <div class="card-text">
             <p class="card-title">Superman</p>
@@ -657,41 +646,7 @@
         </button>
         <button class="character-card" type="button" data-character="flash">
           <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="flash-body" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style="stop-color:#ee0000;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#990000;stop-opacity:1" />
-                </linearGradient>
-              </defs>
-              <!-- Head -->
-              <circle cx="40" cy="17" r="14" fill="#ffd6ae" stroke="#081116" stroke-width="1.5" />
-              <!-- Mask -->
-              <path d="M 32 14 Q 40 10 48 14 L 46 22 Q 40 24 34 22 Z" fill="#cc0000" stroke="#081116" stroke-width="1" />
-              <!-- Eyes behind mask -->
-              <circle cx="36" cy="16" r="1.8" fill="#fff" />
-              <circle cx="44" cy="16" r="1.8" fill="#fff" />
-              <circle cx="36.3" cy="15.8" r="1" fill="#000" />
-              <circle cx="44.3" cy="15.8" r="1" fill="#000" />
-              <!-- Excited mouth -->
-              <path d="M 38 20 Q 40 21 42 20" stroke="#081116" stroke-width="0.8" fill="none" />
-              <!-- Body (dynamic lean) -->
-              <g transform="translate(40, 40) rotate(-8) translate(-40, -40)">
-                <rect x="26" y="38" width="28" height="40" rx="4" fill="url(#flash-body)" stroke="#081116" stroke-width="2" />
-                <!-- Lightning bolt chest -->
-                <polygon points="40,48 42,52 38,52 40,58 36,54 38,54" fill="#ffd166" />
-              </g>
-              <!-- Left arm (speed pose) -->
-              <path d="M 26 42 L 14 46 L 16 54" stroke="#990000" stroke-width="5" fill="none" stroke-linecap="round" />
-              <!-- Right arm (back) -->
-              <path d="M 54 45 L 62 40 L 64 48" stroke="#990000" stroke-width="5" fill="none" stroke-linecap="round" />
-              <!-- Speed lines -->
-              <line x1="8" y1="50" x2="14" y2="50" stroke="#ffd166" stroke-width="1" opacity="0.6" />
-              <line x1="6" y1="56" x2="12" y2="56" stroke="#ffd166" stroke-width="0.8" opacity="0.5" />
-              <!-- Legs -->
-              <rect x="31" y="82" width="6" height="35" rx="2" fill="#990000" stroke="#081116" stroke-width="1" />
-              <rect x="43" y="82" width="6" height="35" rx="2" fill="#990000" stroke="#081116" stroke-width="1" />
-            </svg>
+            <img id="flashSpriteImage" src="images/flash-placeholder.png" alt="Flash sprite" />
           </div>
           <div class="card-text">
             <p class="card-title">Flash</p>
@@ -701,40 +656,7 @@
         </button>
         <button class="character-card" type="button" data-character="batman">
           <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="bat-body" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#0d0d0d;stop-opacity:1" />
-                </linearGradient>
-              </defs>
-              <!-- Cowl with ears -->
-              <path d="M 30 10 L 35 5 L 40 8 L 45 5 L 50 10 L 48 22 Q 40 25 32 22 Z" fill="#1a1a1a" stroke="#000" stroke-width="1.5" />
-              <!-- Face -->
-              <circle cx="40" cy="24" r="13" fill="#ffd6ae" stroke="#000" stroke-width="1.5" />
-              <!-- Eyes (white) -->
-              <ellipse cx="35" cy="22" rx="2.5" ry="3.5" fill="#e9e9e9" stroke="#000" stroke-width="0.5" />
-              <ellipse cx="45" cy="22" rx="2.5" ry="3.5" fill="#e9e9e9" stroke="#000" stroke-width="0.5" />
-              <!-- Eyes (pupils - angry) -->
-              <circle cx="35.5" cy="23" r="1.2" fill="#000" />
-              <circle cx="45.5" cy="23" r="1.2" fill="#000" />
-              <!-- Stern mouth -->
-              <path d="M 37 28 L 43 28 L 42 29 L 38 29" fill="#8b4513" stroke="#000" stroke-width="0.5" />
-              <!-- Body -->
-              <rect x="25" y="40" width="30" height="42" rx="5" fill="url(#bat-body)" stroke="#000" stroke-width="2" />
-              <!-- Bat symbol on chest -->
-              <path d="M 40 52 L 36 50 L 35 55 L 40 57 L 45 55 L 44 50 Z" fill="#444" stroke="#666" stroke-width="0.5" />
-              <!-- Left arm (combat stance) -->
-              <path d="M 25 44 L 12 52 L 14 62" stroke="#2a2a2a" stroke-width="6" fill="none" stroke-linecap="round" />
-              <!-- Right arm (ready) -->
-              <path d="M 55 44 L 68 48 L 66 58" stroke="#2a2a2a" stroke-width="6" fill="none" stroke-linecap="round" />
-              <!-- Cape flow -->
-              <path d="M 25 48 Q 10 55 15 75" stroke="#0a0a0a" stroke-width="5" fill="none" opacity="0.8" />
-              <path d="M 55 48 Q 70 55 65 75" stroke="#0a0a0a" stroke-width="5" fill="none" opacity="0.8" />
-              <!-- Legs -->
-              <rect x="32" y="84" width="6" height="35" rx="2" fill="#2a2a2a" stroke="#000" stroke-width="1" />
-              <rect x="42" y="84" width="6" height="35" rx="2" fill="#2a2a2a" stroke="#000" stroke-width="1" />
-            </svg>
+            <img id="batmanSpriteImage" src="images/batman-placeholder.PNG" alt="Batman sprite" />
           </div>
           <div class="card-text">
             <p class="card-title">Batman</p>
@@ -744,69 +666,7 @@
         </button>
         <button class="character-card" type="button" data-character="green-lantern">
           <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="gl-body" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style="stop-color:#00c878;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#009966;stop-opacity:1" />
-                </linearGradient>
-                <radialGradient id="ring-glow" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" style="stop-color:#00ff66;stop-opacity:0.8" />
-                  <stop offset="100%" style="stop-color:#00aa44;stop-opacity:0.4" />
-                </radialGradient>
-              </defs>
-              <!-- Head -->
-              <circle cx="40" cy="18" r="14" fill="#ffd6ae" stroke="#081116" stroke-width="1.5" />
-              <!-- Hair -->
-              <path d="M 26 12 Q 26 4 40 3 Q 54 4 54 12" fill="#2d2d2d" stroke="#081116" stroke-width="1" />
-              <!-- Eyes -->
-              <circle cx="35" cy="16" r="2" fill="#000" />
-              <circle cx="45" cy="16" r="2" fill="#000" />
-              <circle cx="35.5" cy="15" r="0.8" fill="#fff" />
-              <circle cx="45.5" cy="15" r="0.8" fill="#fff" />
-              <!-- Determined expression -->
-              <path d="M 34 22 Q 40 23 46 22" stroke="#081116" stroke-width="0.8" fill="none" stroke-linecap="round" />
-              <!-- Body -->
-              <rect x="24" y="35" width="32" height="42" rx="5" fill="url(#gl-body)" stroke="#081116" stroke-width="2" />
-              <!-- Power Ring glow on chest -->
-              <circle cx="40" cy="54" r="8" fill="url(#ring-glow)" />
-              <circle cx="40" cy="54" r="6" fill="none" stroke="#00ff66" stroke-width="1" opacity="0.9" />
-              <!-- Power Ring symbol -->
-              <path d="M 40 49 L 43 52 L 40 55 L 37 52 Z" fill="#00ff66" stroke="#000" stroke-width="0.5" />
-              <!-- Left arm (power pose) -->
-              <path d="M 24 40 L 10 48 L 12 58" stroke="#004d2d" stroke-width="6" fill="none" stroke-linecap="round" />
-              <!-- Right arm (ready) -->
-              <path d="M 56 40 L 70 44 L 68 54" stroke="#004d2d" stroke-width="6" fill="none" stroke-linecap="round" />
-              <!-- Energy aura -->
-              <circle cx="40" cy="54" r="12" fill="none" stroke="#00ff66" stroke-width="0.8" opacity="0.6" />
-              <!-- Legs -->
-              <rect x="30" y="82" width="6" height="35" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1" />
-              <rect x="44" y="82" width="6" height="35" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1" />
-              <!-- Energy aura -->
-              <circle cx="40" cy="54" r="12" fill="none" stroke="#00ff66" stroke-width="0.8" opacity="0.6" />
-              <!-- Legs -->
-              <rect x="30" y="82" width="6" height="35" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1" />
-              <rect x="44" y="82" width="6" height="35" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1
-          </div>
-        </button>
-        <button class="character-card" type="button" data-character="green-lantern">
-          <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="gl-body" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style="stop-color:#00a86b;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#007a52;stop-opacity:1" />
-                </linearGradient>
-              </defs>
-              <circle cx="40" cy="20" r="14" fill="#ffd6ae" />
-              <rect x="26" y="38" width="28" height="40" rx="4" fill="url(#gl-body)" stroke="#081116" stroke-width="1.5" />
-              <circle cx="40" cy="55" r="6" fill="#00ff00" opacity="0.8" />
-              <rect x="20" y="44" width="8" height="28" rx="3" fill="#004d2d" stroke="#081116" stroke-width="1" />
-              <rect x="52" y="44" width="8" height="28" rx="3" fill="#004d2d" stroke="#081116" stroke-width="1" />
-              <rect x="28" y="84" width="7" height="32" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1" />
-              <rect x="45" y="84" width="7" height="32" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1" />
-              <polygon points="40,38 45,36 40,35 35,36" fill="#00ff00" opacity="0.9" />
-            </svg>
+            <img id="glSpriteImage" src="images/gl-placeholder.png" alt="Green Lantern sprite" />
           </div>
           <div class="card-text">
             <p class="card-title">Green Lantern</p>
@@ -1278,6 +1138,392 @@
       startEnemyBrain();
     }
 
+    function processSpriteTransparency(imageId) {
+      const spriteImage = document.getElementById(imageId);
+      if (!spriteImage) {
+        return;
+      }
+
+      const sourceImage = new Image();
+      sourceImage.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = sourceImage.naturalWidth;
+        canvas.height = sourceImage.naturalHeight;
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          return;
+        }
+
+        context.drawImage(sourceImage, 0, 0);
+        const frame = context.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = frame.data;
+
+        for (let i = 0; i < pixels.length; i += 4) {
+          const r = pixels[i];
+          const g = pixels[i + 1];
+          const b = pixels[i + 2];
+          const a = pixels[i + 3];
+          const min = Math.min(r, g, b);
+          const max = Math.max(r, g, b);
+          const lowColorSpread = max - min <= 16;
+
+          if (min >= 246) {
+            pixels[i + 3] = 0;
+          } else if (min >= 224 && lowColorSpread) {
+            const fadeRatio = (246 - min) / 22;
+            pixels[i + 3] = Math.max(0, Math.min(255, Math.round(a * fadeRatio)));
+          }
+        }
+
+        if (imageId === "batmanSpriteImage") {
+          const width = canvas.width;
+          const height = canvas.height;
+          const visited = new Uint8Array(width * height);
+          const queue = [];
+          const mattePalette = [];
+
+          function pushMatteColor(x, y) {
+            const idx = (y * width + x) * 4;
+            const a = pixels[idx + 3];
+            if (a < 10) {
+              return;
+            }
+            const r = pixels[idx];
+            const g = pixels[idx + 1];
+            const b = pixels[idx + 2];
+            const spread = Math.max(r, g, b) - Math.min(r, g, b);
+            if (spread > 32) {
+              return;
+            }
+            const exists = mattePalette.some((c) => Math.abs(c.r - r) + Math.abs(c.g - g) + Math.abs(c.b - b) < 20);
+            if (!exists) {
+              mattePalette.push({ r, g, b });
+            }
+          }
+
+          for (let x = 0; x < width; x += 1) {
+            pushMatteColor(x, 0);
+            pushMatteColor(x, height - 1);
+          }
+          for (let y = 0; y < height; y += 1) {
+            pushMatteColor(0, y);
+            pushMatteColor(width - 1, y);
+          }
+
+          function isMattePixel(r, g, b) {
+            const spread = Math.max(r, g, b) - Math.min(r, g, b);
+            if (spread > 38) {
+              return false;
+            }
+            return mattePalette.some((c) => Math.abs(c.r - r) + Math.abs(c.g - g) + Math.abs(c.b - b) <= 42);
+          }
+
+          function seed(x, y) {
+            const n = y * width + x;
+            if (visited[n]) {
+              return;
+            }
+            const idx = n * 4;
+            const a = pixels[idx + 3];
+            if (a < 10) {
+              return;
+            }
+            const r = pixels[idx];
+            const g = pixels[idx + 1];
+            const b = pixels[idx + 2];
+            if (!isMattePixel(r, g, b)) {
+              return;
+            }
+            visited[n] = 1;
+            queue.push(n);
+          }
+
+          for (let x = 0; x < width; x += 1) {
+            seed(x, 0);
+            seed(x, height - 1);
+          }
+          for (let y = 0; y < height; y += 1) {
+            seed(0, y);
+            seed(width - 1, y);
+          }
+
+          for (let qi = 0; qi < queue.length; qi += 1) {
+            const n = queue[qi];
+            const x = n % width;
+            const y = Math.floor(n / width);
+            const idx = n * 4;
+            pixels[idx + 3] = 0;
+
+            if (x > 0) seed(x - 1, y);
+            if (x < width - 1) seed(x + 1, y);
+            if (y > 0) seed(x, y - 1);
+            if (y < height - 1) seed(x, y + 1);
+            if (x > 0 && y > 0) seed(x - 1, y - 1);
+            if (x < width - 1 && y > 0) seed(x + 1, y - 1);
+            if (x > 0 && y < height - 1) seed(x - 1, y + 1);
+            if (x < width - 1 && y < height - 1) seed(x + 1, y + 1);
+          }
+        }
+
+        if (imageId === "supermanSpriteImage") {
+          const width = canvas.width;
+          const height = canvas.height;
+
+          // Key out neutral gray matte and the blue signature mark area.
+          for (let y = 0; y < height; y += 1) {
+            for (let x = 0; x < width; x += 1) {
+              const idx = (y * width + x) * 4;
+              const r = pixels[idx];
+              const g = pixels[idx + 1];
+              const b = pixels[idx + 2];
+              const a = pixels[idx + 3];
+
+              if (a <= 8) {
+                continue;
+              }
+
+              const max = Math.max(r, g, b);
+              const min = Math.min(r, g, b);
+              const spread = max - min;
+
+              const saturation = max === 0 ? 0 : (max - min) / max;
+
+              // Remove low-saturation matte tones (gray/white box) while keeping dark outlines.
+              if (saturation < 0.38 && max > 70) {
+                pixels[idx + 3] = 0;
+                continue;
+              }
+
+              if (saturation < 0.18 && max > 165) {
+                pixels[idx + 3] = 0;
+                continue;
+              }
+
+              const isBottomRight = x > width * 0.56 && y > height * 0.76;
+              const signatureBlue = b > 95 && b - r > 34 && b - g > 18 && r < 150 && g < 180;
+
+              if (isBottomRight && signatureBlue) {
+                pixels[idx + 3] = 0;
+              }
+            }
+          }
+
+          const matteVisited = new Uint8Array(width * height);
+          const matteQueue = [];
+
+          function isSupermanMattePixel(r, g, b) {
+            const spread = Math.max(r, g, b) - Math.min(r, g, b);
+            const max = Math.max(r, g, b);
+            return spread <= 28 && max <= 210;
+          }
+
+          function seedSupermanMatte(x, y) {
+            const n = y * width + x;
+            if (matteVisited[n]) {
+              return;
+            }
+            const idx = n * 4;
+            const a = pixels[idx + 3];
+            if (a < 10) {
+              return;
+            }
+            const r = pixels[idx];
+            const g = pixels[idx + 1];
+            const b = pixels[idx + 2];
+            if (!isSupermanMattePixel(r, g, b)) {
+              return;
+            }
+            matteVisited[n] = 1;
+            matteQueue.push(n);
+          }
+
+          for (let x = 0; x < width; x += 1) {
+            seedSupermanMatte(x, 0);
+            seedSupermanMatte(x, height - 1);
+
+            for (let y = 0; y < height; y += 1) {
+              const idxTop = (y * width + x) * 4;
+              if (pixels[idxTop + 3] > 10) {
+                seedSupermanMatte(x, y);
+                break;
+              }
+            }
+
+            for (let y = height - 1; y >= 0; y -= 1) {
+              const idxBottom = (y * width + x) * 4;
+              if (pixels[idxBottom + 3] > 10) {
+                seedSupermanMatte(x, y);
+                break;
+              }
+            }
+          }
+          for (let y = 0; y < height; y += 1) {
+            seedSupermanMatte(0, y);
+            seedSupermanMatte(width - 1, y);
+
+            for (let x = 0; x < width; x += 1) {
+              const idxLeft = (y * width + x) * 4;
+              if (pixels[idxLeft + 3] > 10) {
+                seedSupermanMatte(x, y);
+                break;
+              }
+            }
+
+            for (let x = width - 1; x >= 0; x -= 1) {
+              const idxRight = (y * width + x) * 4;
+              if (pixels[idxRight + 3] > 10) {
+                seedSupermanMatte(x, y);
+                break;
+              }
+            }
+          }
+
+          for (let qi = 0; qi < matteQueue.length; qi += 1) {
+            const n = matteQueue[qi];
+            const x = n % width;
+            const y = Math.floor(n / width);
+            const idx = n * 4;
+            pixels[idx + 3] = 0;
+
+            if (x > 0) seedSupermanMatte(x - 1, y);
+            if (x < width - 1) seedSupermanMatte(x + 1, y);
+            if (y > 0) seedSupermanMatte(x, y - 1);
+            if (y < height - 1) seedSupermanMatte(x, y + 1);
+            if (x > 0 && y > 0) seedSupermanMatte(x - 1, y - 1);
+            if (x < width - 1 && y > 0) seedSupermanMatte(x + 1, y - 1);
+            if (x > 0 && y < height - 1) seedSupermanMatte(x - 1, y + 1);
+            if (x < width - 1 && y < height - 1) seedSupermanMatte(x + 1, y + 1);
+          }
+
+          const visited = new Uint8Array(width * height);
+          const components = [];
+
+          function collectComponent(startX, startY) {
+            const stack = [[startX, startY]];
+            const pixelsInComponent = [];
+            let count = 0;
+
+            while (stack.length > 0) {
+              const node = stack.pop();
+              if (!node) {
+                continue;
+              }
+              const x = node[0];
+              const y = node[1];
+              const n = y * width + x;
+              if (visited[n]) {
+                continue;
+              }
+              visited[n] = 1;
+
+              const idx = n * 4;
+              if (pixels[idx + 3] <= 12) {
+                continue;
+              }
+
+              count += 1;
+              pixelsInComponent.push(idx);
+
+              for (let dy = -1; dy <= 1; dy += 1) {
+                for (let dx = -1; dx <= 1; dx += 1) {
+                  if (dx === 0 && dy === 0) {
+                    continue;
+                  }
+                  const nx = x + dx;
+                  const ny = y + dy;
+                  if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+                    continue;
+                  }
+                  const nn = ny * width + nx;
+                  if (!visited[nn]) {
+                    stack.push([nx, ny]);
+                  }
+                }
+              }
+            }
+
+            if (count > 0) {
+              components.push({ count, pixelsInComponent });
+            }
+          }
+
+          for (let y = 0; y < height; y += 1) {
+            for (let x = 0; x < width; x += 1) {
+              const n = y * width + x;
+              if (!visited[n]) {
+                collectComponent(x, y);
+              }
+            }
+          }
+
+          let largestComponent = null;
+          for (const component of components) {
+            if (!largestComponent || component.count > largestComponent.count) {
+              largestComponent = component;
+            }
+          }
+
+          if (largestComponent) {
+            const keepSet = new Set(largestComponent.pixelsInComponent);
+            for (const component of components) {
+              if (component === largestComponent) {
+                continue;
+              }
+              for (const idx of component.pixelsInComponent) {
+                if (!keepSet.has(idx)) {
+                  pixels[idx + 3] = 0;
+                }
+              }
+            }
+          }
+        }
+
+        context.putImageData(frame, 0, 0);
+
+        // Trim transparent borders so the sprite fills the card instead of staying tiny.
+        let minX = canvas.width;
+        let minY = canvas.height;
+        let maxX = -1;
+        let maxY = -1;
+
+        for (let y = 0; y < canvas.height; y += 1) {
+          for (let x = 0; x < canvas.width; x += 1) {
+            const alpha = pixels[(y * canvas.width + x) * 4 + 3];
+            if (alpha > 8) {
+              if (x < minX) minX = x;
+              if (y < minY) minY = y;
+              if (x > maxX) maxX = x;
+              if (y > maxY) maxY = y;
+            }
+          }
+        }
+
+        if (maxX > minX && maxY > minY) {
+          const pad = 6;
+          const cropX = Math.max(0, minX - pad);
+          const cropY = Math.max(0, minY - pad);
+          const cropW = Math.min(canvas.width - cropX, (maxX - minX + 1) + pad * 2);
+          const cropH = Math.min(canvas.height - cropY, (maxY - minY + 1) + pad * 2);
+
+          const croppedCanvas = document.createElement("canvas");
+          croppedCanvas.width = cropW;
+          croppedCanvas.height = cropH;
+          const croppedContext = croppedCanvas.getContext("2d");
+
+          if (croppedContext) {
+            croppedContext.drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+            spriteImage.src = croppedCanvas.toDataURL("image/png");
+            return;
+          }
+        }
+
+        spriteImage.src = canvas.toDataURL("image/png");
+      };
+
+      sourceImage.src = spriteImage.src;
+    }
+
     function handleInputAction(action) {
       switch (action) {
         case "left":
@@ -1340,6 +1586,10 @@
     startFightBtn.addEventListener("click", beginFight);
     window.addEventListener("resize", updateArenaMetrics);
 
+    processSpriteTransparency("supermanSpriteImage");
+    processSpriteTransparency("flashSpriteImage");
+    processSpriteTransparency("batmanSpriteImage");
+    processSpriteTransparency("glSpriteImage");
     updateArenaMetrics();
     setMessage("Select your fighter to begin.");
   </script>

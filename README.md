@@ -8,3 +8,4 @@ Oil extraction demo with multiple simulations and a home view.
 2. Choose one of the simulations:
 	- `simulation.html` for the draggable pumpjack simulation.
 	- `oil-platform.html` for the offshore oil platform operations simulation.
+	- `fighter-game.html` for a basic arcade-style 1v1 fighting game.

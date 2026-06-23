@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rig Arena - Fight Night</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #0b0f1b;
+      --bg-mid: #10243a;
+      --bg-sand: #c49a52;
+      --ink: #081116;
+      --neon: #ff5533;
+      --neon-2: #ffd166;
+      --panel: rgba(6, 11, 22, 0.86);
+      --panel-border: #2d4159;
+      --text: #eff6ff;
+      --hero: #1e89ff;
+      --enemy: #f03f53;
+      --accent: #7be0ff;
+      --good: #5df56b;
+      --warn: #ffc145;
+      --danger: #ff4d4d;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Rajdhani", "Trebuchet MS", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 16% 8%, rgba(255, 209, 102, 0.24), transparent 20%),
+        radial-gradient(circle at 90% 20%, rgba(255, 85, 51, 0.25), transparent 28%),
+        linear-gradient(180deg, #12243d 0%, #1c3452 44%, #7a5d2f 44%, #9a783f 100%);
+      display: grid;
+      place-items: center;
+      padding: 14px;
+      overflow-x: hidden;
+    }
+
+    .home-link {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      text-decoration: none;
+      color: #fff;
+      border: 2px solid #ffffff;
+      background: linear-gradient(180deg, #1e3148, #132235);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      z-index: 1000;
+      transition: transform 0.12s ease, filter 0.12s ease;
+    }
+
+    .home-link:hover,
+    .home-link:focus-visible {
+      transform: translateY(-2px);
+      filter: brightness(1.12);
+    }
+
+    .game-wrap {
+      width: min(1020px, 100%);
+      position: relative;
+      border: 3px solid rgba(255, 255, 255, 0.7);
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 20%),
+        var(--panel);
+      box-shadow:
+        0 14px 40px rgba(0, 0, 0, 0.45),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      backdrop-filter: blur(2px);
+    }
+
+    .character-select {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      align-content: center;
+      gap: 16px;
+      padding: clamp(14px, 3vw, 24px);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 229, 156, 0.18), transparent 24%),
+        radial-gradient(circle at 85% 14%, rgba(255, 90, 90, 0.2), transparent 28%),
+        rgba(4, 9, 17, 0.95);
+    }
+
+    .character-select.hidden {
+      display: none;
+    }
+
+    .select-title {
+      margin: 0;
+      text-align: center;
+      font-family: "Bangers", "Impact", sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      letter-spacing: 0.1em;
+      color: #ffe8ab;
+      text-shadow: 0 0 14px rgba(255, 223, 130, 0.6);
+    }
+
+    .select-subtitle {
+      margin: 0;
+      text-align: center;
+      font-size: 1rem;
+      opacity: 0.86;
+    }
+
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .character-card {
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: left;
+      background: linear-gradient(180deg, rgba(44, 73, 106, 0.4), rgba(16, 28, 45, 0.55));
+      color: #e9f3ff;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .card-sprite {
+      width: 90px;
+      height: 120px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .card-sprite svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .card-text {
+      display: grid;
+      gap: 4px;
+    }
+
+    .character-card:hover,
+    .character-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: #ffe089;
+      box-shadow: 0 0 0 2px rgba(255, 224, 137, 0.2);
+    }
+
+    .character-card.active {
+      border-color: #ffe089;
+      box-shadow: 0 0 0 3px rgba(255, 224, 137, 0.26);
+      background: linear-gradient(180deg, rgba(56, 93, 133, 0.58), rgba(22, 38, 58, 0.8));
+    }
+
+    .card-title {
+      margin: 0;
+      font-family: "Bangers", "Impact", sans-serif;
+      letter-spacing: 0.06em;
+      font-size: 1.26rem;
+    }
+
+    .card-tag {
+      margin: 4px 0 8px;
+      font-size: 0.94rem;
+      color: #93d8ff;
+      letter-spacing: 0.03em;
+    }
+
+    .card-stats {
+      margin: 0;
+      font-size: 0.9rem;
+      opacity: 0.92;
+      line-height: 1.35;
+    }
+
+    .select-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .select-start {
+      border: 2px solid #ffffff;
+      border-radius: 8px;
+      font-size: 1rem;
+      padding: 10px 14px;
+      color: #fff;
+      background: linear-gradient(180deg, #e1643f, #bb3c2a);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .select-hint {
+      margin: 0;
+      text-align: center;
+      color: #ffd6bf;
+      min-height: 20px;
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-bottom: 2px solid var(--panel-border);
+      background: linear-gradient(90deg, rgba(255, 77, 77, 0.15), rgba(123, 224, 255, 0.12));
+    }
+
+    .fighter-panel {
+      display: grid;
+      gap: 6px;
+    }
+
+    .fighter-name {
+      margin: 0;
+      font-family: "Bangers", "Impact", sans-serif;
+      letter-spacing: 0.08em;
+      font-size: clamp(1rem, 2.8vw, 1.4rem);
+      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    .health-bar {
+      height: 18px;
+      border: 2px solid #cde4ff;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .health-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #6dff7f, #4fd95f);
+      transition: width 0.2s ease;
+    }
+
+    .timer-box {
+      text-align: center;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      padding: 6px 14px;
+      min-width: 112px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.28));
+    }
+
+    .timer-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
+      margin: 0;
+    }
+
+    .timer {
+      margin: 0;
+      font-family: "Bangers", "Impact", sans-serif;
+      font-size: clamp(1.5rem, 3.2vw, 2rem);
+      color: var(--neon-2);
+    }
+
+    .arena {
+      position: relative;
+      height: min(60vh, 500px);
+      min-height: 330px;
+      overflow: hidden;
+      isolation: isolate;
+      border-bottom: 2px solid var(--panel-border);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 34%),
+        repeating-linear-gradient(90deg, rgba(255, 209, 102, 0.06) 0 16px, rgba(10, 14, 24, 0.04) 16px 32px),
+        linear-gradient(180deg, #274c79 0 58%, #65461f 58% 100%);
+    }
+
+    .stage-sign {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: "Bangers", "Impact", sans-serif;
+      letter-spacing: 0.12em;
+      color: #ffe8ab;
+      font-size: clamp(1.1rem, 3vw, 1.9rem);
+      text-shadow: 0 0 14px rgba(255, 237, 146, 0.75);
+      z-index: 2;
+    }
+
+    .crowd {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 34%;
+      height: 20%;
+      background:
+        radial-gradient(circle at 5% 60%, #1f2937 0 10%, transparent 11%),
+        radial-gradient(circle at 12% 45%, #18212d 0 8%, transparent 9%),
+        radial-gradient(circle at 20% 70%, #111a25 0 9%, transparent 10%),
+        radial-gradient(circle at 30% 50%, #18212d 0 8%, transparent 9%),
+        radial-gradient(circle at 40% 64%, #131c27 0 10%, transparent 11%),
+        radial-gradient(circle at 52% 42%, #1b2736 0 8%, transparent 9%),
+        radial-gradient(circle at 61% 68%, #121b26 0 9%, transparent 10%),
+        radial-gradient(circle at 70% 46%, #1a2430 0 8%, transparent 9%),
+        radial-gradient(circle at 80% 63%, #131c27 0 9%, transparent 10%),
+        radial-gradient(circle at 90% 50%, #1b2736 0 8%, transparent 9%);
+      opacity: 0.7;
+      animation: crowdPulse 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes crowdPulse {
+      from { filter: brightness(0.9); }
+      to { filter: brightness(1.08); }
+    }
+
+    .ground {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 36%;
+      background:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 22px, transparent 22px 44px),
+        linear-gradient(180deg, #816236, #5d3f1d);
+    }
+
+    .fighter {
+      position: absolute;
+      bottom: 30%;
+      width: 72px;
+      height: 138px;
+      transition: filter 0.08s linear;
+      --fighter-main: var(--hero);
+      --fighter-limb: #203548;
+    }
+
+    .fighter.enemy {
+      --fighter-main: var(--enemy);
+      --fighter-limb: #511726;
+    }
+
+    .fighter.hit {
+      filter: brightness(1.5) saturate(1.2);
+    }
+
+    .fighter .shadow {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: -8px;
+      height: 12px;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 999px;
+      filter: blur(1px);
+      transform: scaleX(1);
+    }
+
+    .fighter .body {
+      position: absolute;
+      left: 18px;
+      bottom: 24px;
+      width: 36px;
+      height: 62px;
+      border: 2px solid var(--ink);
+      border-radius: 8px;
+      background: var(--fighter-main);
+    }
+
+    .fighter .head {
+      position: absolute;
+      left: 20px;
+      bottom: 90px;
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      background: #ffd6ae;
+    }
+
+    .fighter .arm,
+    .fighter .leg {
+      position: absolute;
+      border: 2px solid var(--ink);
+      background: var(--fighter-limb);
+      border-radius: 6px;
+      transform-origin: top center;
+      transition: transform 0.06s ease;
+    }
+
+    .fighter .arm.left {
+      left: 6px;
+      bottom: 56px;
+      width: 14px;
+      height: 42px;
+    }
+
+    .fighter .arm.right {
+      right: 6px;
+      bottom: 56px;
+      width: 14px;
+      height: 42px;
+    }
+
+    .fighter .leg.left {
+      left: 16px;
+      bottom: 0;
+      width: 14px;
+      height: 42px;
+    }
+
+    .fighter .leg.right {
+      right: 16px;
+      bottom: 0;
+      width: 14px;
+      height: 42px;
+    }
+
+    .fighter.punching .arm.right,
+    .fighter.enemy.punching .arm.left {
+      transform: rotate(-95deg) translateY(-8px);
+      height: 44px;
+    }
+
+    .fighter.kicking .leg.right,
+    .fighter.enemy.kicking .leg.left {
+      transform: rotate(-84deg) translateY(-10px);
+      height: 46px;
+    }
+
+    .fighter.jumping {
+      animation: hop 0.55s ease;
+    }
+
+    @keyframes hop {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-104px); }
+      100% { transform: translateY(0); }
+    }
+
+    .impact {
+      position: absolute;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      border: 3px solid var(--neon-2);
+      box-shadow: 0 0 20px rgba(255, 237, 146, 0.7);
+      transform: translate(-50%, -50%) scale(0.2);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .impact.show {
+      animation: impactFlash 0.22s ease;
+    }
+
+    @keyframes impactFlash {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.2);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.35);
+      }
+    }
+
+    .message {
+      margin: 0;
+      text-align: center;
+      font-family: "Bangers", "Impact", sans-serif;
+      letter-spacing: 0.08em;
+      color: #ffe8ab;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      min-height: 38px;
+      padding: 10px 12px;
+      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      padding: 12px 14px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(7, 14, 28, 0.7), rgba(7, 14, 28, 0.9));
+    }
+
+    .keys {
+      margin: 0;
+      display: grid;
+      gap: 4px;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+    }
+
+    .keys strong {
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    button {
+      border: 2px solid #ffffff;
+      color: #fff;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #1d3a57, #122236);
+      padding: 8px 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.12s ease, filter 0.12s ease;
+    }
+
+    button:hover,
+    button:focus-visible {
+      transform: translateY(-2px);
+      filter: brightness(1.14);
+    }
+
+    .mobile-controls {
+      display: none;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      padding: 0 14px 16px;
+    }
+
+    .mobile-controls button {
+      min-height: 42px;
+      font-size: 0.88rem;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #2c4a67, #17273a);
+    }
+
+    .mobile-controls button.punch {
+      background: linear-gradient(180deg, #e1643f, #bb3c2a);
+    }
+
+    .mobile-controls button.kick {
+      background: linear-gradient(180deg, #f6b84c, #ce8a1d);
+    }
+
+    .mobile-controls button.jump {
+      background: linear-gradient(180deg, #4f9ef8, #2f6fd0);
+    }
+
+    @media (max-width: 900px) {
+      .hud {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .timer-box {
+        justify-self: center;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .action-row {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .character-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .arena {
+        height: 54vh;
+      }
+
+      .keys {
+        font-size: 0.88rem;
+      }
+
+      .mobile-controls {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="home-link" href="index.html">Home</a>
+
+  <main class="game-wrap" aria-label="Rig Arena fighting game">
+    <section class="character-select" id="characterSelect" aria-label="Character selection">
+      <h1 class="select-title">Choose Your Fighter</h1>
+      <p class="select-subtitle">Pick a style before entering Rig Arena.</p>
+      <div class="character-grid">
+        <button class="character-card" type="button" data-character="superman">
+          <div class="card-sprite">
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="sup-body" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#c41e3a;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#8a1428;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <!-- Head -->
+              <circle cx="40" cy="18" r="15" fill="#ffd6ae" stroke="#081116" stroke-width="1.5" />
+              <!-- Hair -->
+              <path d="M 25 12 Q 25 4 40 2 Q 55 4 55 12" fill="#2d2d2d" stroke="#081116" stroke-width="1" />
+              <!-- Eyes -->
+              <circle cx="35" cy="16" r="2" fill="#000" />
+              <circle cx="45" cy="16" r="2" fill="#000" />
+              <circle cx="35.5" cy="15" r="0.8" fill="#fff" />
+              <circle cx="45.5" cy="15" r="0.8" fill="#fff" />
+              <!-- Determined expression -->
+              <path d="M 33 21 Q 40 22 47 21" stroke="#081116" stroke-width="0.8" fill="none" stroke-linecap="round" />
+              <!-- Body -->
+              <rect x="24" y="35" width="32" height="42" rx="5" fill="url(#sup-body)" stroke="#081116" stroke-width="2" />
+              <!-- S Logo -->
+              <path d="M 38 48 L 42 48 L 40 52 L 44 52" stroke="#ffd166" stroke-width="1.5" fill="none" stroke-linecap="round" />
+              <!-- Left arm (bent) -->
+              <path d="M 24 40 L 16 50 L 18 56" stroke="#1a3a7f" stroke-width="6" fill="none" stroke-linecap="round" />
+              <!-- Right arm (flexed) -->
+              <path d="M 56 40 L 64 48 L 62 55" stroke="#1a3a7f" stroke-width="6" fill="none" stroke-linecap="round" />
+              <!-- Legs -->
+              <rect x="30" y="82" width="6" height="35" rx="3" fill="#1a3a7f" stroke="#081116" stroke-width="1" />
+              <rect x="44" y="82" width="6" height="35" rx="3" fill="#1a3a7f" stroke="#081116" stroke-width="1" />
+            </svg>
+          </div>
+          <div class="card-text">
+            <p class="card-title">Superman</p>
+            <p class="card-tag">Man of Steel</p>
+            <p class="card-stats">Punch: Heavy | Kick: Heavy | Speed: Medium</p>
+          </div>
+        </button>
+        <button class="character-card" type="button" data-character="flash">
+          <div class="card-sprite">
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="flash-body" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#ee0000;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#990000;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <!-- Head -->
+              <circle cx="40" cy="17" r="14" fill="#ffd6ae" stroke="#081116" stroke-width="1.5" />
+              <!-- Mask -->
+              <path d="M 32 14 Q 40 10 48 14 L 46 22 Q 40 24 34 22 Z" fill="#cc0000" stroke="#081116" stroke-width="1" />
+              <!-- Eyes behind mask -->
+              <circle cx="36" cy="16" r="1.8" fill="#fff" />
+              <circle cx="44" cy="16" r="1.8" fill="#fff" />
+              <circle cx="36.3" cy="15.8" r="1" fill="#000" />
+              <circle cx="44.3" cy="15.8" r="1" fill="#000" />
+              <!-- Excited mouth -->
+              <path d="M 38 20 Q 40 21 42 20" stroke="#081116" stroke-width="0.8" fill="none" />
+              <!-- Body (dynamic lean) -->
+              <g transform="translate(40, 40) rotate(-8) translate(-40, -40)">
+                <rect x="26" y="38" width="28" height="40" rx="4" fill="url(#flash-body)" stroke="#081116" stroke-width="2" />
+                <!-- Lightning bolt chest -->
+                <polygon points="40,48 42,52 38,52 40,58 36,54 38,54" fill="#ffd166" />
+              </g>
+              <!-- Left arm (speed pose) -->
+              <path d="M 26 42 L 14 46 L 16 54" stroke="#990000" stroke-width="5" fill="none" stroke-linecap="round" />
+              <!-- Right arm (back) -->
+              <path d="M 54 45 L 62 40 L 64 48" stroke="#990000" stroke-width="5" fill="none" stroke-linecap="round" />
+              <!-- Speed lines -->
+              <line x1="8" y1="50" x2="14" y2="50" stroke="#ffd166" stroke-width="1" opacity="0.6" />
+              <line x1="6" y1="56" x2="12" y2="56" stroke="#ffd166" stroke-width="0.8" opacity="0.5" />
+              <!-- Legs -->
+              <rect x="31" y="82" width="6" height="35" rx="2" fill="#990000" stroke="#081116" stroke-width="1" />
+              <rect x="43" y="82" width="6" height="35" rx="2" fill="#990000" stroke="#081116" stroke-width="1" />
+            </svg>
+          </div>
+          <div class="card-text">
+            <p class="card-title">Flash</p>
+            <p class="card-tag">Speed Force</p>
+            <p class="card-stats">Punch: Light | Kick: Light | Speed: Ultra</p>
+          </div>
+        </button>
+        <button class="character-card" type="button" data-character="batman">
+          <div class="card-sprite">
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="bat-body" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#0d0d0d;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <!-- Cowl with ears -->
+              <path d="M 30 10 L 35 5 L 40 8 L 45 5 L 50 10 L 48 22 Q 40 25 32 22 Z" fill="#1a1a1a" stroke="#000" stroke-width="1.5" />
+              <!-- Face -->
+              <circle cx="40" cy="24" r="13" fill="#ffd6ae" stroke="#000" stroke-width="1.5" />
+              <!-- Eyes (white) -->
+              <ellipse cx="35" cy="22" rx="2.5" ry="3.5" fill="#e9e9e9" stroke="#000" stroke-width="0.5" />
+              <ellipse cx="45" cy="22" rx="2.5" ry="3.5" fill="#e9e9e9" stroke="#000" stroke-width="0.5" />
+              <!-- Eyes (pupils - angry) -->
+              <circle cx="35.5" cy="23" r="1.2" fill="#000" />
+              <circle cx="45.5" cy="23" r="1.2" fill="#000" />
+              <!-- Stern mouth -->
+              <path d="M 37 28 L 43 28 L 42 29 L 38 29" fill="#8b4513" stroke="#000" stroke-width="0.5" />
+              <!-- Body -->
+              <rect x="25" y="40" width="30" height="42" rx="5" fill="url(#bat-body)" stroke="#000" stroke-width="2" />
+              <!-- Bat symbol on chest -->
+              <path d="M 40 52 L 36 50 L 35 55 L 40 57 L 45 55 L 44 50 Z" fill="#444" stroke="#666" stroke-width="0.5" />
+              <!-- Left arm (combat stance) -->
+              <path d="M 25 44 L 12 52 L 14 62" stroke="#2a2a2a" stroke-width="6" fill="none" stroke-linecap="round" />
+              <!-- Right arm (ready) -->
+              <path d="M 55 44 L 68 48 L 66 58" stroke="#2a2a2a" stroke-width="6" fill="none" stroke-linecap="round" />
+              <!-- Cape flow -->
+              <path d="M 25 48 Q 10 55 15 75" stroke="#0a0a0a" stroke-width="5" fill="none" opacity="0.8" />
+              <path d="M 55 48 Q 70 55 65 75" stroke="#0a0a0a" stroke-width="5" fill="none" opacity="0.8" />
+              <!-- Legs -->
+              <rect x="32" y="84" width="6" height="35" rx="2" fill="#2a2a2a" stroke="#000" stroke-width="1" />
+              <rect x="42" y="84" width="6" height="35" rx="2" fill="#2a2a2a" stroke="#000" stroke-width="1" />
+            </svg>
+          </div>
+          <div class="card-text">
+            <p class="card-title">Batman</p>
+            <p class="card-tag">Dark Knight</p>
+            <p class="card-stats">Punch: Medium | Kick: Medium | Speed: High</p>
+          </div>
+        </button>
+        <button class="character-card" type="button" data-character="green-lantern">
+          <div class="card-sprite">
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="gl-body" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#00c878;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#009966;stop-opacity:1" />
+                </linearGradient>
+                <radialGradient id="ring-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" style="stop-color:#00ff66;stop-opacity:0.8" />
+                  <stop offset="100%" style="stop-color:#00aa44;stop-opacity:0.4" />
+                </radialGradient>
+              </defs>
+              <!-- Head -->
+              <circle cx="40" cy="18" r="14" fill="#ffd6ae" stroke="#081116" stroke-width="1.5" />
+              <!-- Hair -->
+              <path d="M 26 12 Q 26 4 40 3 Q 54 4 54 12" fill="#2d2d2d" stroke="#081116" stroke-width="1" />
+              <!-- Eyes -->
+              <circle cx="35" cy="16" r="2" fill="#000" />
+              <circle cx="45" cy="16" r="2" fill="#000" />
+              <circle cx="35.5" cy="15" r="0.8" fill="#fff" />
+              <circle cx="45.5" cy="15" r="0.8" fill="#fff" />
+              <!-- Determined expression -->
+              <path d="M 34 22 Q 40 23 46 22" stroke="#081116" stroke-width="0.8" fill="none" stroke-linecap="round" />
+              <!-- Body -->
+              <rect x="24" y="35" width="32" height="42" rx="5" fill="url(#gl-body)" stroke="#081116" stroke-width="2" />
+              <!-- Power Ring glow on chest -->
+              <circle cx="40" cy="54" r="8" fill="url(#ring-glow)" />
+              <circle cx="40" cy="54" r="6" fill="none" stroke="#00ff66" stroke-width="1" opacity="0.9" />
+              <!-- Power Ring symbol -->
+              <path d="M 40 49 L 43 52 L 40 55 L 37 52 Z" fill="#00ff66" stroke="#000" stroke-width="0.5" />
+              <!-- Left arm (power pose) -->
+              <path d="M 24 40 L 10 48 L 12 58" stroke="#004d2d" stroke-width="6" fill="none" stroke-linecap="round" />
+              <!-- Right arm (ready) -->
+              <path d="M 56 40 L 70 44 L 68 54" stroke="#004d2d" stroke-width="6" fill="none" stroke-linecap="round" />
+              <!-- Energy aura -->
+              <circle cx="40" cy="54" r="12" fill="none" stroke="#00ff66" stroke-width="0.8" opacity="0.6" />
+              <!-- Legs -->
+              <rect x="30" y="82" width="6" height="35" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1" />
+              <rect x="44" y="82" width="6" height="35" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1" />
+              <!-- Energy aura -->
+              <circle cx="40" cy="54" r="12" fill="none" stroke="#00ff66" stroke-width="0.8" opacity="0.6" />
+              <!-- Legs -->
+              <rect x="30" y="82" width="6" height="35" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1" />
+              <rect x="44" y="82" width="6" height="35" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1
+          </div>
+        </button>
+        <button class="character-card" type="button" data-character="green-lantern">
+          <div class="card-sprite">
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="gl-body" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#00a86b;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#007a52;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <circle cx="40" cy="20" r="14" fill="#ffd6ae" />
+              <rect x="26" y="38" width="28" height="40" rx="4" fill="url(#gl-body)" stroke="#081116" stroke-width="1.5" />
+              <circle cx="40" cy="55" r="6" fill="#00ff00" opacity="0.8" />
+              <rect x="20" y="44" width="8" height="28" rx="3" fill="#004d2d" stroke="#081116" stroke-width="1" />
+              <rect x="52" y="44" width="8" height="28" rx="3" fill="#004d2d" stroke="#081116" stroke-width="1" />
+              <rect x="28" y="84" width="7" height="32" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1" />
+              <rect x="45" y="84" width="7" height="32" rx="2" fill="#004d2d" stroke="#081116" stroke-width="1" />
+              <polygon points="40,38 45,36 40,35 35,36" fill="#00ff00" opacity="0.9" />
+            </svg>
+          </div>
+          <div class="card-text">
+            <p class="card-title">Green Lantern</p>
+            <p class="card-tag">Power Ring</p>
+            <p class="card-stats">Punch: Heavy | Kick: Heavy | Speed: Medium</p>
+          </div>
+        </button>
+      </div>
+      <div class="select-actions">
+        <button class="select-start" id="startFightBtn" type="button">Start Fight</button>
+      </div>
+      <p class="select-hint" id="selectHint">Select a fighter to continue.</p>
+    </section>
+
+    <section class="hud">
+      <article class="fighter-panel">
+        <h1 class="fighter-name" id="playerName">RIG RUNNER</h1>
+        <div class="health-bar" aria-label="Player health">
+          <div class="health-fill" id="playerHealth"></div>
+        </div>
+      </article>
+
+      <article class="timer-box" aria-live="polite">
+        <p class="timer-label">ROUND TIMER</p>
+        <p class="timer" id="timer">60</p>
+      </article>
+
+      <article class="fighter-panel">
+        <h2 class="fighter-name" id="enemyName" style="text-align:right;">NIGHT RAIDER</h2>
+        <div class="health-bar" aria-label="Enemy health">
+          <div class="health-fill" id="enemyHealth"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="arena" id="arena" aria-label="Fight arena">
+      <div class="stage-sign">RIG ARENA</div>
+      <div class="crowd" aria-hidden="true"></div>
+      <div class="ground" aria-hidden="true"></div>
+
+      <div class="fighter" id="player" style="left: 100px;">
+        <div class="shadow"></div>
+        <div class="head"></div>
+        <div class="body"></div>
+        <div class="arm left"></div>
+        <div class="arm right"></div>
+        <div class="leg left"></div>
+        <div class="leg right"></div>
+      </div>
+
+      <div class="fighter enemy" id="enemy" style="left: 640px;">
+        <div class="shadow"></div>
+        <div class="head"></div>
+        <div class="body"></div>
+        <div class="arm left"></div>
+        <div class="arm right"></div>
+        <div class="leg left"></div>
+        <div class="leg right"></div>
+      </div>
+
+      <div class="impact" id="impact"></div>
+    </section>
+
+    <p class="message" id="message" aria-live="polite">Fight! Use movement and combo attacks.</p>
+
+    <section class="controls">
+      <p class="keys">
+        <strong>Desktop Controls:</strong>
+        A/D move, W jump, F punch, G kick
+      </p>
+      <div class="action-row">
+        <button id="resetBtn" type="button">Reset Round</button>
+      </div>
+    </section>
+
+    <section class="mobile-controls" aria-label="Touch controls">
+      <button data-action="left" type="button">Left</button>
+      <button data-action="right" type="button">Right</button>
+      <button class="jump" data-action="jump" type="button">Jump</button>
+      <button class="punch" data-action="punch" type="button">Punch</button>
+      <button class="kick" data-action="kick" type="button">Kick</button>
+    </section>
+  </main>
+
+  <script>
+    const arena = document.getElementById("arena");
+    const playerEl = document.getElementById("player");
+    const enemyEl = document.getElementById("enemy");
+    const timerEl = document.getElementById("timer");
+    const playerHealthEl = document.getElementById("playerHealth");
+    const enemyHealthEl = document.getElementById("enemyHealth");
+    const playerNameEl = document.getElementById("playerName");
+    const enemyNameEl = document.getElementById("enemyName");
+    const messageEl = document.getElementById("message");
+    const impactEl = document.getElementById("impact");
+    const resetBtn = document.getElementById("resetBtn");
+    const mobileButtons = Array.from(document.querySelectorAll(".mobile-controls button"));
+    const characterSelectEl = document.getElementById("characterSelect");
+    const selectHintEl = document.getElementById("selectHint");
+    const startFightBtn = document.getElementById("startFightBtn");
+    const characterCards = Array.from(document.querySelectorAll(".character-card"));
+
+    const characterRoster = [
+      {
+        id: "superman",
+        name: "Superman",
+        bodyColor: "#c41e3a",
+        limbColor: "#1a3a7f",
+        punchBonus: 4,
+        kickBonus: 4,
+        moveBonus: 0
+      },
+      {
+        id: "flash",
+        name: "Flash",
+        bodyColor: "#cc0000",
+        limbColor: "#990000",
+        punchBonus: -1,
+        kickBonus: -1,
+        moveBonus: 8
+      },
+      {
+        id: "batman",
+        name: "Batman",
+        bodyColor: "#1a1a1a",
+        limbColor: "#333333",
+        punchBonus: 1,
+        kickBonus: 1,
+        moveBonus: 3
+      },
+      {
+        id: "green-lantern",
+        name: "Green Lantern",
+        bodyColor: "#00a86b",
+        limbColor: "#004d2d",
+        punchBonus: 3,
+        kickBonus: 4,
+        moveBonus: 1
+      }
+    ];
+
+    const state = {
+      arenaWidth: 920,
+      playerX: 100,
+      enemyX: 640,
+      moveStep: 26,
+      jumpLock: false,
+      playerHealth: 100,
+      enemyHealth: 100,
+      selectedCharacterId: "",
+      selectedCharacter: null,
+      enemyCharacter: null,
+      playerPunchBonus: 0,
+      playerKickBonus: 0,
+      enemyPunchBonus: 0,
+      enemyKickBonus: 0,
+      canAttack: true,
+      enemyCanAttack: true,
+      timer: 60,
+      roundActive: false,
+      selectionLocked: false,
+      enemyBrain: null,
+      timerInterval: null
+    };
+
+    const attackConfig = {
+      punch: { damage: 10, range: 105, cooldown: 360, className: "punching" },
+      kick: { damage: 14, range: 120, cooldown: 560, className: "kicking" }
+    };
+
+    function clamp(val, min, max) {
+      return Math.max(min, Math.min(max, val));
+    }
+
+    function getCharacterById(id) {
+      return characterRoster.find((character) => character.id === id) || null;
+    }
+
+    function chooseEnemyCharacter(playerCharacterId) {
+      const options = characterRoster.filter((character) => character.id !== playerCharacterId);
+      return options[Math.floor(Math.random() * options.length)] || characterRoster[0];
+    }
+
+    function applyFighterStyle(element, character) {
+      element.style.setProperty("--fighter-main", character.bodyColor);
+      element.style.setProperty("--fighter-limb", character.limbColor);
+    }
+
+    function highlightSelectedCard() {
+      characterCards.forEach((card) => {
+        const isActive = card.getAttribute("data-character") === state.selectedCharacterId;
+        card.classList.toggle("active", isActive);
+      });
+    }
+
+    function configureSelectedFighters() {
+      const selected = getCharacterById(state.selectedCharacterId);
+      if (!selected) {
+        return false;
+      }
+
+      const enemy = chooseEnemyCharacter(selected.id);
+      state.selectedCharacter = selected;
+      state.enemyCharacter = enemy;
+
+      state.playerPunchBonus = selected.punchBonus;
+      state.playerKickBonus = selected.kickBonus;
+      state.enemyPunchBonus = enemy.punchBonus;
+      state.enemyKickBonus = enemy.kickBonus;
+      state.moveStep = clamp(26 + selected.moveBonus, 20, 34);
+
+      playerNameEl.textContent = selected.name.toUpperCase();
+      enemyNameEl.textContent = enemy.name.toUpperCase();
+
+      applyFighterStyle(playerEl, selected);
+      applyFighterStyle(enemyEl, enemy);
+      return true;
+    }
+
+    function beginFight() {
+      if (!state.selectedCharacterId) {
+        selectHintEl.textContent = "Pick a fighter before starting the round.";
+        return;
+      }
+
+      if (!configureSelectedFighters()) {
+        selectHintEl.textContent = "Unable to load fighter. Try selecting again.";
+        return;
+      }
+
+      state.selectionLocked = true;
+      characterSelectEl.classList.add("hidden");
+      setMessage("Fight! Use movement and combo attacks.");
+      resetRound();
+    }
+
+    function updateArenaMetrics() {
+      state.arenaWidth = arena.clientWidth;
+      const maxX = state.arenaWidth - 78;
+      state.playerX = clamp(state.playerX, 0, maxX);
+      state.enemyX = clamp(state.enemyX, 0, maxX);
+      renderPositions();
+    }
+
+    function renderPositions() {
+      playerEl.style.left = state.playerX + "px";
+      enemyEl.style.left = state.enemyX + "px";
+    }
+
+    function updateHealthBars() {
+      playerHealthEl.style.width = state.playerHealth + "%";
+      enemyHealthEl.style.width = state.enemyHealth + "%";
+
+      playerHealthEl.style.background = healthGradient(state.playerHealth);
+      enemyHealthEl.style.background = healthGradient(state.enemyHealth);
+    }
+
+    function healthGradient(value) {
+      if (value <= 25) {
+        return "linear-gradient(90deg, #ff4d4d, #c22828)";
+      }
+      if (value <= 55) {
+        return "linear-gradient(90deg, #ffc145, #e49012)";
+      }
+      return "linear-gradient(90deg, #6dff7f, #4fd95f)";
+    }
+
+    function setMessage(text) {
+      messageEl.textContent = text;
+    }
+
+    function showImpact(targetX) {
+      const arenaRect = arena.getBoundingClientRect();
+      const hitX = clamp(targetX, 16, state.arenaWidth - 16);
+      impactEl.style.left = hitX + "px";
+      impactEl.style.top = Math.round(arenaRect.height * 0.58) + "px";
+      impactEl.classList.remove("show");
+      void impactEl.offsetWidth;
+      impactEl.classList.add("show");
+    }
+
+    function setHitFlash(element) {
+      element.classList.add("hit");
+      setTimeout(() => element.classList.remove("hit"), 120);
+    }
+
+    function performPlayerJump() {
+      if (!state.roundActive || state.jumpLock) {
+        return;
+      }
+      state.jumpLock = true;
+      playerEl.classList.add("jumping");
+      setTimeout(() => {
+        playerEl.classList.remove("jumping");
+        state.jumpLock = false;
+      }, 560);
+    }
+
+    function movePlayer(direction) {
+      if (!state.roundActive) {
+        return;
+      }
+      const maxX = state.arenaWidth - 78;
+      state.playerX = clamp(state.playerX + direction * state.moveStep, 0, maxX);
+      renderPositions();
+    }
+
+    function isPlayerInRange(range) {
+      return Math.abs((state.playerX + 36) - (state.enemyX + 36)) <= range;
+    }
+
+    function runAttackAnimation(element, className, duration) {
+      element.classList.add(className);
+      setTimeout(() => element.classList.remove(className), duration);
+    }
+
+    function playerAttack(type) {
+      if (!state.roundActive || !state.canAttack) {
+        return;
+      }
+
+      const attack = attackConfig[type];
+      if (!attack) {
+        return;
+      }
+
+      const damageBonus = type === "kick" ? state.playerKickBonus : state.playerPunchBonus;
+      const damage = clamp(attack.damage + damageBonus, 4, 24);
+
+      state.canAttack = false;
+      runAttackAnimation(playerEl, attack.className, attack.cooldown - 80);
+
+      if (isPlayerInRange(attack.range)) {
+        state.enemyHealth = clamp(state.enemyHealth - damage, 0, 100);
+        updateHealthBars();
+        setHitFlash(enemyEl);
+        showImpact(state.enemyX + 36);
+        setMessage(type === "kick" ? "Heavy kick lands!" : "Clean punch!");
+        evaluateRoundEnd();
+      } else {
+        setMessage("Attack missed. Close the distance.");
+      }
+
+      setTimeout(() => {
+        state.canAttack = true;
+      }, attack.cooldown);
+    }
+
+    function enemyAttack(type) {
+      if (!state.roundActive || !state.enemyCanAttack) {
+        return;
+      }
+
+      const attack = attackConfig[type];
+      const damageBonus = type === "kick" ? state.enemyKickBonus : state.enemyPunchBonus;
+      const damage = clamp(attack.damage + damageBonus, 4, 24);
+      state.enemyCanAttack = false;
+      runAttackAnimation(enemyEl, attack.className, attack.cooldown - 90);
+
+      if (Math.abs((state.enemyX + 36) - (state.playerX + 36)) <= attack.range) {
+        state.playerHealth = clamp(state.playerHealth - damage, 0, 100);
+        updateHealthBars();
+        setHitFlash(playerEl);
+        showImpact(state.playerX + 36);
+        setMessage(type === "kick" ? "Night Raider lands a kick!" : "Night Raider punches!");
+        evaluateRoundEnd();
+      }
+
+      setTimeout(() => {
+        state.enemyCanAttack = true;
+      }, attack.cooldown + 120);
+    }
+
+    function enemyAI() {
+      if (!state.roundActive) {
+        return;
+      }
+
+      const maxX = state.arenaWidth - 78;
+      const distance = (state.playerX + 36) - (state.enemyX + 36);
+      const absDistance = Math.abs(distance);
+
+      if (absDistance > 96) {
+        const step = absDistance > 220 ? 24 : 16;
+        state.enemyX = clamp(state.enemyX + Math.sign(distance) * step, 0, maxX);
+        renderPositions();
+      } else if (state.enemyCanAttack) {
+        const move = Math.random();
+        if (move < 0.55) {
+          enemyAttack("punch");
+        } else {
+          enemyAttack("kick");
+        }
+      }
+    }
+
+    function evaluateRoundEnd() {
+      if (state.playerHealth <= 0 || state.enemyHealth <= 0 || state.timer <= 0) {
+        finishRound();
+      }
+    }
+
+    function finishRound() {
+      if (!state.roundActive) {
+        return;
+      }
+
+      state.roundActive = false;
+      clearInterval(state.enemyBrain);
+      clearInterval(state.timerInterval);
+
+      if (state.playerHealth === state.enemyHealth) {
+        setMessage("Draw game. Reset and run it back.");
+      } else if (state.playerHealth > state.enemyHealth) {
+        setMessage("You win the round! Arena champion.");
+      } else {
+        setMessage("Night Raider wins. Try a rematch.");
+      }
+    }
+
+    function startRoundClock() {
+      clearInterval(state.timerInterval);
+      state.timerInterval = setInterval(() => {
+        if (!state.roundActive) {
+          return;
+        }
+        state.timer -= 1;
+        timerEl.textContent = state.timer;
+        if (state.timer <= 10) {
+          timerEl.style.color = "#ff6f6f";
+        }
+        if (state.timer <= 0) {
+          state.timer = 0;
+          timerEl.textContent = "0";
+          finishRound();
+        }
+      }, 1000);
+    }
+
+    function startEnemyBrain() {
+      clearInterval(state.enemyBrain);
+      state.enemyBrain = setInterval(enemyAI, 420);
+    }
+
+    function resetRound() {
+      if (!state.selectionLocked) {
+        return;
+      }
+
+      clearInterval(state.enemyBrain);
+      clearInterval(state.timerInterval);
+
+      state.playerX = 100;
+      state.enemyX = Math.max(state.arenaWidth - 210, 380);
+      state.playerHealth = 100;
+      state.enemyHealth = 100;
+      state.jumpLock = false;
+      state.canAttack = true;
+      state.enemyCanAttack = true;
+      state.timer = 60;
+      state.roundActive = true;
+
+      timerEl.textContent = "60";
+      timerEl.style.color = "#ffd166";
+      renderPositions();
+      updateHealthBars();
+      setMessage("Fight! Use movement and combo attacks.");
+      startRoundClock();
+      startEnemyBrain();
+    }
+
+    function handleInputAction(action) {
+      switch (action) {
+        case "left":
+          movePlayer(-1);
+          break;
+        case "right":
+          movePlayer(1);
+          break;
+        case "jump":
+          performPlayerJump();
+          break;
+        case "punch":
+          playerAttack("punch");
+          break;
+        case "kick":
+          playerAttack("kick");
+          break;
+        default:
+          break;
+      }
+    }
+
+    window.addEventListener("keydown", (event) => {
+      const key = event.key.toLowerCase();
+      if (["a", "d", "w", "f", "g"].includes(key)) {
+        event.preventDefault();
+      }
+
+      if (key === "a") {
+        handleInputAction("left");
+      }
+      if (key === "d") {
+        handleInputAction("right");
+      }
+      if (key === "w") {
+        handleInputAction("jump");
+      }
+      if (key === "f") {
+        handleInputAction("punch");
+      }
+      if (key === "g") {
+        handleInputAction("kick");
+      }
+    });
+
+    mobileButtons.forEach((button) => {
+      const action = button.getAttribute("data-action");
+      button.addEventListener("click", () => handleInputAction(action));
+    });
+
+    characterCards.forEach((card) => {
+      card.addEventListener("click", () => {
+        state.selectedCharacterId = card.getAttribute("data-character") || "";
+        selectHintEl.textContent = "";
+        highlightSelectedCard();
+      });
+    });
+
+    resetBtn.addEventListener("click", resetRound);
+    startFightBtn.addEventListener("click", beginFight);
+    window.addEventListener("resize", updateArenaMetrics);
+
+    updateArenaMetrics();
+    setMessage("Select your fighter to begin.");
+  </script>
+</body>
+</html>

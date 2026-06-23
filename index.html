@@ -78,6 +78,13 @@
       flex-wrap: wrap;
     }
 
+    .top-right-link {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 1000;
+    }
+
     .button {
       display: inline-block;
       text-decoration: none;
@@ -115,10 +122,16 @@
       .button {
         width: 100%;
       }
+
+      .top-right-link {
+        position: static;
+        margin-bottom: 12px;
+      }
     }
   </style>
 </head>
 <body>
+  <a class="button primary top-right-link" href="fighter-game.html">Rig Arena Fight Game</a>
   <main class="home-card">
     <h1>Oil Rig Simulation Home</h1>
     <p>Select a simulation to explore how onshore and offshore oil extraction systems operate.</p>

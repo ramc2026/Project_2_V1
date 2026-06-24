@@ -1,0 +1,121 @@
+﻿{
+    "character":  "doomsday",
+    "source":  "doomsdaysprite.PNG",
+    "backgroundSample":  {
+                             "r":  253,
+                             "g":  252,
+                             "b":  252
+                         },
+    "settings":  {
+                     "backgroundDistanceThreshold":  42,
+                     "colorSpreadThreshold":  18,
+                     "minComponentArea":  700,
+                     "padding":  8,
+                     "pruneMinNeighbors":  3,
+                     "prunePasses":  2,
+                     "forceBackground":  {
+                                             "r":  -1,
+                                             "g":  -1,
+                                             "b":  -1
+                                         }
+                 },
+    "sequenceCount":  4,
+    "sequences":  [
+                      {
+                          "sequence":  "sequence-01",
+                          "frameCount":  1,
+                          "frames":  [
+                                         {
+                                             "frame":  "frame-01",
+                                             "file":  "frame-01.png",
+                                             "bbox":  {
+                                                          "x":  7,
+                                                          "y":  0,
+                                                          "width":  141,
+                                                          "height":  352
+                                                      },
+                                             "area":  30493,
+                                             "fill":  0.6144
+                                         }
+                                     ]
+                      },
+                      {
+                          "sequence":  "sequence-02",
+                          "frameCount":  3,
+                          "frames":  [
+                                         {
+                                             "frame":  "frame-01",
+                                             "file":  "frame-01.png",
+                                             "bbox":  {
+                                                          "x":  7,
+                                                          "y":  613,
+                                                          "width":  141,
+                                                          "height":  77
+                                                      },
+                                             "area":  10639,
+                                             "fill":  0.9799
+                                         },
+                                         {
+                                             "frame":  "frame-02",
+                                             "file":  "frame-02.png",
+                                             "bbox":  {
+                                                          "x":  38,
+                                                          "y":  384,
+                                                          "width":  110,
+                                                          "height":  213
+                                                      },
+                                             "area":  10118,
+                                             "fill":  0.4318
+                                         },
+                                         {
+                                             "frame":  "frame-03",
+                                             "file":  "frame-03.png",
+                                             "bbox":  {
+                                                          "x":  153,
+                                                          "y":  0,
+                                                          "width":  798,
+                                                          "height":  1306
+                                                      },
+                                             "area":  559997,
+                                             "fill":  0.5373
+                                         }
+                                     ]
+                      },
+                      {
+                          "sequence":  "sequence-03",
+                          "frameCount":  1,
+                          "frames":  [
+                                         {
+                                             "frame":  "frame-01",
+                                             "file":  "frame-01.png",
+                                             "bbox":  {
+                                                          "x":  7,
+                                                          "y":  713,
+                                                          "width":  141,
+                                                          "height":  322
+                                                      },
+                                             "area":  20228,
+                                             "fill":  0.4455
+                                         }
+                                     ]
+                      },
+                      {
+                          "sequence":  "sequence-04",
+                          "frameCount":  1,
+                          "frames":  [
+                                         {
+                                             "frame":  "frame-01",
+                                             "file":  "frame-01.png",
+                                             "bbox":  {
+                                                          "x":  17,
+                                                          "y":  1059,
+                                                          "width":  131,
+                                                          "height":  241
+                                                      },
+                                             "area":  9735,
+                                             "fill":  0.3084
+                                         }
+                                     ]
+                      }
+                  ]
+}

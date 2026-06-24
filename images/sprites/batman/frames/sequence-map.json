@@ -1,0 +1,43 @@
+﻿{
+    "character":  "batman",
+    "source":  "batmansprite.PNG",
+    "backgroundSample":  {
+                             "r":  253,
+                             "g":  252,
+                             "b":  252
+                         },
+    "settings":  {
+                     "backgroundDistanceThreshold":  42,
+                     "colorSpreadThreshold":  18,
+                     "minComponentArea":  700,
+                     "padding":  8,
+                     "pruneMinNeighbors":  3,
+                     "prunePasses":  2,
+                     "forceBackground":  {
+                                             "r":  -1,
+                                             "g":  -1,
+                                             "b":  -1
+                                         }
+                 },
+    "sequenceCount":  1,
+    "sequences":  [
+                      {
+                          "sequence":  "sequence-01",
+                          "frameCount":  1,
+                          "frames":  [
+                                         {
+                                             "frame":  "frame-01",
+                                             "file":  "frame-01.png",
+                                             "bbox":  {
+                                                          "x":  4,
+                                                          "y":  34,
+                                                          "width":  943,
+                                                          "height":  1237
+                                                      },
+                                             "area":  1158863,
+                                             "fill":  0.9935
+                                         }
+                                     ]
+                      }
+                  ]
+}

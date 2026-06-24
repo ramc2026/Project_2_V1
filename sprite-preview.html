@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprite Animation Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .viewer-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid #475569;
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .control-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .sequence-selector label,
+        .speed-control label {
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: #cbd5e1;
+        }
+
+        .sequence-selector select {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(15, 23, 42, 0.8);
+            color: #e0e7ff;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .sequence-selector select:focus {
+            outline: none;
+            border-color: #60a5fa;
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        .animation-viewer {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 320px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .animation-viewer canvas {
+            max-width: 100%;
+            max-height: 300px;
+            image-rendering: pixelated;
+        }
+
+        .frame-info {
+            font-size: 0.85em;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 6px;
+            line-height: 1.5;
+        }
+
+        .frame-info strong {
+            color: #cbd5e1;
+        }
+
+        .playback-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .playback-controls button {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+        }
+
+        .playback-controls button:hover {
+            background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+            transform: scale(1.02);
+        }
+
+        .playback-controls button:active {
+            transform: scale(0.98);
+        }
+
+        .playback-controls button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .speed-control {
+            margin-bottom: 15px;
+        }
+
+        .speed-control input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .frame-counter {
+            text-align: center;
+            font-size: 0.85em;
+            color: #94a3b8;
+            padding: 8px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 6px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #94a3b8;
+            padding: 40px 20px;
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .status {
+            text-align: center;
+            color: #93c5fd;
+            font-size: 0.95em;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .playback-controls {
+                gap: 6px;
+            }
+
+            .playback-controls button {
+                font-size: 0.8em;
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Sprite Animation Preview</h1>
+        <div id="status" class="status">Loading sprite sequences...</div>
+        <div class="viewer-card">
+            <div class="control-row">
+                <div class="sequence-selector">
+                    <label for="sequence-select">Animation Sequence:</label>
+                    <select id="sequence-select"></select>
+                </div>
+            </div>
+
+            <div class="animation-viewer">
+                <canvas id="main-canvas" width="420" height="320"></canvas>
+            </div>
+
+            <div class="frame-info" id="frame-info">No sequence selected.</div>
+
+            <div class="playback-controls">
+                <button id="play-btn">▶ Play</button>
+                <button id="stop-btn">⏹ Stop</button>
+                <button id="prev-btn">⬅ Prev</button>
+                <button id="next-btn">Next ➡</button>
+            </div>
+
+            <div class="speed-control">
+                <label for="speed-range">Speed:</label>
+                <input type="range" id="speed-range" min="10" max="500" value="100" step="10">
+            </div>
+
+            <div class="frame-counter" id="frame-counter">Frame 0 / 0</div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_PATH = 'images/sprites';
+        const CHARACTERS = [
+            'flash', 'green-lantern', 'hawkgirl',
+            'killercroc', 'sinestro', 'doomsday'
+        ];
+
+        class UnifiedSpriteAnimator {
+            constructor() {
+                this.allSequences = [];
+                this.currentSelection = 0;
+                this.currentFrame = 0;
+                this.isPlaying = false;
+                this.frameSpeed = 100;
+                this.animationFrameId = null;
+                this.lastFrameTime = 0;
+
+                this.canvas = document.getElementById('main-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.statusEl = document.getElementById('status');
+                this.sequenceSelect = document.getElementById('sequence-select');
+                this.frameInfoEl = document.getElementById('frame-info');
+                this.frameCounterEl = document.getElementById('frame-counter');
+
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                this.sequenceSelect.addEventListener('change', (e) => {
+                    this.currentSelection = parseInt(e.target.value, 10) || 0;
+                    this.currentFrame = 0;
+                    this.stop();
+                    this.displayFrame();
+                });
+
+                document.getElementById('play-btn').addEventListener('click', () => this.play());
+                document.getElementById('stop-btn').addEventListener('click', () => this.stop());
+                document.getElementById('prev-btn').addEventListener('click', () => this.previousFrame());
+                document.getElementById('next-btn').addEventListener('click', () => this.nextFrame());
+
+                document.getElementById('speed-range').addEventListener('change', (e) => {
+                    this.frameSpeed = Math.max(1, 510 - parseInt(e.target.value, 10));
+                });
+            }
+
+            async loadAllSequences() {
+                this.allSequences = [];
+                let missingCount = 0;
+
+                for (const character of CHARACTERS) {
+                    try {
+                        const mapPath = `${BASE_PATH}/${character}/frames/sequence-map.json?v=${Date.now()}`;
+                        const response = await fetch(mapPath);
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        const sequences = data.sequences || [];
+
+                        sequences.forEach((seq, seqIndex) => {
+                            this.allSequences.push({
+                                key: `${character}-${seqIndex}`,
+                                character,
+                                sequenceName: seq.sequence,
+                                frameCount: seq.frameCount,
+                                frames: seq.frames || []
+                            });
+                        });
+                    } catch (error) {
+                        missingCount++;
+                        console.error(`Error loading ${character}:`, error);
+                    }
+                }
+
+                this.populateDropdown();
+
+                if (this.allSequences.length === 0) {
+                    this.statusEl.textContent = 'No sprite sequences found. Run extraction script first.';
+                    this.statusEl.className = 'error';
+                    return;
+                }
+
+                this.statusEl.textContent = `Loaded ${this.allSequences.length} sequences from ${CHARACTERS.length - missingCount} characters.`;
+                this.displayFrame();
+            }
+
+            populateDropdown() {
+                this.sequenceSelect.innerHTML = this.allSequences.map((seq, i) => (
+                    `<option value="${i}">${seq.character} - ${seq.sequenceName} (${seq.frameCount} frames)</option>`
+                )).join('');
+            }
+
+            getActiveSequence() {
+                return this.allSequences[this.currentSelection] || null;
+            }
+
+            async displayFrame() {
+                const active = this.getActiveSequence();
+                if (!active || !active.frames || active.frames.length === 0) {
+                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    this.frameInfoEl.textContent = 'No sequence selected.';
+                    this.frameCounterEl.textContent = 'Frame 0 / 0';
+                    return;
+                }
+
+                if (this.currentFrame >= active.frameCount) {
+                    this.currentFrame = 0;
+                }
+
+                const frame = active.frames[this.currentFrame];
+
+                if (!frame) {
+                    return;
+                }
+
+                try {
+                    const framePath = `${BASE_PATH}/${active.character}/frames/${active.sequenceName}/${frame.file}?v=${Date.now()}`;
+                    const img = new Image();
+                    img.onload = () => {
+                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                        const scale = Math.min(
+                            this.canvas.width / img.width,
+                            this.canvas.height / img.height,
+                            1
+                        );
+                        const x = (this.canvas.width - img.width * scale) / 2;
+                        const y = (this.canvas.height - img.height * scale) / 2;
+
+                        this.ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+                        this.frameInfoEl.innerHTML = `
+                            <strong>Character:</strong> ${active.character}<br>
+                            <strong>Sequence:</strong> ${active.sequenceName}<br>
+                            <strong>Dimensions:</strong> ${frame.bbox.width}×${frame.bbox.height}<br>
+                            <strong>Fill:</strong> ${(frame.fill * 100).toFixed(1)}%
+                        `;
+
+                        this.frameCounterEl.textContent = `Frame ${this.currentFrame + 1} / ${active.frameCount}`;
+                    };
+                    img.onerror = () => {
+                        console.error(`Failed to load: ${framePath}`);
+                    };
+                    img.src = framePath;
+                } catch (error) {
+                    console.error('Error displaying frame:', error);
+                }
+            }
+
+            play() {
+                if (this.isPlaying) {
+                    return;
+                }
+
+                this.isPlaying = true;
+                this.lastFrameTime = Date.now();
+                this.animate();
+            }
+
+            stop() {
+                this.isPlaying = false;
+                if (this.animationFrameId) {
+                    cancelAnimationFrame(this.animationFrameId);
+                }
+            }
+
+            animate() {
+                const now = Date.now();
+                const elapsed = now - this.lastFrameTime;
+                const active = this.getActiveSequence();
+
+                if (!active || active.frameCount === 0) {
+                    this.stop();
+                    return;
+                }
+
+                if (elapsed >= this.frameSpeed) {
+                    this.currentFrame++;
+
+                    if (this.currentFrame >= active.frameCount) {
+                        this.currentFrame = 0;
+                    }
+
+                    this.displayFrame();
+                    this.lastFrameTime = now;
+                }
+
+                if (this.isPlaying) {
+                    this.animationFrameId = requestAnimationFrame(() => this.animate());
+                }
+            }
+
+            nextFrame() {
+                this.stop();
+                const active = this.getActiveSequence();
+                if (!active || active.frameCount === 0) {
+                    return;
+                }
+
+                this.currentFrame = (this.currentFrame + 1) % active.frameCount;
+                this.displayFrame();
+            }
+
+            previousFrame() {
+                this.stop();
+                const active = this.getActiveSequence();
+                if (!active || active.frameCount === 0) {
+                    return;
+                }
+
+                this.currentFrame = (this.currentFrame - 1 + active.frameCount) % active.frameCount;
+                this.displayFrame();
+            }
+        }
+
+        async function initializePreview() {
+            const animator = new UnifiedSpriteAnimator();
+            await animator.loadAllSequences();
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializePreview);
+        } else {
+            initializePreview();
+        }
+    </script>
+</body>
+</html>

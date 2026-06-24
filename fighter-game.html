@@ -90,6 +90,7 @@
       display: grid;
       align-content: center;
       gap: 16px;
+      overflow-y: auto;
       padding: clamp(14px, 3vw, 24px);
       background:
         radial-gradient(circle at 18% 18%, rgba(255, 229, 156, 0.18), transparent 24%),
@@ -145,6 +146,7 @@
       display: flex;
       align-items: flex-end;
       justify-content: center;
+      overflow: hidden;
       background: rgba(0, 0, 0, 0.2);
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -162,15 +164,14 @@
       image-rendering: pixelated;
     }
 
-    #supermanSpriteImage,
     #flashSpriteImage,
-    #batmanSpriteImage,
     #glSpriteImage {
       width: 100%;
       height: 100%;
       object-fit: contain;
       object-position: center bottom;
-      transform: none;
+      transform: scale(1.65);
+      transform-origin: center bottom;
     }
 
     .card-text {
@@ -634,19 +635,17 @@
       <h1 class="select-title">Choose Your Fighter</h1>
       <p class="select-subtitle">Pick a style before entering Rig Arena.</p>
       <div class="character-grid">
-        <button class="character-card" type="button" data-character="superman">
-          <div class="card-sprite">
-            <img id="supermanSpriteImage" src="images/superman-placeholder.backup.PNG" alt="Superman sprite" />
-          </div>
-          <div class="card-text">
-            <p class="card-title">Superman</p>
-            <p class="card-tag">Man of Steel</p>
-            <p class="card-stats">Punch: Heavy | Kick: Heavy | Speed: Medium</p>
-          </div>
-        </button>
         <button class="character-card" type="button" data-character="flash">
           <div class="card-sprite">
-            <img id="flashSpriteImage" src="images/flash-placeholder.png" alt="Flash sprite" />
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="40" cy="18" r="13" fill="#efb69b" stroke="#1a1a1a" stroke-width="1.5" />
+              <rect x="24" y="34" width="32" height="44" rx="6" fill="#b01d2d" stroke="#1a1a1a" stroke-width="2" />
+              <path d="M 26 44 L 16 58" stroke="#ffcf2f" stroke-width="4" stroke-linecap="round" />
+              <path d="M 54 44 L 64 58" stroke="#ffcf2f" stroke-width="4" stroke-linecap="round" />
+              <rect x="29" y="82" width="8" height="34" rx="3" fill="#c62828" />
+              <rect x="43" y="82" width="8" height="34" rx="3" fill="#c62828" />
+              <path d="M 38 52 L 46 52" stroke="#ffe083" stroke-width="3" stroke-linecap="round" />
+            </svg>
           </div>
           <div class="card-text">
             <p class="card-title">Flash</p>
@@ -654,24 +653,93 @@
             <p class="card-stats">Punch: Light | Kick: Light | Speed: Ultra</p>
           </div>
         </button>
-        <button class="character-card" type="button" data-character="batman">
-          <div class="card-sprite">
-            <img id="batmanSpriteImage" src="images/batman-placeholder.PNG" alt="Batman sprite" />
-          </div>
-          <div class="card-text">
-            <p class="card-title">Batman</p>
-            <p class="card-tag">Dark Knight</p>
-            <p class="card-stats">Punch: Medium | Kick: Medium | Speed: High</p>
-          </div>
-        </button>
         <button class="character-card" type="button" data-character="green-lantern">
           <div class="card-sprite">
-            <img id="glSpriteImage" src="images/gl-placeholder.png" alt="Green Lantern sprite" />
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="40" cy="18" r="13" fill="#d6b190" stroke="#1a1a1a" stroke-width="1.5" />
+              <rect x="23" y="34" width="34" height="44" rx="6" fill="#2f7a43" stroke="#1a1a1a" stroke-width="2" />
+              <rect x="16" y="44" width="10" height="30" rx="4" fill="#1f5e32" />
+              <rect x="54" y="44" width="10" height="30" rx="4" fill="#1f5e32" />
+              <rect x="29" y="82" width="8" height="34" rx="3" fill="#245f35" />
+              <rect x="43" y="82" width="8" height="34" rx="3" fill="#245f35" />
+              <circle cx="40" cy="54" r="6" fill="#9fff76" opacity="0.85" />
+            </svg>
           </div>
           <div class="card-text">
             <p class="card-title">Green Lantern</p>
             <p class="card-tag">Power Ring</p>
             <p class="card-stats">Punch: Heavy | Kick: Heavy | Speed: Medium</p>
+          </div>
+        </button>
+        <button class="character-card" type="button" data-character="hawkgirl">
+          <div class="card-sprite">
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="40" cy="18" r="13" fill="#f0c788" stroke="#1a1a1a" stroke-width="1.5" />
+              <rect x="25" y="36" width="30" height="40" rx="5" fill="#c69a42" stroke="#1a1a1a" stroke-width="2" />
+              <path d="M 25 48 L 8 62 L 14 72" stroke="#8b6a2f" stroke-width="5" fill="none" stroke-linecap="round" />
+              <path d="M 55 48 L 72 62 L 66 72" stroke="#8b6a2f" stroke-width="5" fill="none" stroke-linecap="round" />
+              <rect x="31" y="82" width="6" height="34" rx="2" fill="#7a5b21" />
+              <rect x="43" y="82" width="6" height="34" rx="2" fill="#7a5b21" />
+            </svg>
+          </div>
+          <div class="card-text">
+            <p class="card-title">Hawkgirl</p>
+            <p class="card-tag">Winged Warrior</p>
+            <p class="card-stats">Punch: Medium | Kick: High | Speed: High</p>
+          </div>
+        </button>
+        <button class="character-card" type="button" data-character="killercroc">
+          <div class="card-sprite">
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="40" cy="18" r="13" fill="#6d8f57" stroke="#132015" stroke-width="1.5" />
+              <rect x="23" y="34" width="34" height="44" rx="6" fill="#3f6b42" stroke="#132015" stroke-width="2" />
+              <rect x="16" y="44" width="10" height="30" rx="4" fill="#2c4b2f" />
+              <rect x="54" y="44" width="10" height="30" rx="4" fill="#2c4b2f" />
+              <rect x="29" y="82" width="8" height="34" rx="3" fill="#2c4b2f" />
+              <rect x="43" y="82" width="8" height="34" rx="3" fill="#2c4b2f" />
+            </svg>
+          </div>
+          <div class="card-text">
+            <p class="card-title">Killer Croc</p>
+            <p class="card-tag">Sewer Brute</p>
+            <p class="card-stats">Punch: Ultra | Kick: Ultra | Speed: Low</p>
+          </div>
+        </button>
+        <button class="character-card" type="button" data-character="sinestro">
+          <div class="card-sprite">
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="40" cy="18" r="13" fill="#e8b78f" stroke="#1a1a1a" stroke-width="1.5" />
+              <rect x="24" y="36" width="32" height="42" rx="5" fill="#d9c019" stroke="#1a1a1a" stroke-width="2" />
+              <circle cx="40" cy="54" r="6" fill="#fff27a" opacity="0.8" />
+              <rect x="18" y="44" width="8" height="30" rx="3" fill="#5f4f00" />
+              <rect x="54" y="44" width="8" height="30" rx="3" fill="#5f4f00" />
+              <rect x="30" y="82" width="7" height="34" rx="2" fill="#5f4f00" />
+              <rect x="43" y="82" width="7" height="34" rx="2" fill="#5f4f00" />
+            </svg>
+          </div>
+          <div class="card-text">
+            <p class="card-title">Sinestro</p>
+            <p class="card-tag">Yellow Fear Ring</p>
+            <p class="card-stats">Punch: High | Kick: Medium | Speed: Medium</p>
+          </div>
+        </button>
+        <button class="character-card" type="button" data-character="doomsday">
+          <div class="card-sprite">
+            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="40" cy="18" r="13" fill="#9a9a9a" stroke="#1a1a1a" stroke-width="1.5" />
+              <rect x="22" y="34" width="36" height="46" rx="6" fill="#7f7f7f" stroke="#1a1a1a" stroke-width="2" />
+              <path d="M 24 40 L 16 50" stroke="#d9d9d9" stroke-width="2" />
+              <path d="M 56 40 L 64 50" stroke="#d9d9d9" stroke-width="2" />
+              <rect x="16" y="44" width="10" height="30" rx="4" fill="#4c4c4c" />
+              <rect x="54" y="44" width="10" height="30" rx="4" fill="#4c4c4c" />
+              <rect x="29" y="82" width="8" height="34" rx="3" fill="#4c4c4c" />
+              <rect x="43" y="82" width="8" height="34" rx="3" fill="#4c4c4c" />
+            </svg>
+          </div>
+          <div class="card-text">
+            <p class="card-title">Doomsday</p>
+            <p class="card-tag">Kryptonian Slayer</p>
+            <p class="card-stats">Punch: Ultra | Kick: Ultra | Speed: Low</p>
           </div>
         </button>
       </div>
@@ -771,15 +839,6 @@
 
     const characterRoster = [
       {
-        id: "superman",
-        name: "Superman",
-        bodyColor: "#c41e3a",
-        limbColor: "#1a3a7f",
-        punchBonus: 4,
-        kickBonus: 4,
-        moveBonus: 0
-      },
-      {
         id: "flash",
         name: "Flash",
         bodyColor: "#cc0000",
@@ -789,15 +848,6 @@
         moveBonus: 8
       },
       {
-        id: "batman",
-        name: "Batman",
-        bodyColor: "#1a1a1a",
-        limbColor: "#333333",
-        punchBonus: 1,
-        kickBonus: 1,
-        moveBonus: 3
-      },
-      {
         id: "green-lantern",
         name: "Green Lantern",
         bodyColor: "#00a86b",
@@ -805,6 +855,42 @@
         punchBonus: 3,
         kickBonus: 4,
         moveBonus: 1
+      },
+      {
+        id: "hawkgirl",
+        name: "Hawkgirl",
+        bodyColor: "#c69a42",
+        limbColor: "#7a5b21",
+        punchBonus: 2,
+        kickBonus: 3,
+        moveBonus: 4
+      },
+      {
+        id: "killercroc",
+        name: "Killer Croc",
+        bodyColor: "#3f6b42",
+        limbColor: "#2c4b2f",
+        punchBonus: 5,
+        kickBonus: 5,
+        moveBonus: -2
+      },
+      {
+        id: "sinestro",
+        name: "Sinestro",
+        bodyColor: "#d9c019",
+        limbColor: "#5f4f00",
+        punchBonus: 3,
+        kickBonus: 2,
+        moveBonus: 2
+      },
+      {
+        id: "doomsday",
+        name: "Doomsday",
+        bodyColor: "#7f7f7f",
+        limbColor: "#4c4c4c",
+        punchBonus: 6,
+        kickBonus: 6,
+        moveBonus: -3
       }
     ];
 
@@ -1176,309 +1262,6 @@
           }
         }
 
-        if (imageId === "batmanSpriteImage") {
-          const width = canvas.width;
-          const height = canvas.height;
-          const visited = new Uint8Array(width * height);
-          const queue = [];
-          const mattePalette = [];
-
-          function pushMatteColor(x, y) {
-            const idx = (y * width + x) * 4;
-            const a = pixels[idx + 3];
-            if (a < 10) {
-              return;
-            }
-            const r = pixels[idx];
-            const g = pixels[idx + 1];
-            const b = pixels[idx + 2];
-            const spread = Math.max(r, g, b) - Math.min(r, g, b);
-            if (spread > 32) {
-              return;
-            }
-            const exists = mattePalette.some((c) => Math.abs(c.r - r) + Math.abs(c.g - g) + Math.abs(c.b - b) < 20);
-            if (!exists) {
-              mattePalette.push({ r, g, b });
-            }
-          }
-
-          for (let x = 0; x < width; x += 1) {
-            pushMatteColor(x, 0);
-            pushMatteColor(x, height - 1);
-          }
-          for (let y = 0; y < height; y += 1) {
-            pushMatteColor(0, y);
-            pushMatteColor(width - 1, y);
-          }
-
-          function isMattePixel(r, g, b) {
-            const spread = Math.max(r, g, b) - Math.min(r, g, b);
-            if (spread > 38) {
-              return false;
-            }
-            return mattePalette.some((c) => Math.abs(c.r - r) + Math.abs(c.g - g) + Math.abs(c.b - b) <= 42);
-          }
-
-          function seed(x, y) {
-            const n = y * width + x;
-            if (visited[n]) {
-              return;
-            }
-            const idx = n * 4;
-            const a = pixels[idx + 3];
-            if (a < 10) {
-              return;
-            }
-            const r = pixels[idx];
-            const g = pixels[idx + 1];
-            const b = pixels[idx + 2];
-            if (!isMattePixel(r, g, b)) {
-              return;
-            }
-            visited[n] = 1;
-            queue.push(n);
-          }
-
-          for (let x = 0; x < width; x += 1) {
-            seed(x, 0);
-            seed(x, height - 1);
-          }
-          for (let y = 0; y < height; y += 1) {
-            seed(0, y);
-            seed(width - 1, y);
-          }
-
-          for (let qi = 0; qi < queue.length; qi += 1) {
-            const n = queue[qi];
-            const x = n % width;
-            const y = Math.floor(n / width);
-            const idx = n * 4;
-            pixels[idx + 3] = 0;
-
-            if (x > 0) seed(x - 1, y);
-            if (x < width - 1) seed(x + 1, y);
-            if (y > 0) seed(x, y - 1);
-            if (y < height - 1) seed(x, y + 1);
-            if (x > 0 && y > 0) seed(x - 1, y - 1);
-            if (x < width - 1 && y > 0) seed(x + 1, y - 1);
-            if (x > 0 && y < height - 1) seed(x - 1, y + 1);
-            if (x < width - 1 && y < height - 1) seed(x + 1, y + 1);
-          }
-        }
-
-        if (imageId === "supermanSpriteImage") {
-          const width = canvas.width;
-          const height = canvas.height;
-
-          // Key out neutral gray matte and the blue signature mark area.
-          for (let y = 0; y < height; y += 1) {
-            for (let x = 0; x < width; x += 1) {
-              const idx = (y * width + x) * 4;
-              const r = pixels[idx];
-              const g = pixels[idx + 1];
-              const b = pixels[idx + 2];
-              const a = pixels[idx + 3];
-
-              if (a <= 8) {
-                continue;
-              }
-
-              const max = Math.max(r, g, b);
-              const min = Math.min(r, g, b);
-              const spread = max - min;
-
-              const saturation = max === 0 ? 0 : (max - min) / max;
-
-              // Remove low-saturation matte tones (gray/white box) while keeping dark outlines.
-              if (saturation < 0.38 && max > 70) {
-                pixels[idx + 3] = 0;
-                continue;
-              }
-
-              if (saturation < 0.18 && max > 165) {
-                pixels[idx + 3] = 0;
-                continue;
-              }
-
-              const isBottomRight = x > width * 0.56 && y > height * 0.76;
-              const signatureBlue = b > 95 && b - r > 34 && b - g > 18 && r < 150 && g < 180;
-
-              if (isBottomRight && signatureBlue) {
-                pixels[idx + 3] = 0;
-              }
-            }
-          }
-
-          const matteVisited = new Uint8Array(width * height);
-          const matteQueue = [];
-
-          function isSupermanMattePixel(r, g, b) {
-            const spread = Math.max(r, g, b) - Math.min(r, g, b);
-            const max = Math.max(r, g, b);
-            return spread <= 28 && max <= 210;
-          }
-
-          function seedSupermanMatte(x, y) {
-            const n = y * width + x;
-            if (matteVisited[n]) {
-              return;
-            }
-            const idx = n * 4;
-            const a = pixels[idx + 3];
-            if (a < 10) {
-              return;
-            }
-            const r = pixels[idx];
-            const g = pixels[idx + 1];
-            const b = pixels[idx + 2];
-            if (!isSupermanMattePixel(r, g, b)) {
-              return;
-            }
-            matteVisited[n] = 1;
-            matteQueue.push(n);
-          }
-
-          for (let x = 0; x < width; x += 1) {
-            seedSupermanMatte(x, 0);
-            seedSupermanMatte(x, height - 1);
-
-            for (let y = 0; y < height; y += 1) {
-              const idxTop = (y * width + x) * 4;
-              if (pixels[idxTop + 3] > 10) {
-                seedSupermanMatte(x, y);
-                break;
-              }
-            }
-
-            for (let y = height - 1; y >= 0; y -= 1) {
-              const idxBottom = (y * width + x) * 4;
-              if (pixels[idxBottom + 3] > 10) {
-                seedSupermanMatte(x, y);
-                break;
-              }
-            }
-          }
-          for (let y = 0; y < height; y += 1) {
-            seedSupermanMatte(0, y);
-            seedSupermanMatte(width - 1, y);
-
-            for (let x = 0; x < width; x += 1) {
-              const idxLeft = (y * width + x) * 4;
-              if (pixels[idxLeft + 3] > 10) {
-                seedSupermanMatte(x, y);
-                break;
-              }
-            }
-
-            for (let x = width - 1; x >= 0; x -= 1) {
-              const idxRight = (y * width + x) * 4;
-              if (pixels[idxRight + 3] > 10) {
-                seedSupermanMatte(x, y);
-                break;
-              }
-            }
-          }
-
-          for (let qi = 0; qi < matteQueue.length; qi += 1) {
-            const n = matteQueue[qi];
-            const x = n % width;
-            const y = Math.floor(n / width);
-            const idx = n * 4;
-            pixels[idx + 3] = 0;
-
-            if (x > 0) seedSupermanMatte(x - 1, y);
-            if (x < width - 1) seedSupermanMatte(x + 1, y);
-            if (y > 0) seedSupermanMatte(x, y - 1);
-            if (y < height - 1) seedSupermanMatte(x, y + 1);
-            if (x > 0 && y > 0) seedSupermanMatte(x - 1, y - 1);
-            if (x < width - 1 && y > 0) seedSupermanMatte(x + 1, y - 1);
-            if (x > 0 && y < height - 1) seedSupermanMatte(x - 1, y + 1);
-            if (x < width - 1 && y < height - 1) seedSupermanMatte(x + 1, y + 1);
-          }
-
-          const visited = new Uint8Array(width * height);
-          const components = [];
-
-          function collectComponent(startX, startY) {
-            const stack = [[startX, startY]];
-            const pixelsInComponent = [];
-            let count = 0;
-
-            while (stack.length > 0) {
-              const node = stack.pop();
-              if (!node) {
-                continue;
-              }
-              const x = node[0];
-              const y = node[1];
-              const n = y * width + x;
-              if (visited[n]) {
-                continue;
-              }
-              visited[n] = 1;
-
-              const idx = n * 4;
-              if (pixels[idx + 3] <= 12) {
-                continue;
-              }
-
-              count += 1;
-              pixelsInComponent.push(idx);
-
-              for (let dy = -1; dy <= 1; dy += 1) {
-                for (let dx = -1; dx <= 1; dx += 1) {
-                  if (dx === 0 && dy === 0) {
-                    continue;
-                  }
-                  const nx = x + dx;
-                  const ny = y + dy;
-                  if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
-                    continue;
-                  }
-                  const nn = ny * width + nx;
-                  if (!visited[nn]) {
-                    stack.push([nx, ny]);
-                  }
-                }
-              }
-            }
-
-            if (count > 0) {
-              components.push({ count, pixelsInComponent });
-            }
-          }
-
-          for (let y = 0; y < height; y += 1) {
-            for (let x = 0; x < width; x += 1) {
-              const n = y * width + x;
-              if (!visited[n]) {
-                collectComponent(x, y);
-              }
-            }
-          }
-
-          let largestComponent = null;
-          for (const component of components) {
-            if (!largestComponent || component.count > largestComponent.count) {
-              largestComponent = component;
-            }
-          }
-
-          if (largestComponent) {
-            const keepSet = new Set(largestComponent.pixelsInComponent);
-            for (const component of components) {
-              if (component === largestComponent) {
-                continue;
-              }
-              for (const idx of component.pixelsInComponent) {
-                if (!keepSet.has(idx)) {
-                  pixels[idx + 3] = 0;
-                }
-              }
-            }
-          }
-        }
-
         context.putImageData(frame, 0, 0);
 
         // Trim transparent borders so the sprite fills the card instead of staying tiny.
@@ -1518,6 +1301,102 @@
           }
         }
 
+        spriteImage.src = canvas.toDataURL("image/png");
+      };
+
+      sourceImage.src = spriteImage.src;
+    }
+
+    function cleanupGreenLanternCard(imageId) {
+      const spriteImage = document.getElementById(imageId);
+      if (!spriteImage) {
+        return;
+      }
+
+      const sourceImage = new Image();
+      sourceImage.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = sourceImage.naturalWidth;
+        canvas.height = sourceImage.naturalHeight;
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          return;
+        }
+
+        context.drawImage(sourceImage, 0, 0);
+        const frame = context.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = frame.data;
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const rowOpaque = new Array(height).fill(0);
+        const rowDark = new Array(height).fill(0);
+        const colOpaque = new Array(width).fill(0);
+        const colDark = new Array(width).fill(0);
+
+        for (let y = 0; y < height; y += 1) {
+          for (let x = 0; x < width; x += 1) {
+            const i = (y * width + x) * 4;
+            const r = pixels[i];
+            const g = pixels[i + 1];
+            const b = pixels[i + 2];
+            const a = pixels[i + 3];
+
+            if (a <= 20) {
+              continue;
+            }
+
+            rowOpaque[y] += 1;
+            colOpaque[x] += 1;
+
+            const darkGuidePixel = r < 58 && g < 78 && b < 92;
+            if (darkGuidePixel) {
+              rowDark[y] += 1;
+              colDark[x] += 1;
+            }
+          }
+        }
+
+        const guideRows = new Array(height).fill(false);
+        const guideCols = new Array(width).fill(false);
+
+        for (let y = 0; y < height; y += 1) {
+          if (rowOpaque[y] >= 8 && rowDark[y] / rowOpaque[y] >= 0.72) {
+            guideRows[y] = true;
+          }
+        }
+
+        for (let x = 0; x < width; x += 1) {
+          if (colOpaque[x] >= 8 && colDark[x] / colOpaque[x] >= 0.72) {
+            guideCols[x] = true;
+          }
+        }
+
+        for (let y = 0; y < height; y += 1) {
+          for (let x = 0; x < width; x += 1) {
+            if (!guideRows[y] && !guideCols[x]) {
+              continue;
+            }
+
+            const i = (y * width + x) * 4;
+            const r = pixels[i];
+            const g = pixels[i + 1];
+            const b = pixels[i + 2];
+            const a = pixels[i + 3];
+
+            if (a <= 20) {
+              continue;
+            }
+
+            const darkGuidePixel = r < 68 && g < 88 && b < 102;
+            if (darkGuidePixel) {
+              pixels[i + 3] = 0;
+            }
+          }
+        }
+
+        context.putImageData(frame, 0, 0);
         spriteImage.src = canvas.toDataURL("image/png");
       };
 
@@ -1586,10 +1465,29 @@
     startFightBtn.addEventListener("click", beginFight);
     window.addEventListener("resize", updateArenaMetrics);
 
-    processSpriteTransparency("supermanSpriteImage");
-    processSpriteTransparency("flashSpriteImage");
-    processSpriteTransparency("batmanSpriteImage");
-    processSpriteTransparency("glSpriteImage");
+    const flashSprite = document.getElementById("flashSpriteImage");
+    const greenLanternSprite = document.getElementById("glSpriteImage");
+
+    // Runtime fallback so card sprite scale is correct even if stale CSS is cached.
+    [flashSprite, greenLanternSprite].forEach((img) => {
+      if (!img) {
+        return;
+      }
+      img.style.transform = "scale(1.65)";
+      img.style.transformOrigin = "center bottom";
+      img.style.objectFit = "contain";
+      img.style.objectPosition = "center bottom";
+    });
+
+    if (flashSprite && /placeholder/i.test(flashSprite.getAttribute("src") || "")) {
+      processSpriteTransparency("flashSpriteImage");
+    }
+    if (greenLanternSprite && /placeholder/i.test(greenLanternSprite.getAttribute("src") || "")) {
+      processSpriteTransparency("glSpriteImage");
+    }
+    if (greenLanternSprite) {
+      cleanupGreenLanternCard("glSpriteImage");
+    }
     updateArenaMetrics();
     setMessage("Select your fighter to begin.");
   </script>

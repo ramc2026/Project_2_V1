@@ -1799,6 +1799,28 @@
       return sequences;
     }
 
+    function sanitizeKillerCrocSequences(sequences) {
+      const punchSeq = sequences["sequence-03"];
+      if (!punchSeq || !punchSeq.frames || punchSeq.frames.length === 0) {
+        return sequences;
+      }
+
+      // Keep only full-body punch frames (drop cropped torso-only frames).
+      const fullBodyFrames = punchSeq.frames.filter((frame) => {
+        const box = frame.bbox || {};
+        return (box.width || 0) >= 95 && (box.height || 0) >= 135;
+      });
+
+      if (fullBodyFrames.length > 0) {
+        sequences["sequence-03"] = {
+          name: "sequence-03",
+          frames: fullBodyFrames.map((frame) => ({ ...frame }))
+        };
+      }
+
+      return sequences;
+    }
+
     function requestGreenLanternFrameCleanup(framePath) {
       if (cleanedFrameSrcCache.has(framePath) || frameCleanupInProgress.has(framePath)) {
         return;
@@ -1897,8 +1919,99 @@
       sourceImage.src = framePath;
     }
 
+    function requestKillerCrocFrameCleanup(framePath) {
+      if (cleanedFrameSrcCache.has(framePath) || frameCleanupInProgress.has(framePath)) {
+        return;
+      }
+      frameCleanupInProgress.add(framePath);
+
+      const sourceImage = new Image();
+      sourceImage.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = sourceImage.naturalWidth;
+        canvas.height = sourceImage.naturalHeight;
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          frameCleanupInProgress.delete(framePath);
+          return;
+        }
+
+        context.drawImage(sourceImage, 0, 0);
+        const frame = context.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = frame.data;
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Remove top-left annotation artifacts like "B." / "D." using tiny-component cleanup.
+        const visited = new Uint8Array(width * height);
+        const roiMaxX = Math.min(90, width);
+        const roiMaxY = Math.min(70, height);
+
+        const getAlpha = (x, y) => pixels[(y * width + x) * 4 + 3];
+        const neighbors = [
+          [-1, -1], [0, -1], [1, -1],
+          [-1, 0],           [1, 0],
+          [-1, 1],  [0, 1],  [1, 1]
+        ];
+
+        for (let y = 0; y < roiMaxY; y += 1) {
+          for (let x = 0; x < roiMaxX; x += 1) {
+            const startIdx = y * width + x;
+            if (visited[startIdx] || getAlpha(x, y) <= 20) {
+              continue;
+            }
+
+            const stack = [[x, y]];
+            const component = [];
+            visited[startIdx] = 1;
+
+            while (stack.length > 0) {
+              const [cx, cy] = stack.pop();
+              component.push([cx, cy]);
+
+              for (const [dx, dy] of neighbors) {
+                const nx = cx + dx;
+                const ny = cy + dy;
+                if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+                  continue;
+                }
+                const nIdx = ny * width + nx;
+                if (visited[nIdx]) {
+                  continue;
+                }
+                if (getAlpha(nx, ny) <= 20) {
+                  continue;
+                }
+                visited[nIdx] = 1;
+                stack.push([nx, ny]);
+              }
+            }
+
+            // Keep the character body; drop only tiny artifacts.
+            if (component.length < 180) {
+              for (const [px, py] of component) {
+                const i = (py * width + px) * 4;
+                pixels[i + 3] = 0;
+              }
+            }
+          }
+        }
+
+        context.putImageData(frame, 0, 0);
+        cleanedFrameSrcCache.set(framePath, canvas.toDataURL("image/png"));
+        frameCleanupInProgress.delete(framePath);
+      };
+
+      sourceImage.onerror = () => {
+        frameCleanupInProgress.delete(framePath);
+      };
+
+      sourceImage.src = framePath;
+    }
+
     function resolveFrameSrc(characterId, framePath) {
-      if (characterId !== "green-lantern") {
+      if (characterId !== "green-lantern" && characterId !== "killercroc") {
         return framePath;
       }
 
@@ -1906,7 +2019,11 @@
         return cleanedFrameSrcCache.get(framePath);
       }
 
-      requestGreenLanternFrameCleanup(framePath);
+      if (characterId === "green-lantern") {
+        requestGreenLanternFrameCleanup(framePath);
+      } else if (characterId === "killercroc") {
+        requestKillerCrocFrameCleanup(framePath);
+      }
       return framePath;
     }
 
@@ -2046,6 +2163,19 @@
               });
             });
             framePaths.forEach((framePath) => requestGreenLanternFrameCleanup(framePath));
+          }
+
+          if (char === "killercroc") {
+            sanitizeKillerCrocSequences(sequences);
+            const framePaths = new Set();
+            Object.values(sequences).forEach((seq) => {
+              (seq.frames || []).forEach((frame) => {
+                if (frame && frame.path) {
+                  framePaths.add(frame.path);
+                }
+              });
+            });
+            framePaths.forEach((framePath) => requestKillerCrocFrameCleanup(framePath));
           }
           
           spriteSequences[char] = sequences;

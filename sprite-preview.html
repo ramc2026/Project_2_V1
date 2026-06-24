@@ -310,6 +310,29 @@
                 return Object.values(byName);
             }
 
+            sanitizeKillerCrocSequenceList(sequenceList) {
+                const byName = Object.fromEntries(sequenceList.map((seq) => [seq.sequence, seq]));
+                const punchSeq = byName['sequence-03'];
+                if (!punchSeq || !punchSeq.frames || punchSeq.frames.length === 0) {
+                    return sequenceList;
+                }
+
+                const fullBodyFrames = punchSeq.frames.filter((frame) => {
+                    const box = frame.bbox || {};
+                    return (box.width || 0) >= 95 && (box.height || 0) >= 135;
+                });
+
+                if (fullBodyFrames.length > 0) {
+                    byName['sequence-03'] = {
+                        ...byName['sequence-03'],
+                        frames: fullBodyFrames.map((frame) => ({ ...frame })),
+                        frameCount: fullBodyFrames.length
+                    };
+                }
+
+                return Object.values(byName);
+            }
+
             requestGreenLanternFrameCleanup(framePath) {
                 if (this.cleanedFrameSrcCache.has(framePath) || this.frameCleanupInProgress.has(framePath)) {
                     return;
@@ -413,14 +436,106 @@
                 sourceImage.src = framePath;
             }
 
+            requestKillerCrocFrameCleanup(framePath) {
+                if (this.cleanedFrameSrcCache.has(framePath) || this.frameCleanupInProgress.has(framePath)) {
+                    return;
+                }
+                this.frameCleanupInProgress.add(framePath);
+
+                const sourceImage = new Image();
+                sourceImage.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = sourceImage.naturalWidth;
+                    canvas.height = sourceImage.naturalHeight;
+                    const context = canvas.getContext('2d');
+                    if (!context) {
+                        this.frameCleanupInProgress.delete(framePath);
+                        return;
+                    }
+
+                    context.drawImage(sourceImage, 0, 0);
+                    const frame = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const pixels = frame.data;
+                    const width = canvas.width;
+                    const height = canvas.height;
+
+                    // Remove top-left source-sheet annotation letters (e.g., B./D.) by dropping tiny components.
+                    const visited = new Uint8Array(width * height);
+                    const roiMaxX = Math.min(90, width);
+                    const roiMaxY = Math.min(70, height);
+                    const getAlpha = (x, y) => pixels[(y * width + x) * 4 + 3];
+                    const neighbors = [
+                        [-1, -1], [0, -1], [1, -1],
+                        [-1, 0],           [1, 0],
+                        [-1, 1],  [0, 1],  [1, 1]
+                    ];
+
+                    for (let y = 0; y < roiMaxY; y += 1) {
+                        for (let x = 0; x < roiMaxX; x += 1) {
+                            const startIdx = y * width + x;
+                            if (visited[startIdx] || getAlpha(x, y) <= 20) {
+                                continue;
+                            }
+
+                            const stack = [[x, y]];
+                            const component = [];
+                            visited[startIdx] = 1;
+
+                            while (stack.length > 0) {
+                                const [cx, cy] = stack.pop();
+                                component.push([cx, cy]);
+
+                                for (const [dx, dy] of neighbors) {
+                                    const nx = cx + dx;
+                                    const ny = cy + dy;
+                                    if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+                                        continue;
+                                    }
+                                    const nIdx = ny * width + nx;
+                                    if (visited[nIdx]) {
+                                        continue;
+                                    }
+                                    if (getAlpha(nx, ny) <= 20) {
+                                        continue;
+                                    }
+                                    visited[nIdx] = 1;
+                                    stack.push([nx, ny]);
+                                }
+                            }
+
+                            if (component.length < 180) {
+                                for (const [px, py] of component) {
+                                    const i = (py * width + px) * 4;
+                                    pixels[i + 3] = 0;
+                                }
+                            }
+                        }
+                    }
+
+                    context.putImageData(frame, 0, 0);
+                    this.cleanedFrameSrcCache.set(framePath, canvas.toDataURL('image/png'));
+                    this.frameCleanupInProgress.delete(framePath);
+                };
+
+                sourceImage.onerror = () => {
+                    this.frameCleanupInProgress.delete(framePath);
+                };
+
+                sourceImage.src = framePath;
+            }
+
             resolveFrameSrc(character, framePath) {
-                if (character !== 'green-lantern') {
+                if (character !== 'green-lantern' && character !== 'killercroc') {
                     return framePath;
                 }
                 if (this.cleanedFrameSrcCache.has(framePath)) {
                     return this.cleanedFrameSrcCache.get(framePath);
                 }
-                this.requestGreenLanternFrameCleanup(framePath);
+                if (character === 'green-lantern') {
+                    this.requestGreenLanternFrameCleanup(framePath);
+                } else if (character === 'killercroc') {
+                    this.requestKillerCrocFrameCleanup(framePath);
+                }
                 return framePath;
             }
 
@@ -469,6 +584,19 @@
                             framePaths.forEach((framePath) => this.requestGreenLanternFrameCleanup(framePath));
                         }
 
+                        if (character === 'killercroc') {
+                            sequences = this.sanitizeKillerCrocSequenceList(sequences);
+                            const framePaths = new Set();
+                            sequences.forEach((seq) => {
+                                (seq.frames || []).forEach((frame) => {
+                                    if (frame && frame.framePath) {
+                                        framePaths.add(frame.framePath);
+                                    }
+                                });
+                            });
+                            framePaths.forEach((framePath) => this.requestKillerCrocFrameCleanup(framePath));
+                        }
+
                         sequences.forEach((seq, seqIndex) => {
                             const normalizedFrames = (seq.frames || []).map((f) => ({
                                 ...f,
@@ -501,8 +629,15 @@
             }
 
             populateDropdown() {
+                const getSequenceLabel = (seq) => {
+                    if (seq.character === 'killercroc' && seq.sequenceName === 'sequence-01') {
+                        return 'Killer Croc k(loop)';
+                    }
+                    return `${seq.character} - ${seq.sequenceName} (${seq.frameCount} frames)`;
+                };
+
                 this.sequenceSelect.innerHTML = this.allSequences.map((seq, i) => (
-                    `<option value="${i}">${seq.character} - ${seq.sequenceName} (${seq.frameCount} frames)</option>`
+                    `<option value="${i}">${getSequenceLabel(seq)}</option>`
                 )).join('');
             }
 
@@ -545,12 +680,20 @@
 
                         this.ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
 
-                        this.frameInfoEl.innerHTML = `
-                            <strong>Character:</strong> ${active.character}<br>
-                            <strong>Sequence:</strong> ${active.sequenceName}<br>
-                            <strong>Dimensions:</strong> ${frame.bbox.width}×${frame.bbox.height}<br>
-                            <strong>Fill:</strong> ${(frame.fill * 100).toFixed(1)}%
-                        `;
+                                                const isKillerCrocLoop = active.character === 'killercroc' && active.sequenceName === 'sequence-01';
+                                                const sequenceLabel = isKillerCrocLoop ? 'k(loop)' : active.sequenceName;
+                                                this.frameInfoEl.innerHTML = isKillerCrocLoop
+                                                        ? `
+                                                                <strong>Sequence:</strong> ${sequenceLabel}<br>
+                                                                <strong>Dimensions:</strong> ${frame.bbox.width}×${frame.bbox.height}<br>
+                                                                <strong>Fill:</strong> ${(frame.fill * 100).toFixed(1)}%
+                                                            `
+                                                        : `
+                                                                <strong>Character:</strong> ${active.character}<br>
+                                                                <strong>Sequence:</strong> ${sequenceLabel}<br>
+                                                                <strong>Dimensions:</strong> ${frame.bbox.width}×${frame.bbox.height}<br>
+                                                                <strong>Fill:</strong> ${(frame.fill * 100).toFixed(1)}%
+                                                            `;
 
                         this.frameCounterEl.textContent = `Frame ${this.currentFrame + 1} / ${active.frameCount}`;
                     };

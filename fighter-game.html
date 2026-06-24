@@ -174,6 +174,50 @@
       transform-origin: center bottom;
     }
 
+    .card-sprite img[src*="killercroc"] {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 40% center;
+      transform: scale(1.08);
+      transform-origin: center;
+    }
+
+    .card-sprite img[src*="theflash"] {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .card-sprite img[src*="thesinestro"] {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .card-sprite img[src*="thehawkgirl"] {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .card-sprite img[src*="thehaljordan"] {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .card-sprite img[src*="thedoomsday"] {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
     .card-text {
       display: grid;
       gap: 4px;
@@ -236,6 +280,52 @@
       text-align: center;
       color: #ffd6bf;
       min-height: 20px;
+    }
+
+    .venue-select {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .venue-label {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #ffe8ab;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .venue-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px;
+    }
+
+    .venue-option {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      padding: 12px 8px;
+      background: linear-gradient(180deg, rgba(44, 73, 106, 0.3), rgba(16, 28, 45, 0.45));
+      color: #c0d9ff;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .venue-option:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.6);
+      background: linear-gradient(180deg, rgba(70, 100, 140, 0.4), rgba(30, 50, 80, 0.5));
+    }
+
+    .venue-option.active {
+      border-color: #7be0ff;
+      background: linear-gradient(180deg, rgba(123, 224, 255, 0.3), rgba(30, 140, 180, 0.4));
+      color: #fff;
+      box-shadow: 0 0 12px rgba(123, 224, 255, 0.4);
     }
 
     .hud {
@@ -312,6 +402,43 @@
         linear-gradient(180deg, #274c79 0 58%, #65461f 58% 100%);
     }
 
+    /* Venue-specific arena styles */
+    .arena.venue-rig {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 34%),
+        repeating-linear-gradient(90deg, rgba(255, 209, 102, 0.06) 0 16px, rgba(10, 14, 24, 0.04) 16px 32px),
+        linear-gradient(180deg, #274c79 0 58%, #65461f 58% 100%);
+    }
+
+    .arena.venue-street {
+      background:
+        linear-gradient(180deg, rgba(100, 50, 50, 0.3), transparent 40%),
+        repeating-linear-gradient(45deg, rgba(255, 100, 100, 0.1) 0 20px, rgba(50, 50, 50, 0.08) 20px 40px),
+        linear-gradient(180deg, #3d2d2d 0 50%, #5a4a3a 50% 100%);
+    }
+
+    .arena.venue-stadium {
+      background:
+        radial-gradient(ellipse at center 20%, rgba(255, 240, 100, 0.2), transparent 50%),
+        linear-gradient(180deg, rgba(100, 150, 200, 0.4), transparent 30%),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 10px, transparent 10px 20px),
+        linear-gradient(180deg, #4a5f7f 0 60%, #8a7a5a 60% 100%);
+    }
+
+    .arena.venue-underground {
+      background:
+        linear-gradient(180deg, rgba(30, 30, 50, 0.6), transparent 30%),
+        repeating-linear-gradient(90deg, rgba(100, 100, 120, 0.1) 0 25px, rgba(40, 40, 60, 0.1) 25px 50px),
+        linear-gradient(180deg, #1a1a2a 0 60%, #3a2a2a 60% 100%);
+    }
+
+    .arena.venue-beach {
+      background:
+        linear-gradient(180deg, rgba(135, 206, 235, 0.4), rgba(70, 150, 200, 0.2) 40%, transparent 50%),
+        repeating-linear-gradient(90deg, rgba(220, 200, 100, 0.1) 0 15px, rgba(210, 190, 80, 0.05) 15px 30px),
+        linear-gradient(180deg, #d4af86 0 60%, #e8c5a0 60% 100%);
+    }
+
     .stage-sign {
       position: absolute;
       top: 18px;
@@ -323,6 +450,26 @@
       font-size: clamp(1.1rem, 3vw, 1.9rem);
       text-shadow: 0 0 14px rgba(255, 237, 146, 0.75);
       z-index: 2;
+    }
+
+    .arena.venue-street .stage-sign {
+      color: #ff6666;
+      text-shadow: 0 0 14px rgba(255, 100, 100, 0.75);
+    }
+
+    .arena.venue-stadium .stage-sign {
+      color: #ffff99;
+      text-shadow: 0 0 20px rgba(255, 255, 150, 0.9);
+    }
+
+    .arena.venue-underground .stage-sign {
+      color: #aaaacc;
+      text-shadow: 0 0 10px rgba(150, 150, 200, 0.5);
+    }
+
+    .arena.venue-beach .stage-sign {
+      color: #ffcc66;
+      text-shadow: 0 0 14px rgba(255, 200, 100, 0.75);
     }
 
     .crowd {
@@ -365,11 +512,14 @@
     .fighter {
       position: absolute;
       bottom: 30%;
-      width: 72px;
-      height: 138px;
+      width: 200px;
+      height: 280px;
       transition: filter 0.08s linear;
       --fighter-main: var(--hero);
       --fighter-limb: #203548;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
     }
 
     .fighter.enemy {
@@ -379,6 +529,26 @@
 
     .fighter.hit {
       filter: brightness(1.5) saturate(1.2);
+    }
+
+    /* Hide old geometric parts, show sprites */
+    .fighter .shadow,
+    .fighter .head,
+    .fighter .body,
+    .fighter .arm,
+    .fighter .leg {
+      display: none !important;
+    }
+
+    .fighter .sprite-frame {
+      display: block;
+      height: auto;
+      width: auto;
+      max-width: 100%;
+      max-height: 100%;
+      image-rendering: pixelated;
+      background: transparent !important;
+      mix-blend-mode: normal;
     }
 
     .fighter .shadow {
@@ -637,15 +807,7 @@
       <div class="character-grid">
         <button class="character-card" type="button" data-character="flash">
           <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="40" cy="18" r="13" fill="#efb69b" stroke="#1a1a1a" stroke-width="1.5" />
-              <rect x="24" y="34" width="32" height="44" rx="6" fill="#b01d2d" stroke="#1a1a1a" stroke-width="2" />
-              <path d="M 26 44 L 16 58" stroke="#ffcf2f" stroke-width="4" stroke-linecap="round" />
-              <path d="M 54 44 L 64 58" stroke="#ffcf2f" stroke-width="4" stroke-linecap="round" />
-              <rect x="29" y="82" width="8" height="34" rx="3" fill="#c62828" />
-              <rect x="43" y="82" width="8" height="34" rx="3" fill="#c62828" />
-              <path d="M 38 52 L 46 52" stroke="#ffe083" stroke-width="3" stroke-linecap="round" />
-            </svg>
+            <img src="images/theflash.PNG" alt="Flash" />
           </div>
           <div class="card-text">
             <p class="card-title">Flash</p>
@@ -655,15 +817,7 @@
         </button>
         <button class="character-card" type="button" data-character="green-lantern">
           <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="40" cy="18" r="13" fill="#d6b190" stroke="#1a1a1a" stroke-width="1.5" />
-              <rect x="23" y="34" width="34" height="44" rx="6" fill="#2f7a43" stroke="#1a1a1a" stroke-width="2" />
-              <rect x="16" y="44" width="10" height="30" rx="4" fill="#1f5e32" />
-              <rect x="54" y="44" width="10" height="30" rx="4" fill="#1f5e32" />
-              <rect x="29" y="82" width="8" height="34" rx="3" fill="#245f35" />
-              <rect x="43" y="82" width="8" height="34" rx="3" fill="#245f35" />
-              <circle cx="40" cy="54" r="6" fill="#9fff76" opacity="0.85" />
-            </svg>
+            <img src="images/thehaljordan.PNG" alt="Green Lantern" />
           </div>
           <div class="card-text">
             <p class="card-title">Green Lantern</p>
@@ -673,14 +827,7 @@
         </button>
         <button class="character-card" type="button" data-character="hawkgirl">
           <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="40" cy="18" r="13" fill="#f0c788" stroke="#1a1a1a" stroke-width="1.5" />
-              <rect x="25" y="36" width="30" height="40" rx="5" fill="#c69a42" stroke="#1a1a1a" stroke-width="2" />
-              <path d="M 25 48 L 8 62 L 14 72" stroke="#8b6a2f" stroke-width="5" fill="none" stroke-linecap="round" />
-              <path d="M 55 48 L 72 62 L 66 72" stroke="#8b6a2f" stroke-width="5" fill="none" stroke-linecap="round" />
-              <rect x="31" y="82" width="6" height="34" rx="2" fill="#7a5b21" />
-              <rect x="43" y="82" width="6" height="34" rx="2" fill="#7a5b21" />
-            </svg>
+            <img src="images/thehawkgirl.PNG" alt="Hawkgirl" />
           </div>
           <div class="card-text">
             <p class="card-title">Hawkgirl</p>
@@ -690,14 +837,7 @@
         </button>
         <button class="character-card" type="button" data-character="killercroc">
           <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="40" cy="18" r="13" fill="#6d8f57" stroke="#132015" stroke-width="1.5" />
-              <rect x="23" y="34" width="34" height="44" rx="6" fill="#3f6b42" stroke="#132015" stroke-width="2" />
-              <rect x="16" y="44" width="10" height="30" rx="4" fill="#2c4b2f" />
-              <rect x="54" y="44" width="10" height="30" rx="4" fill="#2c4b2f" />
-              <rect x="29" y="82" width="8" height="34" rx="3" fill="#2c4b2f" />
-              <rect x="43" y="82" width="8" height="34" rx="3" fill="#2c4b2f" />
-            </svg>
+            <img src="images/thekillercroc.PNG" alt="Killer Croc" />
           </div>
           <div class="card-text">
             <p class="card-title">Killer Croc</p>
@@ -707,15 +847,7 @@
         </button>
         <button class="character-card" type="button" data-character="sinestro">
           <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="40" cy="18" r="13" fill="#e8b78f" stroke="#1a1a1a" stroke-width="1.5" />
-              <rect x="24" y="36" width="32" height="42" rx="5" fill="#d9c019" stroke="#1a1a1a" stroke-width="2" />
-              <circle cx="40" cy="54" r="6" fill="#fff27a" opacity="0.8" />
-              <rect x="18" y="44" width="8" height="30" rx="3" fill="#5f4f00" />
-              <rect x="54" y="44" width="8" height="30" rx="3" fill="#5f4f00" />
-              <rect x="30" y="82" width="7" height="34" rx="2" fill="#5f4f00" />
-              <rect x="43" y="82" width="7" height="34" rx="2" fill="#5f4f00" />
-            </svg>
+            <img src="images/thesinestro.PNG" alt="Sinestro" />
           </div>
           <div class="card-text">
             <p class="card-title">Sinestro</p>
@@ -725,16 +857,7 @@
         </button>
         <button class="character-card" type="button" data-character="doomsday">
           <div class="card-sprite">
-            <svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="40" cy="18" r="13" fill="#9a9a9a" stroke="#1a1a1a" stroke-width="1.5" />
-              <rect x="22" y="34" width="36" height="46" rx="6" fill="#7f7f7f" stroke="#1a1a1a" stroke-width="2" />
-              <path d="M 24 40 L 16 50" stroke="#d9d9d9" stroke-width="2" />
-              <path d="M 56 40 L 64 50" stroke="#d9d9d9" stroke-width="2" />
-              <rect x="16" y="44" width="10" height="30" rx="4" fill="#4c4c4c" />
-              <rect x="54" y="44" width="10" height="30" rx="4" fill="#4c4c4c" />
-              <rect x="29" y="82" width="8" height="34" rx="3" fill="#4c4c4c" />
-              <rect x="43" y="82" width="8" height="34" rx="3" fill="#4c4c4c" />
-            </svg>
+            <img src="images/thedoomsday.PNG" alt="Doomsday" />
           </div>
           <div class="card-text">
             <p class="card-title">Doomsday</p>
@@ -742,6 +865,16 @@
             <p class="card-stats">Punch: Ultra | Kick: Ultra | Speed: Low</p>
           </div>
         </button>
+      </div>
+      <div class="venue-select">
+        <p class="venue-label">Choose Your Venue</p>
+        <div class="venue-grid">
+          <button class="venue-option active" data-venue="rig" type="button">Rig Arena</button>
+          <button class="venue-option" data-venue="street" type="button">Street Fight</button>
+          <button class="venue-option" data-venue="stadium" type="button">Stadium</button>
+          <button class="venue-option" data-venue="underground" type="button">Underground</button>
+          <button class="venue-option" data-venue="beach" type="button">Beach</button>
+        </div>
       </div>
       <div class="select-actions">
         <button class="select-start" id="startFightBtn" type="button">Start Fight</button>
@@ -771,7 +904,7 @@
     </section>
 
     <section class="arena" id="arena" aria-label="Fight arena">
-      <div class="stage-sign">RIG ARENA</div>
+      <div class="stage-sign" id="stageSign">RIG ARENA</div>
       <div class="crowd" aria-hidden="true"></div>
       <div class="ground" aria-hidden="true"></div>
 
@@ -831,6 +964,7 @@
     const messageEl = document.getElementById("message");
     const impactEl = document.getElementById("impact");
     const resetBtn = document.getElementById("resetBtn");
+    const stageSignEl = document.getElementById("stageSign");
     const mobileButtons = Array.from(document.querySelectorAll(".mobile-controls button"));
     const characterSelectEl = document.getElementById("characterSelect");
     const selectHintEl = document.getElementById("selectHint");
@@ -905,6 +1039,7 @@
       selectedCharacterId: "",
       selectedCharacter: null,
       enemyCharacter: null,
+      selectedVenue: "rig",
       playerPunchBonus: 0,
       playerKickBonus: 0,
       enemyPunchBonus: 0,
@@ -914,6 +1049,8 @@
       timer: 60,
       roundActive: false,
       selectionLocked: false,
+      movingLeft: false,
+      movingRight: false,
       enemyBrain: null,
       timerInterval: null
     };
@@ -984,9 +1121,33 @@
       }
 
       state.selectionLocked = true;
+      state.movingLeft = false;
+      state.movingRight = false;
       characterSelectEl.classList.add("hidden");
+      
+      // Initialize sprite rendering for this fight
+      initializeSpritesForFight();
+      
       setMessage("Fight! Use movement and combo attacks.");
       resetRound();
+    }
+
+    function initializeSpritesForFight() {
+      // Clear old fighter HTML and prepare for sprites
+      playerEl.innerHTML = '';
+      enemyEl.innerHTML = '';
+      
+      // Get the actual character IDs
+      const playerCharId = state.selectedCharacter.id;
+      const enemyCharId = state.enemyCharacter.id;
+      
+      // Set idle pose for both fighters (standing still, first frame)
+      if (spriteAnimators[playerCharId]) {
+        spriteAnimators[playerCharId].playIdle();
+      }
+      if (spriteAnimators[enemyCharId]) {
+        spriteAnimators[enemyCharId].playIdle();
+      }
     }
 
     function updateArenaMetrics() {
@@ -1113,6 +1274,13 @@
       runAttackAnimation(enemyEl, attack.className, attack.cooldown - 90);
 
       if (Math.abs((state.enemyX + 36) - (state.playerX + 36)) <= attack.range) {
+              // Play enemy sprite attack animation
+              if (state.enemyCharacter && spriteAnimators[state.enemyCharacter.id]) {
+                const anim = spriteAnimators[state.enemyCharacter.id];
+                anim.playSequence(animationMap[type] || 'sequence-01', false);
+                setTimeout(() => anim.playIdle(), 500);
+              }
+
         state.playerHealth = clamp(state.playerHealth - damage, 0, 100);
         updateHealthBars();
         setHitFlash(playerEl);
@@ -1210,6 +1378,8 @@
       state.playerHealth = 100;
       state.enemyHealth = 100;
       state.jumpLock = false;
+      state.movingLeft = false;
+      state.movingRight = false;
       state.canAttack = true;
       state.enemyCanAttack = true;
       state.timer = 60;
@@ -1331,9 +1501,9 @@
         const height = canvas.height;
 
         const rowOpaque = new Array(height).fill(0);
-        const rowDark = new Array(height).fill(0);
+        const rowGuideLike = new Array(height).fill(0);
         const colOpaque = new Array(width).fill(0);
-        const colDark = new Array(width).fill(0);
+        const colGuideLike = new Array(width).fill(0);
 
         for (let y = 0; y < height; y += 1) {
           for (let x = 0; x < width; x += 1) {
@@ -1350,10 +1520,11 @@
             rowOpaque[y] += 1;
             colOpaque[x] += 1;
 
-            const darkGuidePixel = r < 58 && g < 78 && b < 92;
-            if (darkGuidePixel) {
-              rowDark[y] += 1;
-              colDark[x] += 1;
+            const darkGuidePixel = r < 68 && g < 88 && b < 102;
+            const brightGuidePixel = r > 205 && g > 205 && b > 205;
+            if (darkGuidePixel || brightGuidePixel) {
+              rowGuideLike[y] += 1;
+              colGuideLike[x] += 1;
             }
           }
         }
@@ -1362,13 +1533,13 @@
         const guideCols = new Array(width).fill(false);
 
         for (let y = 0; y < height; y += 1) {
-          if (rowOpaque[y] >= 8 && rowDark[y] / rowOpaque[y] >= 0.72) {
+          if (rowOpaque[y] >= 8 && rowGuideLike[y] / rowOpaque[y] >= 0.62) {
             guideRows[y] = true;
           }
         }
 
         for (let x = 0; x < width; x += 1) {
-          if (colOpaque[x] >= 8 && colDark[x] / colOpaque[x] >= 0.72) {
+          if (colOpaque[x] >= 8 && colGuideLike[x] / colOpaque[x] >= 0.62) {
             guideCols[x] = true;
           }
         }
@@ -1389,8 +1560,9 @@
               continue;
             }
 
-            const darkGuidePixel = r < 68 && g < 88 && b < 102;
-            if (darkGuidePixel) {
+            const darkGuidePixel = r < 80 && g < 96 && b < 112;
+            const brightGuidePixel = r > 200 && g > 200 && b > 200;
+            if (darkGuidePixel || brightGuidePixel) {
               pixels[i + 3] = 0;
             }
           }
@@ -1425,6 +1597,22 @@
       }
     }
 
+    function updatePlayerRunState() {
+      if (!state.roundActive || !state.selectedCharacter || state.selectedCharacter.id !== "flash") {
+        return;
+      }
+      const animator = spriteAnimators[state.selectedCharacter.id];
+      if (!animator) {
+        return;
+      }
+
+      if (state.movingLeft || state.movingRight) {
+        animator.playSequence(animationMap.run || "sequence-01", true, true);
+      } else {
+        animator.playIdle();
+      }
+    }
+
     window.addEventListener("keydown", (event) => {
       const key = event.key.toLowerCase();
       if (["a", "d", "w", "f", "g"].includes(key)) {
@@ -1432,10 +1620,18 @@
       }
 
       if (key === "a") {
-        handleInputAction("left");
+        state.movingLeft = true;
+        if (!event.repeat) {
+          handleInputAction("left");
+        }
+        updatePlayerRunState();
       }
       if (key === "d") {
-        handleInputAction("right");
+        state.movingRight = true;
+        if (!event.repeat) {
+          handleInputAction("right");
+        }
+        updatePlayerRunState();
       }
       if (key === "w") {
         handleInputAction("jump");
@@ -1445,6 +1641,32 @@
       }
       if (key === "g") {
         handleInputAction("kick");
+      }
+    });
+
+    // Continuous held-key movement for Flash so running frames can cycle smoothly.
+    setInterval(() => {
+      if (!state.roundActive || !state.selectedCharacter || state.selectedCharacter.id !== "flash") {
+        return;
+      }
+      const movingLeftOnly = state.movingLeft && !state.movingRight;
+      const movingRightOnly = state.movingRight && !state.movingLeft;
+      if (movingLeftOnly) {
+        movePlayer(-1);
+      } else if (movingRightOnly) {
+        movePlayer(1);
+      }
+    }, 85);
+
+    window.addEventListener("keyup", (event) => {
+      const key = event.key.toLowerCase();
+      if (key === "a") {
+        state.movingLeft = false;
+        updatePlayerRunState();
+      }
+      if (key === "d") {
+        state.movingRight = false;
+        updatePlayerRunState();
       }
     });
 
@@ -1458,6 +1680,35 @@
         state.selectedCharacterId = card.getAttribute("data-character") || "";
         selectHintEl.textContent = "";
         highlightSelectedCard();
+      });
+    });
+
+    // Venue selection handlers
+    const venueOptions = Array.from(document.querySelectorAll(".venue-option"));
+    venueOptions.forEach((option) => {
+      option.addEventListener("click", () => {
+        const venue = option.getAttribute("data-venue");
+        state.selectedVenue = venue;
+        
+        // Update active venue styling
+        venueOptions.forEach((opt) => {
+          opt.classList.remove("active");
+        });
+        option.classList.add("active");
+        
+        // Apply venue styling to arena
+        arena.className = "arena";
+        arena.classList.add(`venue-${venue}`);
+        
+        // Update stage sign text
+        const venueNames = {
+          rig: "RIG ARENA",
+          street: "STREET FIGHT",
+          stadium: "MAIN STADIUM",
+          underground: "UNDERGROUND",
+          beach: "BEACH BATTLE"
+        };
+        stageSignEl.textContent = venueNames[venue] || "RIG ARENA";
       });
     });
 
@@ -1488,6 +1739,440 @@
     if (greenLanternSprite) {
       cleanupGreenLanternCard("glSpriteImage");
     }
+
+    // ====== SPRITE RENDERING SYSTEM ======
+    const spriteSequences = {};
+    const spriteAnimators = {};
+    const cleanedFrameSrcCache = new Map();
+    const frameCleanupInProgress = new Set();
+
+    function sanitizeGreenLanternSequences(sequences) {
+      const runSeq = sequences["sequence-01"];
+      if (!runSeq || !runSeq.frames || runSeq.frames.length === 0) {
+        return sequences;
+      }
+
+      // Keep only plausible full-body frames for standing/walking.
+      const stableWalkFrames = runSeq.frames.filter((frame) => {
+        const box = frame.bbox || {};
+        return (box.width || 0) >= 95 && (box.height || 0) >= 150;
+      });
+
+      const walkFrames = stableWalkFrames.length > 0 ? stableWalkFrames : [runSeq.frames[0]];
+      const idleFrame = walkFrames[Math.floor(walkFrames.length / 2)] || walkFrames[0];
+
+      // Ring blast frame from source sheet if present.
+      const ringFrame = sequences["sequence-02"]
+        && sequences["sequence-02"].frames
+        && sequences["sequence-02"].frames[0]
+          ? sequences["sequence-02"].frames[0]
+          : null;
+
+      sequences["sequence-01"] = {
+        name: "sequence-01",
+        frames: walkFrames.map((frame) => ({ ...frame }))
+      };
+
+      // Punch mapped to visible ring attack: wind-up -> ring blast -> recover.
+      sequences["sequence-02"] = {
+        name: "sequence-02",
+        frames: ringFrame
+          ? [
+              { ...walkFrames[0] },
+              { ...ringFrame },
+              { ...(walkFrames[1] || walkFrames[0]) }
+            ]
+          : [{ ...idleFrame }]
+      };
+
+      // Sequence-03 should remain full-body motion; avoid cropped ring frame that hides the head.
+      sequences["sequence-03"] = {
+        name: "sequence-03",
+        frames: [
+          { ...walkFrames[0] },
+          { ...(walkFrames[1] || walkFrames[0]) },
+          { ...(walkFrames[2] || walkFrames[0]) },
+          { ...idleFrame }
+        ]
+      };
+
+      return sequences;
+    }
+
+    function requestGreenLanternFrameCleanup(framePath) {
+      if (cleanedFrameSrcCache.has(framePath) || frameCleanupInProgress.has(framePath)) {
+        return;
+      }
+      frameCleanupInProgress.add(framePath);
+
+      const sourceImage = new Image();
+      sourceImage.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = sourceImage.naturalWidth;
+        canvas.height = sourceImage.naturalHeight;
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          frameCleanupInProgress.delete(framePath);
+          return;
+        }
+
+        context.drawImage(sourceImage, 0, 0);
+        const frame = context.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = frame.data;
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Safer cleanup: only remove long straight black/white guide-line runs.
+        const sourcePixels = new Uint8ClampedArray(pixels);
+        const isGuidePixel = (r, g, b, a) => {
+          if (a <= 20) return false;
+          const spread = Math.max(r, g, b) - Math.min(r, g, b);
+          const dark = r < 52 && g < 52 && b < 52 && spread <= 12;
+          const bright = r > 230 && g > 230 && b > 230 && spread <= 12;
+          return dark || bright;
+        };
+
+        const hasLongRun = (x, y) => {
+          let hRun = 1;
+          for (let dx = 1; dx <= 4; dx += 1) {
+            const nx = x - dx;
+            if (nx < 0) break;
+            const ni = (y * width + nx) * 4;
+            if (!isGuidePixel(sourcePixels[ni], sourcePixels[ni + 1], sourcePixels[ni + 2], sourcePixels[ni + 3])) break;
+            hRun += 1;
+          }
+          for (let dx = 1; dx <= 4; dx += 1) {
+            const nx = x + dx;
+            if (nx >= width) break;
+            const ni = (y * width + nx) * 4;
+            if (!isGuidePixel(sourcePixels[ni], sourcePixels[ni + 1], sourcePixels[ni + 2], sourcePixels[ni + 3])) break;
+            hRun += 1;
+          }
+
+          let vRun = 1;
+          for (let dy = 1; dy <= 4; dy += 1) {
+            const ny = y - dy;
+            if (ny < 0) break;
+            const ni = (ny * width + x) * 4;
+            if (!isGuidePixel(sourcePixels[ni], sourcePixels[ni + 1], sourcePixels[ni + 2], sourcePixels[ni + 3])) break;
+            vRun += 1;
+          }
+          for (let dy = 1; dy <= 4; dy += 1) {
+            const ny = y + dy;
+            if (ny >= height) break;
+            const ni = (ny * width + x) * 4;
+            if (!isGuidePixel(sourcePixels[ni], sourcePixels[ni + 1], sourcePixels[ni + 2], sourcePixels[ni + 3])) break;
+            vRun += 1;
+          }
+
+          return hRun >= 6 || vRun >= 6;
+        };
+
+        for (let y = 0; y < height; y += 1) {
+          for (let x = 0; x < width; x += 1) {
+            const i = (y * width + x) * 4;
+            const r = sourcePixels[i];
+            const g = sourcePixels[i + 1];
+            const b = sourcePixels[i + 2];
+            const a = sourcePixels[i + 3];
+            if (!isGuidePixel(r, g, b, a)) {
+              continue;
+            }
+            if (hasLongRun(x, y)) {
+              pixels[i + 3] = 0;
+            }
+          }
+        }
+
+        context.putImageData(frame, 0, 0);
+        cleanedFrameSrcCache.set(framePath, canvas.toDataURL("image/png"));
+        frameCleanupInProgress.delete(framePath);
+      };
+
+      sourceImage.onerror = () => {
+        frameCleanupInProgress.delete(framePath);
+      };
+
+      sourceImage.src = framePath;
+    }
+
+    function resolveFrameSrc(characterId, framePath) {
+      if (characterId !== "green-lantern") {
+        return framePath;
+      }
+
+      if (cleanedFrameSrcCache.has(framePath)) {
+        return cleanedFrameSrcCache.get(framePath);
+      }
+
+      requestGreenLanternFrameCleanup(framePath);
+      return framePath;
+    }
+
+    // Sprite animation manager
+    class SpriteAnimator {
+      constructor(characterId, sequences) {
+        this.characterId = characterId;
+        this.sequences = sequences;
+        this.currentSequence = null;
+        this.currentFrame = 0;
+        this.frameTime = 0;
+        this.frameDelay = 80; // ms per frame
+        this.isPlaying = false;
+        this.loop = true;
+        this.isIdle = false;
+        this.pingPong = false;
+        this.frameDirection = 1;
+      }
+
+      playSequence(sequenceName, loop = true, pingPong = false) {
+        if (this.currentSequence === sequenceName && this.isPlaying && this.pingPong === pingPong) {
+          return;
+        }
+        const seq = this.sequences[sequenceName];
+        if (!seq) {
+          console.warn(`Sequence ${sequenceName} not found for ${this.characterId}`);
+          return;
+        }
+        this.currentSequence = sequenceName;
+        this.currentFrame = 0;
+        this.frameTime = 0;
+        this.loop = loop;
+        this.isPlaying = true;
+        this.isIdle = false;
+        this.pingPong = pingPong;
+        this.frameDirection = 1;
+      }
+
+      playIdle() {
+        // Idle is a still pose: first frame only.
+        const seq = this.sequences["sequence-01"];
+        if (!seq || !seq.frames || seq.frames.length === 0) {
+          return;
+        }
+        this.currentSequence = "sequence-01";
+        this.currentFrame = 0;
+        this.frameTime = 0;
+        this.loop = false;
+        this.isPlaying = false;
+        this.isIdle = true;
+        this.pingPong = false;
+        this.frameDirection = 1;
+      }
+
+      update(deltaTime) {
+        if (!this.isPlaying || !this.currentSequence) {
+          return;
+        }
+        const seq = this.sequences[this.currentSequence];
+        if (!seq || this.isIdle) return;
+        this.frameTime += deltaTime;
+        if (this.frameTime >= this.frameDelay) {
+          this.frameTime -= this.frameDelay;
+          if (this.pingPong && seq.frames.length > 1) {
+            this.currentFrame += this.frameDirection;
+
+            if (this.currentFrame >= seq.frames.length) {
+              this.frameDirection = -1;
+              this.currentFrame = Math.max(0, seq.frames.length - 2);
+            } else if (this.currentFrame < 0) {
+              if (this.loop) {
+                this.frameDirection = 1;
+                this.currentFrame = Math.min(1, seq.frames.length - 1);
+              } else {
+                this.isPlaying = false;
+                this.currentFrame = 0;
+              }
+            }
+          } else {
+            this.currentFrame += 1;
+
+            if (this.currentFrame >= seq.frames.length) {
+              if (this.loop) {
+                this.currentFrame = 0;
+              } else {
+                this.isPlaying = false;
+                this.currentFrame = seq.frames.length - 1;
+              }
+            }
+          }
+        }
+      }
+
+      getCurrentFrame() {
+        if (!this.currentSequence) return null;
+        const seq = this.sequences[this.currentSequence];
+        if (!seq) return null;
+        return seq.frames[Math.min(this.currentFrame, seq.frames.length - 1)];
+      }
+
+      stop() {
+        this.isPlaying = false;
+      }
+    }
+
+    // Load all sprite sequences
+    async function loadSpriteSequences() {
+      const characters = ['flash', 'green-lantern', 'hawkgirl', 'killercroc', 'sinestro', 'doomsday'];
+      
+      for (const char of characters) {
+        try {
+          const response = await fetch(`images/sprites/${char}/frames/sequence-map.json?v=${Date.now()}`);
+          if (!response.ok) continue;
+          
+          const data = await response.json();
+          const sequences = {};
+          
+          data.sequences.forEach(seq => {
+            sequences[seq.sequence] = {
+              name: seq.sequence,
+              frames: seq.frames.map(f => ({
+                ...f,
+                path: `images/sprites/${char}/frames/${seq.sequence}/${f.file}`
+              }))
+            };
+          });
+
+          if (char === "green-lantern") {
+            sanitizeGreenLanternSequences(sequences);
+
+            const framePaths = new Set();
+            Object.values(sequences).forEach((seq) => {
+              (seq.frames || []).forEach((frame) => {
+                if (frame && frame.path) {
+                  framePaths.add(frame.path);
+                }
+              });
+            });
+            framePaths.forEach((framePath) => requestGreenLanternFrameCleanup(framePath));
+          }
+          
+          spriteSequences[char] = sequences;
+          spriteAnimators[char] = new SpriteAnimator(char, sequences);
+        } catch (error) {
+          console.warn(`Failed to load sequences for ${char}:`, error);
+        }
+      }
+      
+      console.log('Sprite sequences loaded:', Object.keys(spriteSequences));
+    }
+
+    // Animation to sequence mapping
+    const animationMap = {
+      'idle': 'sequence-01',
+      'run': 'sequence-01',
+      'punch': 'sequence-02',
+      'kick': 'sequence-03',
+      'jump': 'sequence-01',
+      'hit': 'sequence-01',
+      'victory': 'sequence-01'
+    };
+
+    // Render sprite frame to fighter element
+    function renderSpriteFrame(fighterEl, characterId, animator) {
+      const frame = animator.getCurrentFrame();
+      if (!frame) {
+        return;
+      }
+
+      let imgEl = fighterEl.querySelector('img.sprite-frame');
+      if (!imgEl) {
+        // Create sprite image element if it doesn't exist
+        imgEl = document.createElement('img');
+        imgEl.className = 'sprite-frame';
+        imgEl.alt = characterId;
+        fighterEl.appendChild(imgEl);
+      }
+
+      // Update image source.
+      const nextSrc = resolveFrameSrc(characterId, frame.path);
+      if (imgEl.src !== nextSrc) {
+        imgEl.src = nextSrc;
+      }
+    }
+
+    // Modify renderPositions to include sprite rendering
+    const originalRenderPositions = renderPositions;
+    renderPositions = function() {
+      originalRenderPositions();
+      
+      if (state.roundActive && state.selectedCharacter && spriteAnimators[state.selectedCharacter.id]) {
+        renderSpriteFrame(playerEl, state.selectedCharacter.id, spriteAnimators[state.selectedCharacter.id]);
+      }
+      
+      if (state.roundActive && state.enemyCharacter && spriteAnimators[state.enemyCharacter.id]) {
+        renderSpriteFrame(enemyEl, state.enemyCharacter.id, spriteAnimators[state.enemyCharacter.id]);
+      }
+    };
+
+    // Animation loop
+    let lastFrameTime = Date.now();
+    setInterval(() => {
+      const now = Date.now();
+      const deltaTime = now - lastFrameTime;
+      lastFrameTime = now;
+
+      for (const animator of Object.values(spriteAnimators)) {
+        animator.update(deltaTime);
+      }
+      
+      renderPositions();
+    }, 16); // ~60fps
+
+    // Hook into game actions
+    const originalPlayerAttack = playerAttack;
+    playerAttack = function(type) {
+      originalPlayerAttack.call(this, type);
+      if (state.selectedCharacter && spriteAnimators[state.selectedCharacter.id]) {
+        const animator = spriteAnimators[state.selectedCharacter.id];
+        const sequenceName = animationMap[type] || "sequence-01";
+        animator.playSequence(sequenceName, false);
+
+        // Return to static idle after the action sequence.
+        const seq = animator.sequences[sequenceName];
+        const frameCount = seq && seq.frames ? seq.frames.length : 1;
+        const animDuration = frameCount * animator.frameDelay + 100;
+        setTimeout(() => animator.playIdle(), animDuration);
+      }
+    };
+
+    const originalMovePlayer = movePlayer;
+    movePlayer = function(direction) {
+      originalMovePlayer.call(this, direction);
+      // Flash should loop run frames while movement keys are held.
+      if (state.selectedCharacter && state.selectedCharacter.id === "flash") {
+        updatePlayerRunState();
+        return;
+      }
+
+      // Other characters: brief movement animation, then return to idle.
+      if (state.selectedCharacter && direction !== 0 && spriteAnimators[state.selectedCharacter.id]) {
+        const animator = spriteAnimators[state.selectedCharacter.id];
+        animator.playSequence(animationMap.run || "sequence-01", false);
+        setTimeout(() => {
+          animator.playIdle();
+        }, 120);
+      }
+    };
+
+    const originalPerformPlayerJump = performPlayerJump;
+    performPlayerJump = function() {
+      originalPerformPlayerJump.call(this);
+      if (state.selectedCharacter && spriteAnimators[state.selectedCharacter.id]) {
+        const animator = spriteAnimators[state.selectedCharacter.id];
+        animator.playSequence(animationMap.jump || "sequence-01", false);
+        setTimeout(() => {
+          animator.playIdle();
+        }, 560);
+      }
+    };
+
+    // Load sprites on page load
+    loadSpriteSequences().then(() => {
+      console.log('Sprites ready for combat!');
+    });
+
     updateArenaMetrics();
     setMessage("Select your fighter to begin.");
   </script>

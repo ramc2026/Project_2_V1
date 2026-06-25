@@ -194,6 +194,28 @@
       white-space: nowrap;
     }
 
+    .versus-wrap {
+      display: grid;
+      justify-items: center;
+      align-self: center;
+      gap: 8px;
+    }
+
+    .opponent-status {
+      min-height: 22px;
+      padding: 4px 8px;
+      border: 1px solid rgba(155, 214, 255, 0.35);
+      border-radius: 999px;
+      background: rgba(8, 18, 32, 0.7);
+      color: #9fd8ff;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      white-space: nowrap;
+    }
+
     .quick-actions {
       position: absolute;
       left: 50%;
@@ -235,6 +257,12 @@
       border-color: rgba(243, 200, 71, 0.65);
       background: linear-gradient(180deg, rgba(83, 60, 19, 0.95), rgba(53, 37, 8, 0.98));
       color: #ffefbd;
+    }
+
+    .action.disabled {
+      pointer-events: none;
+      opacity: 0.58;
+      filter: grayscale(0.35);
     }
 
     .roster {
@@ -502,12 +530,12 @@
       </section>
       <div class="mode-pill">Simulation Select</div>
       <section class="fighter-stat" aria-label="Right profile">
-        <h2 style="text-align:right;">HAWKGIRL</h2>
+        <h2 id="rightFighterName" style="text-align:right;">HAWKGIRL</h2>
         <div class="stat-grid">
-          <div>LVL<strong>20</strong></div>
-          <div>STR<strong>1813</strong></div>
-          <div>ABL<strong>2753</strong></div>
-          <div>HP<strong>1474</strong></div>
+          <div>LVL<strong id="rightStatLvl">20</strong></div>
+          <div>STR<strong id="rightStatStr">1813</strong></div>
+          <div>ABL<strong id="rightStatAbl">2753</strong></div>
+          <div>HP<strong id="rightStatHp">1474</strong></div>
         </div>
       </section>
     </header>
@@ -517,14 +545,17 @@
         <figure class="portrait left">
           <img id="leftPortraitImage" src="images/thehaljordan.PNG" alt="Green Lantern portrait" />
         </figure>
-        <div class="versus">VS</div>
+        <div class="versus-wrap">
+          <div class="versus">VS</div>
+          <div class="opponent-status" id="opponentStatus" aria-live="polite">AI opponent ready</div>
+        </div>
         <figure class="portrait right">
-          <img src="images/thehawkgirl.PNG" alt="Featured right fighter" />
+          <img id="rightPortraitImage" src="images/thehawkgirl.PNG" alt="Hawkgirl portrait" />
         </figure>
       </div>
 
       <nav class="quick-actions" aria-label="Main page links">
-        <a class="action primary" href="fighter-game.html?v=cardscale2">Enter Fight Game</a>
+        <a class="action primary" id="enterFightLink" href="fighter-game.html?v=cardscale2">Enter Fight Game</a>
         <a class="action" href="simulation.html">Open Pump Simulation</a>
         <a class="action" href="oil-platform.html">Open Platform Simulation</a>
       </nav>
@@ -536,11 +567,11 @@
         <span>Home layout inspired by a versus select screen</span>
       </div>
       <div class="roster-grid">
-        <button class="roster-card active" type="button" data-name="Green Lantern" data-image="images/thehaljordan.PNG" data-lvl="20" data-str="2144" data-abl="2152" data-hp="1284" aria-pressed="true"><img src="images/thehaljordan.PNG" alt="Green Lantern card" /></button>
-        <button class="roster-card" type="button" data-name="Flash" data-image="images/theflash.PNG" data-lvl="20" data-str="2080" data-abl="2630" data-hp="1210" aria-pressed="false"><img src="images/theflash.PNG" alt="Flash card" /></button>
-        <button class="roster-card" type="button" data-name="Doomsday" data-image="images/thedoomsday.PNG" data-lvl="20" data-str="2775" data-abl="1665" data-hp="1690" aria-pressed="false"><img src="images/thedoomsday.PNG" alt="Doomsday card" /></button>
-        <button class="roster-card" type="button" data-name="Hawkgirl" data-image="images/thehawkgirl.PNG" data-lvl="20" data-str="1813" data-abl="2753" data-hp="1474" aria-pressed="false"><img src="images/thehawkgirl.PNG" alt="Hawkgirl card" /></button>
-        <button class="roster-card" type="button" data-name="Killer Croc" data-image="images/thekillercroc.PNG" data-lvl="20" data-str="2698" data-abl="1520" data-hp="1730" aria-pressed="false"><img src="images/thekillercroc.PNG" alt="Killer Croc card" /></button>
+        <button class="roster-card active" type="button" data-id="green-lantern" data-name="Green Lantern" data-image="images/thehaljordan.PNG" data-lvl="20" data-str="2144" data-abl="2152" data-hp="1284" aria-pressed="true"><img src="images/thehaljordan.PNG" alt="Green Lantern card" /></button>
+        <button class="roster-card" type="button" data-id="flash" data-name="Flash" data-image="images/theflash.PNG" data-lvl="20" data-str="2080" data-abl="2630" data-hp="1210" aria-pressed="false"><img src="images/theflash.PNG" alt="Flash card" /></button>
+        <button class="roster-card" type="button" data-id="doomsday" data-name="Doomsday" data-image="images/thedoomsday.PNG" data-lvl="20" data-str="2775" data-abl="1665" data-hp="1690" aria-pressed="false"><img src="images/thedoomsday.PNG" alt="Doomsday card" /></button>
+        <button class="roster-card" type="button" data-id="hawkgirl" data-name="Hawkgirl" data-image="images/thehawkgirl.PNG" data-lvl="20" data-str="1813" data-abl="2753" data-hp="1474" aria-pressed="false"><img src="images/thehawkgirl.PNG" alt="Hawkgirl card" /></button>
+        <button class="roster-card" type="button" data-id="killercroc" data-name="Killer Croc" data-image="images/thekillercroc.PNG" data-lvl="20" data-str="2698" data-abl="1520" data-hp="1730" aria-pressed="false"><img src="images/thekillercroc.PNG" alt="Killer Croc card" /></button>
       </div>
     </section>
   </main>
@@ -552,6 +583,160 @@
     const leftStatStr = document.getElementById('leftStatStr');
     const leftStatAbl = document.getElementById('leftStatAbl');
     const leftStatHp = document.getElementById('leftStatHp');
+    const rightName = document.getElementById('rightFighterName');
+    const rightPortraitImage = document.getElementById('rightPortraitImage');
+    const rightStatLvl = document.getElementById('rightStatLvl');
+    const rightStatStr = document.getElementById('rightStatStr');
+    const rightStatAbl = document.getElementById('rightStatAbl');
+    const rightStatHp = document.getElementById('rightStatHp');
+    const opponentStatus = document.getElementById('opponentStatus');
+    const enterFightLink = document.getElementById('enterFightLink');
+
+    const OPPONENT_SELECT_DURATION_MS = 5000;
+    const OPPONENT_SHUFFLE_STEP_MS = 180;
+
+    let opponentCountdownInterval = null;
+    let opponentShuffleInterval = null;
+    let opponentFinalizeTimeout = null;
+    let latestOpponentPreview = null;
+    let selectedPlayerCard = null;
+    let finalizedOpponentCard = null;
+
+    function applyFighterToPanel(card, side) {
+      if (!card) {
+        return;
+      }
+
+      const name = card.dataset.name || 'Fighter';
+      const image = card.dataset.image || '';
+      const lvl = card.dataset.lvl || '20';
+      const str = card.dataset.str || '0';
+      const abl = card.dataset.abl || '0';
+      const hp = card.dataset.hp || '0';
+
+      if (side === 'left') {
+        leftName.textContent = name.toUpperCase();
+        leftPortraitImage.src = image || leftPortraitImage.src;
+        leftPortraitImage.alt = `${name} portrait`;
+        leftStatLvl.textContent = lvl;
+        leftStatStr.textContent = str;
+        leftStatAbl.textContent = abl;
+        leftStatHp.textContent = hp;
+
+        leftPortraitImage.classList.remove('swap');
+        void leftPortraitImage.offsetWidth;
+        leftPortraitImage.classList.add('swap');
+        return;
+      }
+
+      rightName.textContent = name.toUpperCase();
+      rightPortraitImage.src = image || rightPortraitImage.src;
+      rightPortraitImage.alt = `${name} portrait`;
+      rightStatLvl.textContent = lvl;
+      rightStatStr.textContent = str;
+      rightStatAbl.textContent = abl;
+      rightStatHp.textContent = hp;
+
+      rightPortraitImage.classList.remove('swap');
+      void rightPortraitImage.offsetWidth;
+      rightPortraitImage.classList.add('swap');
+    }
+
+    function chooseRandomOpponent(selectedCard) {
+      const pool = Array.from(rosterCards);
+      if (!pool.length) {
+        return null;
+      }
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function setOpponentStatus(text) {
+      if (!opponentStatus) {
+        return;
+      }
+      opponentStatus.textContent = text;
+    }
+
+    function updateFightLink() {
+      if (!enterFightLink) {
+        return;
+      }
+
+      if (!selectedPlayerCard || !finalizedOpponentCard) {
+        enterFightLink.classList.add('disabled');
+        enterFightLink.href = 'fighter-game.html?v=cardscale2';
+        return;
+      }
+
+      const playerId = selectedPlayerCard.dataset.id;
+      const opponentId = finalizedOpponentCard.dataset.id;
+      if (!playerId || !opponentId) {
+        enterFightLink.classList.add('disabled');
+        enterFightLink.href = 'fighter-game.html?v=cardscale2';
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.set('v', 'cardscale2');
+      params.set('player', playerId);
+      params.set('opponent', opponentId);
+      enterFightLink.href = `fighter-game.html?${params.toString()}`;
+      enterFightLink.classList.remove('disabled');
+    }
+
+    function clearOpponentPickTimers() {
+      if (opponentCountdownInterval) {
+        clearInterval(opponentCountdownInterval);
+        opponentCountdownInterval = null;
+      }
+      if (opponentShuffleInterval) {
+        clearInterval(opponentShuffleInterval);
+        opponentShuffleInterval = null;
+      }
+      if (opponentFinalizeTimeout) {
+        clearTimeout(opponentFinalizeTimeout);
+        opponentFinalizeTimeout = null;
+      }
+    }
+
+    function startRandomOpponentPick(selectedCard) {
+      clearOpponentPickTimers();
+
+      const pool = Array.from(rosterCards);
+      if (!pool.length) {
+        setOpponentStatus('No opponent available');
+        return;
+      }
+
+      const pickFromPool = () => pool[Math.floor(Math.random() * pool.length)];
+      latestOpponentPreview = pickFromPool();
+      applyFighterToPanel(latestOpponentPreview, 'right');
+
+      let remainingSeconds = Math.ceil(OPPONENT_SELECT_DURATION_MS / 1000);
+      setOpponentStatus(`AI selecting: ${remainingSeconds}s`);
+      finalizedOpponentCard = null;
+      updateFightLink();
+
+      opponentShuffleInterval = setInterval(() => {
+        latestOpponentPreview = pickFromPool();
+        applyFighterToPanel(latestOpponentPreview, 'right');
+      }, OPPONENT_SHUFFLE_STEP_MS);
+
+      opponentCountdownInterval = setInterval(() => {
+        remainingSeconds = Math.max(0, remainingSeconds - 1);
+        setOpponentStatus(`AI selecting: ${remainingSeconds}s`);
+      }, 1000);
+
+      opponentFinalizeTimeout = setTimeout(() => {
+        clearOpponentPickTimers();
+        const finalOpponent = latestOpponentPreview || pickFromPool();
+        applyFighterToPanel(finalOpponent, 'right');
+        finalizedOpponentCard = finalOpponent;
+        const finalName = (finalOpponent.dataset.name || 'Opponent').toUpperCase();
+        setOpponentStatus(`AI opponent ready: ${finalName}`);
+        updateFightLink();
+      }, OPPONENT_SELECT_DURATION_MS);
+    }
 
     function selectCard(card) {
       rosterCards.forEach((entry) => {
@@ -560,23 +745,28 @@
         entry.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
 
-      const name = card.dataset.name || 'Fighter';
-      leftName.textContent = name.toUpperCase();
-      leftPortraitImage.src = card.dataset.image || leftPortraitImage.src;
-      leftPortraitImage.alt = `${name} portrait`;
-      leftStatLvl.textContent = card.dataset.lvl || leftStatLvl.textContent;
-      leftStatStr.textContent = card.dataset.str || leftStatStr.textContent;
-      leftStatAbl.textContent = card.dataset.abl || leftStatAbl.textContent;
-      leftStatHp.textContent = card.dataset.hp || leftStatHp.textContent;
-
-      leftPortraitImage.classList.remove('swap');
-      void leftPortraitImage.offsetWidth;
-      leftPortraitImage.classList.add('swap');
+      selectedPlayerCard = card;
+      applyFighterToPanel(card, 'left');
+      startRandomOpponentPick(card);
     }
 
     rosterCards.forEach((card) => {
       card.addEventListener('click', () => selectCard(card));
     });
+
+    const defaultCard = rosterCards.find((card) => card.classList.contains('active')) || rosterCards[0];
+    if (defaultCard) {
+      selectCard(defaultCard);
+    }
+
+    if (enterFightLink) {
+      enterFightLink.addEventListener('click', (event) => {
+        if (!selectedPlayerCard || !finalizedOpponentCard) {
+          event.preventDefault();
+          setOpponentStatus('Wait for AI opponent lock...');
+        }
+      });
+    }
   </script>
 </body>
 </html>

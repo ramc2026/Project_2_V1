@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Command Select Hub</title>
+  <title>Selection of Fight</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg-void: #060b14;
@@ -28,12 +28,11 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Rajdhani", "Trebuchet MS", sans-serif;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 18% 14%, rgba(72, 165, 255, 0.27), transparent 30%),
-        radial-gradient(circle at 82% 24%, rgba(216, 64, 90, 0.23), transparent 30%),
-        linear-gradient(180deg, #0a1220 0%, #0c1a2d 52%, #08111d 100%);
+        linear-gradient(180deg, rgba(12, 10, 16, 0.72), rgba(12, 6, 10, 0.86)),
+        url("images/redsunprison.PNG?v=2") center center / cover no-repeat fixed;
       overflow-x: hidden;
     }
 
@@ -43,8 +42,10 @@
       inset: 0;
       pointer-events: none;
       background-image:
-        linear-gradient(rgba(159, 211, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(159, 211, 255, 0.05) 1px, transparent 1px);
+        radial-gradient(circle at 18% 14%, rgba(255, 122, 122, 0.26), transparent 32%),
+        radial-gradient(circle at 82% 22%, rgba(236, 198, 110, 0.2), transparent 34%),
+        linear-gradient(rgba(255, 180, 180, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 180, 180, 0.04) 1px, transparent 1px);
       background-size: 36px 36px;
       mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 80%);
       z-index: -1;
@@ -58,6 +59,92 @@
       grid-template-rows: auto 1fr auto;
       gap: 14px;
       min-height: 100vh;
+      opacity: 0;
+      transform: translateY(14px) scale(0.995);
+      pointer-events: none;
+      transition: opacity 300ms ease, transform 300ms ease;
+    }
+
+    body.lobby-open .shell {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .home-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(14, 10, 12, 0.72), rgba(8, 6, 7, 0.86)),
+        url("images/redsunprison.PNG?v=2") center center / cover no-repeat;
+      transition: opacity 280ms ease;
+    }
+
+    .home-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .home-panel {
+      width: min(760px, 100%);
+      border: 2px solid rgba(255, 221, 184, 0.6);
+      background: linear-gradient(180deg, rgba(31, 14, 16, 0.86), rgba(14, 9, 10, 0.9));
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 213, 177, 0.22);
+      border-radius: 12px;
+      padding: clamp(18px, 4vw, 34px);
+      text-align: center;
+    }
+
+    .home-box {
+      border: 2px solid rgba(255, 222, 171, 0.75);
+      background: linear-gradient(180deg, rgba(40, 16, 16, 0.82), rgba(20, 9, 9, 0.9));
+      color: #ffe6c0;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .logo-box {
+      width: min(640px, 100%);
+      min-height: clamp(110px, 20vw, 190px);
+      font-size: clamp(1.2rem, 4vw, 2.4rem);
+      text-shadow: 0 0 16px rgba(243, 149, 114, 0.45);
+    }
+
+    .play-box {
+      margin-top: 14px;
+      width: min(260px, 70%);
+      min-height: 74px;
+      padding: 8px;
+    }
+
+    .enter-lobby-btn {
+      border: 2px solid rgba(255, 222, 171, 0.85);
+      background: linear-gradient(180deg, rgba(126, 45, 27, 0.94), rgba(72, 23, 12, 0.98));
+      color: #ffefcf;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.84rem;
+      cursor: pointer;
+      transition: transform 140ms ease, filter 140ms ease;
+    }
+
+    .enter-lobby-btn:hover,
+    .enter-lobby-btn:focus-visible {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
     }
 
     .top-hud {
@@ -169,15 +256,38 @@
     }
 
     .portrait img {
+      --portrait-scale-x: 1;
+      --portrait-scale-y: 1;
       width: min(94%, 460px);
       max-height: 100%;
       object-fit: contain;
       object-position: center bottom;
       filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.5));
+      transform-origin: center bottom;
+      transform: scale(var(--portrait-scale-x), var(--portrait-scale-y));
     }
 
     .portrait.right img {
-      transform: scaleX(-1);
+      transform: scaleX(-1) scale(var(--portrait-scale-x), var(--portrait-scale-y));
+    }
+
+    #leftPortraitImage[src*="theflash"],
+    #rightPortraitImage[src*="theflash"] {
+      --portrait-scale-x: 1.04;
+      --portrait-scale-y: 1.34;
+    }
+
+    #leftPortraitImage[src*="thedoomsday"],
+    #rightPortraitImage[src*="thedoomsday"] {
+      --portrait-scale-x: 1.05;
+      --portrait-scale-y: 1.32;
+    }
+
+    #leftPortraitImage[src*="thekillercroc"],
+    #rightPortraitImage[src*="thekillercroc"] {
+      --portrait-scale-x: 0.98;
+      --portrait-scale-y: 1.18;
+      object-position: 50% bottom;
     }
 
     .versus {
@@ -293,15 +403,15 @@
 
     .roster-grid {
       display: grid;
-      grid-template-columns: repeat(10, minmax(0, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
     }
 
     .roster-card {
       appearance: none;
       border: 2px solid rgba(175, 215, 255, 0.26);
       background: linear-gradient(180deg, rgba(33, 59, 89, 0.55), rgba(16, 30, 47, 0.72));
-      aspect-ratio: 3 / 4;
+      aspect-ratio: 3 / 5;
       overflow: hidden;
       display: grid;
       place-items: end center;
@@ -318,8 +428,9 @@
       width: 100%;
       height: calc(100% - 20px);
       object-fit: cover;
-      object-position: center top;
+      object-position: center bottom;
       opacity: 0.95;
+      transform-origin: center bottom;
     }
 
     .roster-card[data-name="Flash"] img,
@@ -327,12 +438,17 @@
     .roster-card[data-name="Killer Croc"] img {
       object-fit: cover;
       object-position: center center;
-      transform: scale(1.14);
+      transform: scale(1.04, 1.32);
       transform-origin: center center;
     }
 
+    .roster-card[data-name="Doomsday"] img {
+      transform: scale(1.03, 1.3);
+    }
+
     .roster-card[data-name="Killer Croc"] img {
-      transform: scale(1.22);
+      transform: scale(0.98, 1.16);
+      object-position: 50% center;
     }
 
     .roster-card::after {
@@ -517,6 +633,15 @@
   </style>
 </head>
 <body>
+  <section class="home-screen" id="homeScreen" aria-label="Home start screen">
+    <div class="home-panel">
+      <div class="home-box logo-box" aria-label="Game logo">Injustice: Gods Among Us (Bootleg)</div>
+      <div class="home-box play-box" aria-label="Play placeholder">
+        <button class="enter-lobby-btn" id="enterLobbyBtn" type="button">Play</button>
+      </div>
+    </div>
+  </section>
+
   <main class="shell" aria-label="Command select home page">
     <header class="top-hud">
       <section class="fighter-stat" aria-label="Left profile">
@@ -528,7 +653,7 @@
           <div>HP<strong id="leftStatHp">1284</strong></div>
         </div>
       </section>
-      <div class="mode-pill">Simulation Select</div>
+      <div class="mode-pill">Selection of Fight</div>
       <section class="fighter-stat" aria-label="Right profile">
         <h2 id="rightFighterName" style="text-align:right;">HAWKGIRL</h2>
         <div class="stat-grid">
@@ -556,22 +681,19 @@
 
       <nav class="quick-actions" aria-label="Main page links">
         <a class="action primary" id="enterFightLink" href="fighter-game.html?v=cardscale2">Enter Fight Game</a>
-        <a class="action" href="simulation.html">Open Pump Simulation</a>
-        <a class="action" href="oil-platform.html">Open Platform Simulation</a>
       </nav>
     </section>
 
     <section class="roster" aria-label="Roster strip preview">
       <div class="roster-head">
-        <strong>Character Roster Style</strong>
-        <span>Home layout inspired by a versus select screen</span>
+        <strong>Roster</strong>
       </div>
       <div class="roster-grid">
-        <button class="roster-card active" type="button" data-id="green-lantern" data-name="Green Lantern" data-image="images/thehaljordan.PNG" data-lvl="20" data-str="2144" data-abl="2152" data-hp="1284" aria-pressed="true"><img src="images/thehaljordan.PNG" alt="Green Lantern card" /></button>
-        <button class="roster-card" type="button" data-id="flash" data-name="Flash" data-image="images/theflash.PNG" data-lvl="20" data-str="2080" data-abl="2630" data-hp="1210" aria-pressed="false"><img src="images/theflash.PNG" alt="Flash card" /></button>
-        <button class="roster-card" type="button" data-id="doomsday" data-name="Doomsday" data-image="images/thedoomsday.PNG" data-lvl="20" data-str="2775" data-abl="1665" data-hp="1690" aria-pressed="false"><img src="images/thedoomsday.PNG" alt="Doomsday card" /></button>
-        <button class="roster-card" type="button" data-id="hawkgirl" data-name="Hawkgirl" data-image="images/thehawkgirl.PNG" data-lvl="20" data-str="1813" data-abl="2753" data-hp="1474" aria-pressed="false"><img src="images/thehawkgirl.PNG" alt="Hawkgirl card" /></button>
-        <button class="roster-card" type="button" data-id="killercroc" data-name="Killer Croc" data-image="images/thekillercroc.PNG" data-lvl="20" data-str="2698" data-abl="1520" data-hp="1730" aria-pressed="false"><img src="images/thekillercroc.PNG" alt="Killer Croc card" /></button>
+        <button class="roster-card active" type="button" data-id="green-lantern" data-name="Green Lantern" data-image="images/thehaljordan.PNG" data-lvl="20" data-str="2280" data-abl="2210" data-hp="1450" aria-pressed="true"><img src="images/thehaljordan.PNG" alt="Green Lantern card" /></button>
+        <button class="roster-card" type="button" data-id="flash" data-name="Flash" data-image="images/theflash.PNG" data-lvl="20" data-str="2235" data-abl="2460" data-hp="1420" aria-pressed="false"><img src="images/theflash.PNG" alt="Flash card" /></button>
+        <button class="roster-card" type="button" data-id="doomsday" data-name="Doomsday" data-image="images/thedoomsday.PNG" data-lvl="20" data-str="2450" data-abl="2050" data-hp="1540" aria-pressed="false"><img src="images/thedoomsday.PNG" alt="Doomsday card" /></button>
+        <button class="roster-card" type="button" data-id="hawkgirl" data-name="Hawkgirl" data-image="images/thehawkgirl.PNG" data-lvl="20" data-str="2180" data-abl="2400" data-hp="1465" aria-pressed="false"><img src="images/thehawkgirl.PNG" alt="Hawkgirl card" /></button>
+        <button class="roster-card" type="button" data-id="killercroc" data-name="Killer Croc" data-image="images/thekillercroc.PNG" data-lvl="20" data-str="2410" data-abl="1980" data-hp="1560" aria-pressed="false"><img src="images/thekillercroc.PNG" alt="Killer Croc card" /></button>
       </div>
     </section>
   </main>
@@ -591,6 +713,8 @@
     const rightStatHp = document.getElementById('rightStatHp');
     const opponentStatus = document.getElementById('opponentStatus');
     const enterFightLink = document.getElementById('enterFightLink');
+    const homeScreen = document.getElementById('homeScreen');
+    const enterLobbyBtn = document.getElementById('enterLobbyBtn');
 
     const OPPONENT_SELECT_DURATION_MS = 5000;
     const OPPONENT_SHUFFLE_STEP_MS = 180;
@@ -601,6 +725,22 @@
     let latestOpponentPreview = null;
     let selectedPlayerCard = null;
     let finalizedOpponentCard = null;
+
+    function openLobby() {
+      document.body.classList.add('lobby-open');
+      if (homeScreen) {
+        homeScreen.classList.add('hidden');
+      }
+    }
+
+    if (enterLobbyBtn) {
+      enterLobbyBtn.addEventListener('click', openLobby);
+    }
+
+    const startView = new URLSearchParams(window.location.search).get('view');
+    if (startView === 'lobby' || window.location.hash === '#lobby') {
+      openLobby();
+    }
 
     function applyFighterToPanel(card, side) {
       if (!card) {

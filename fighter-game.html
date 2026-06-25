@@ -6,7 +6,7 @@
   <title>Rig Arena - Fight Night</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg-deep: #0b0f1b;
@@ -34,7 +34,7 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Rajdhani", "Trebuchet MS", sans-serif;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
       color: var(--text);
       background:
         radial-gradient(circle at 16% 8%, rgba(255, 209, 102, 0.24), transparent 20%),
@@ -109,7 +109,7 @@
     .select-title {
       margin: 0;
       text-align: center;
-      font-family: "Bangers", "Impact", sans-serif;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
       font-size: clamp(1.5rem, 4vw, 2.4rem);
       letter-spacing: 0.1em;
       color: #ffe8ab;
@@ -242,7 +242,7 @@
 
     .card-title {
       margin: 0;
-      font-family: "Bangers", "Impact", sans-serif;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
       letter-spacing: 0.06em;
       font-size: 1.26rem;
     }
@@ -273,6 +273,8 @@
       border-radius: 8px;
       font-size: 1rem;
       padding: 10px 14px;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
+      letter-spacing: 0.04em;
       color: #fff;
       background: linear-gradient(180deg, #e1643f, #bb3c2a);
       font-weight: 700;
@@ -311,6 +313,8 @@
       border-radius: 10px;
       padding: 12px 8px;
       background: linear-gradient(180deg, rgba(44, 73, 106, 0.3), rgba(16, 28, 45, 0.45));
+      font-family: "Orbitron", "Segoe UI", sans-serif;
+      letter-spacing: 0.03em;
       color: #c0d9ff;
       cursor: pointer;
       transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
@@ -349,7 +353,7 @@
 
     .fighter-name {
       margin: 0;
-      font-family: "Bangers", "Impact", sans-serif;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
       letter-spacing: 0.08em;
       font-size: clamp(1rem, 2.8vw, 1.4rem);
       text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
@@ -388,7 +392,7 @@
 
     .timer {
       margin: 0;
-      font-family: "Bangers", "Impact", sans-serif;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
       font-size: clamp(1.5rem, 3.2vw, 2rem);
       color: var(--neon-2);
     }
@@ -468,7 +472,7 @@
       top: 18px;
       left: 50%;
       transform: translateX(-50%);
-      font-family: "Bangers", "Impact", sans-serif;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
       letter-spacing: 0.12em;
       color: #ffe8ab;
       font-size: clamp(1.1rem, 3vw, 1.9rem);
@@ -761,7 +765,7 @@
     .message {
       margin: 0;
       text-align: center;
-      font-family: "Bangers", "Impact", sans-serif;
+      font-family: "Orbitron", "Segoe UI", sans-serif;
       letter-spacing: 0.08em;
       color: #ffe8ab;
       font-size: clamp(1rem, 2.5vw, 1.4rem);
@@ -776,7 +780,7 @@
       padding: 0 12px 10px;
       text-align: center;
       font-size: 0.98rem;
-      color: #bcecff;
+      color: #ffffff;
       letter-spacing: 0.02em;
       opacity: 0;
       transform: translateY(3px);
@@ -785,6 +789,32 @@
 
     .winner-dialogue.show {
       opacity: 1;
+      transform: translateY(0);
+    }
+
+    .intro-skip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      margin: 0 auto 8px;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      border-radius: 999px;
+      background: rgba(10, 18, 34, 0.72);
+      color: #d9f1ff;
+      font-size: 0.85rem;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(3px);
+      transition: opacity 0.16s ease, transform 0.16s ease;
+    }
+
+    .intro-skip.show {
+      opacity: 1;
+      pointer-events: auto;
       transform: translateY(0);
     }
 
@@ -970,7 +1000,7 @@
         </button>
       </div>
       <div class="venue-select">
-        <p class="venue-label">Choose Your Venue</p>
+        <p class="venue-label">Select Venue</p>
         <div class="venue-grid">
           <button class="venue-option active" data-venue="rig" type="button">Memorial Station</button>
           <button class="venue-option" data-venue="street" type="button">Fortress of Solitude</button>
@@ -1034,12 +1064,13 @@
     </section>
 
     <p class="message" id="message" aria-live="polite">Fight! Use movement and combo attacks.</p>
+    <button class="intro-skip" id="introSkipBtn" type="button" aria-label="Skip intro dialogue">➤</button>
     <p class="winner-dialogue" id="winnerDialogue" aria-live="polite"></p>
 
     <section class="controls">
       <p class="keys">
         <strong>Desktop Controls:</strong>
-        A/D move, S run (Killer Croc: sequence-02), W jump, F punch, G kick
+        A/D move, S run, W jump, F punch, G kick
       </p>
       <div class="action-row">
         <button id="resetBtn" type="button">Reset Round</button>
@@ -1067,6 +1098,7 @@
     const playerNameEl = document.getElementById("playerName");
     const enemyNameEl = document.getElementById("enemyName");
     const messageEl = document.getElementById("message");
+    const introSkipBtn = document.getElementById("introSkipBtn");
     const winnerDialogueEl = document.getElementById("winnerDialogue");
     const impactEl = document.getElementById("impact");
     const resetBtn = document.getElementById("resetBtn");
@@ -1086,9 +1118,9 @@
         name: "Flash",
         bodyColor: "#cc0000",
         limbColor: "#990000",
-        punchBonus: 0,
-        kickBonus: 0,
-        moveBonus: 8
+        punchBonus: 2,
+        kickBonus: 2,
+        moveBonus: 7
       },
       {
         id: "green-lantern",
@@ -1096,15 +1128,15 @@
         bodyColor: "#00a86b",
         limbColor: "#004d2d",
         punchBonus: 3,
-        kickBonus: 4,
-        moveBonus: 1
+        kickBonus: 3,
+        moveBonus: 2
       },
       {
         id: "hawkgirl",
         name: "Hawkgirl",
         bodyColor: "#c69a42",
         limbColor: "#7a5b21",
-        punchBonus: 2,
+        punchBonus: 3,
         kickBonus: 3,
         moveBonus: 4
       },
@@ -1113,18 +1145,18 @@
         name: "Killer Croc",
         bodyColor: "#3f6b42",
         limbColor: "#2c4b2f",
-        punchBonus: 5,
-        kickBonus: 5,
-        moveBonus: -2
+        punchBonus: 4,
+        kickBonus: 4,
+        moveBonus: -1
       },
       {
         id: "doomsday",
         name: "Doomsday",
         bodyColor: "#7f7f7f",
         limbColor: "#4c4c4c",
-        punchBonus: 6,
-        kickBonus: 6,
-        moveBonus: -3
+        punchBonus: 4,
+        kickBonus: 5,
+        moveBonus: -2
       }
     ];
 
@@ -1135,7 +1167,10 @@
       baseMoveStep: 26,
       moveStep: 26,
       runMultiplier: 1.5,
+      playerFacingScaleX: 1,
+      enemyFacingScaleX: -1,
       jumpLock: false,
+      enemyJumpLock: false,
       playerHealth: 100,
       enemyHealth: 100,
       selectedCharacterId: "",
@@ -1166,10 +1201,16 @@
       introTimers: []
     };
 
+    const INTRO_WORD_DELAY_MS = 220;
+    const INTRO_LINE_PAUSE_MS = 620;
+
     const attackConfig = {
       punch: { damage: 4, range: 105, cooldown: 360, className: "punching" },
       kick: { damage: 6, range: 120, cooldown: 560, className: "kicking" }
     };
+    const GREEN_LANTERN_LASER_RANGE = 330;
+    const ENEMY_AI_TICK_MS = 290;
+    const ENEMY_JUMP_TIME_MS = 560;
 
     const winnerDialoguesByCharacter = {
       flash: [
@@ -1197,6 +1238,44 @@
         "You cannot stop what I am.",
         "Only ruin follows me."
       ]
+    };
+
+    const winnerDialoguesByMatchup = {
+      flash: {
+        flash: ["Fastest alive. Even against myself."],
+        "green-lantern": ["Your constructs are still too slow for me."],
+        hawkgirl: ["Your wings cannot outpace me."],
+        killercroc: ["Big target. Easy finish."],
+        doomsday: ["You hit hard. I hit first."]
+      },
+      "green-lantern": {
+        flash: ["Willpower beats speed when it matters."],
+        "green-lantern": ["My will burns brighter this round."],
+        hawkgirl: ["Nth metal or not, my light holds."],
+        killercroc: ["Even monsters kneel to the ring."],
+        doomsday: ["Your rage breaks against my will."]
+      },
+      hawkgirl: {
+        flash: ["You cannot run from a perfect strike."],
+        "green-lantern": ["Your ring could not block every blow."],
+        hawkgirl: ["Only one warrior rules this sky."],
+        killercroc: ["Predator grounded."],
+        doomsday: ["Brute force still loses to skill."]
+      },
+      killercroc: {
+        flash: ["Speed means nothing in my jaws."],
+        "green-lantern": ["Your light tastes weak."],
+        hawkgirl: ["Wings clipped."],
+        killercroc: ["Only one alpha survives."],
+        doomsday: ["Monster to monster: I take this one."]
+      },
+      doomsday: {
+        flash: ["Run. It changes nothing."],
+        "green-lantern": ["Your will is broken."],
+        hawkgirl: ["Sky falls. You fall with it."],
+        killercroc: ["Predator erased."],
+        doomsday: ["Annihilation accepts only one winner."]
+      }
     };
 
     const openingTauntsByCharacter = {
@@ -1278,106 +1357,142 @@
       ]
     };
 
+    const openingExtensionsByCharacter = {
+      flash: [
+        "I hit before most people finish a sentence.",
+        "By the time you react, I have already moved twice."
+      ],
+      "green-lantern": [
+        "My focus does not crack under pressure.",
+        "I have ended fights like this with discipline and control."
+      ],
+      hawkgirl: [
+        "I do not bluff. I commit and I finish.",
+        "Every strike is precise, and every mistake gets punished."
+      ],
+      killercroc: [
+        "I thrive in chaos, and this ring is my swamp now.",
+        "The longer this goes, the worse it gets for you."
+      ],
+      doomsday: [
+        "I exist to break everything in front of me.",
+        "This arena only has room for one survivor."
+      ]
+    };
+
     const openingTauntsByMatchup = {
       flash: {
-        "green-lantern": [
-          "Ring tricks won't help when you cannot even track me.",
-          "Let's see if your will can keep up with my speed."
-        ],
-        killercroc: [
-          "You are big, Croc. Big targets are easy.",
-          "Try snapping at lightning, Croc."
-        ],
-        doomsday: [
-          "You hit hard, but only if you land one.",
-          "You cannot smash what you cannot catch."
-        ]
+        flash: ["Only one speedster leaves this ring standing."],
+        "green-lantern": ["Ring tricks will not save you from this pace."],
+        hawkgirl: ["Wings are nice, but they are still slower than lightning."],
+        killercroc: ["Big target, slow reflexes, quick knockout."],
+        doomsday: ["You cannot smash what you cannot even touch."]
       },
       "green-lantern": {
-        flash: [
-          "Speed means nothing without control, Flash.",
-          "I can cage even lightning."
-        ],
-        doomsday: [
-          "I have contained monsters worse than you.",
-          "Your rage ends in a construct prison."
-        ]
+        flash: ["Willpower beats speed every time, Flash."],
+        "green-lantern": ["Another Lantern duel, another test of will."],
+        hawkgirl: ["Your mace meets emerald force today."],
+        killercroc: ["Your rage ends in a hard-light cage, Croc."],
+        doomsday: ["I have contained monsters worse than you."]
       },
       hawkgirl: {
-        killercroc: [
-          "Stay in the sewer, beast.",
-          "I have hunted creatures fiercer than you."
-        ]
+        flash: ["Run if you want, I strike from above."],
+        "green-lantern": ["Your ring will not block every swing."],
+        hawkgirl: ["Only one warrior earns the sky tonight."],
+        killercroc: ["Stay in the sewer, beast."],
+        doomsday: ["I have felled giants before, and you are next."]
       },
       killercroc: {
-        flash: [
-          "You can run, but I only need one bite.",
-          "Fast food, Flash."
-        ],
-        "green-lantern": [
-          "That ring won't stop these jaws.",
-          "I break constructs and bones."
+        flash: ["Run all you want, I only need one grab."],
+        "green-lantern": ["That ring will crack in my jaws."],
+        hawkgirl: ["Bird wings make easy prey."],
+        killercroc: ["Only the meanest Croc walks out alive."],
+        doomsday: ["Big monster, bigger appetite."
         ]
       },
       doomsday: {
-        "green-lantern": [
-          "Your ring will crack like the rest.",
-          "Willpower breaks under extinction."
-        ],
-        flash: [
-          "Run all you want. You still fall.",
-          "I will catch you eventually."
-        ]
+        flash: ["Run all you want, speed ends in ruin."],
+        "green-lantern": ["Your will shatters like all resistance."],
+        hawkgirl: ["Fly higher. I will still drag you down."],
+        killercroc: ["Predator or prey, all things break."],
+        doomsday: ["Only destruction can face destruction."]
       }
     };
 
     const openingComebacksByMatchup = {
+      flash: {
+        flash: ["Then race me for it."],
+        "green-lantern": ["Your constructs still need time. I don't."],
+        hawkgirl: ["Good. I like a challenge with altitude."],
+        killercroc: ["Try biting the wind, Croc."],
+        doomsday: ["By the time you roar, I am already gone."]
+      },
       "green-lantern": {
-        flash: [
-          "I have captured faster threats than you.",
-          "Your speed will not outrun my will."
-        ]
+        flash: ["I have captured faster threats than you."],
+        "green-lantern": ["Then let our will decide it."],
+        hawkgirl: ["I have held the line against warriors stronger than you."],
+        killercroc: ["Your rage is exactly what makes you predictable."],
+        doomsday: ["No cage holds you forever, but this fight ends now."]
+      },
+      hawkgirl: {
+        flash: ["Speed means little if I read your pattern."],
+        "green-lantern": ["Then test that ring against Nth metal."],
+        hawkgirl: ["Good. No excuses when this is over."],
+        killercroc: ["Come get me then, beast."],
+        doomsday: ["I have survived worse than your fury."]
       },
       killercroc: {
-        flash: [
-          "Keep talking, little man. I am still hungry.",
-          "I do not need speed. I need one grab."
-        ]
-      },
-      flash: {
-        doomsday: [
-          "You are still swinging at afterimages.",
-          "By the time you roar, I am already gone."
-        ],
-        killercroc: [
-          "You are too slow and too loud, Croc.",
-          "Try biting the wind."
-        ]
+        flash: ["Keep talking, little man. I am still hungry."],
+        "green-lantern": ["Your light will go out fast."],
+        hawkgirl: ["Claws beat feathers."],
+        killercroc: ["About time I met a real fight."],
+        doomsday: ["Then let's see whose bones crack first."]
       },
       doomsday: {
-        "green-lantern": [
-          "No cage holds me.",
-          "You cannot contain annihilation."
+        flash: ["Afterimages still bleed."],
+        "green-lantern": ["No cage holds me."],
+        hawkgirl: ["Hope breaks like everything else."],
+        killercroc: ["Predator. Prey. Both end the same."],
+        doomsday: ["Then only one ruin remains."
         ]
       }
     };
 
     const openingFinalByMatchup = {
       flash: {
-        "green-lantern": [
-          "Show me that ring can handle this pace.",
-          "Let's test your will against velocity."
-        ],
-        killercroc: [
-          "Heads up, Croc. Here comes the storm.",
-          "Try not to trip over your own tail."
-        ]
+        flash: ["No more words. Race starts now."],
+        "green-lantern": ["Let's test your will against velocity."],
+        hawkgirl: ["Try to track this angle of attack."],
+        killercroc: ["Heads up, Croc. Here comes the storm."],
+        doomsday: ["Now move, before I lap you."]
       },
       "green-lantern": {
-        flash: [
-          "Then prove your speed, Flash.",
-          "Enough. Let's settle this properly."
-        ]
+        flash: ["Then prove your speed, Flash."],
+        "green-lantern": ["By will alone, this ends now."],
+        hawkgirl: ["Step in. Let's settle this with force."],
+        killercroc: ["Construct up. Fight on."],
+        doomsday: ["I am done containing. Now I strike."]
+      },
+      hawkgirl: {
+        flash: ["Keep running. I am still in range."],
+        "green-lantern": ["Let's see if your ring can stop this swing."],
+        hawkgirl: ["Enough talk. Warrior to warrior."],
+        killercroc: ["Come up from the gutter and fight."],
+        doomsday: ["Try to break me. I dare you."]
+      },
+      killercroc: {
+        flash: ["Now hold still long enough to get caught."],
+        "green-lantern": ["Your light goes dark right now."],
+        hawkgirl: ["Flap all you want. I still bite."],
+        killercroc: ["Only one alpha Croc tonight."],
+        doomsday: ["Let's see whose monster wins."]
+      },
+      doomsday: {
+        flash: ["Run. It only delays the end."],
+        "green-lantern": ["Your will ends here."],
+        hawkgirl: ["Fall from the sky and break."],
+        killercroc: ["Predator meets extinction."],
+        doomsday: ["Begin annihilation."]
       }
     };
 
@@ -1423,13 +1538,13 @@
 
       characterSelectEl.classList.add("forced-venue-only");
       if (selectTitleEl) {
-        selectTitleEl.textContent = "Choose Your Venue";
+        selectTitleEl.textContent = "Select Venue";
       }
       if (selectSubtitleEl) {
         selectSubtitleEl.textContent = `${state.selectedCharacter.name} vs ${state.enemyCharacter.name} locked in.`;
       }
-      selectHintEl.textContent = "Character locked. Choose a venue and press Start Fight.";
-      setMessage("Choose a venue, then press Start Fight.");
+      selectHintEl.textContent = "Character locked. Select a venue and press Start Fight.";
+      setMessage("Select a venue, then press Start Fight.");
     }
 
     function applyFighterStyle(element, character) {
@@ -1582,6 +1697,13 @@
       winnerDialogueEl.classList.toggle("show", Boolean(text));
     }
 
+    function setIntroSkipVisible(show) {
+      if (!introSkipBtn) {
+        return;
+      }
+      introSkipBtn.classList.toggle("show", Boolean(show));
+    }
+
     function clearIntroTimers() {
       state.introTimers.forEach((timerId) => clearTimeout(timerId));
       state.introTimers = [];
@@ -1601,6 +1723,39 @@
         return fallback;
       }
       return pool[Math.floor(Math.random() * pool.length)] || fallback;
+    }
+
+    function makeIntroLineLonger(baseLine, speakerId) {
+      const extension = pickRandomLine(openingExtensionsByCharacter[speakerId], "");
+      if (!extension) {
+        return baseLine;
+      }
+      return `${baseLine} ${extension}`;
+    }
+
+    async function typeMessageWords(text, sequenceId) {
+      const words = String(text || "").trim().split(/\s+/).filter(Boolean);
+      if (words.length === 0) {
+        setMessage("");
+        return true;
+      }
+
+      let current = "";
+      for (const word of words) {
+        if (state.introSequenceId !== sequenceId) {
+          return false;
+        }
+
+        current = current ? `${current} ${word}` : word;
+        setMessage(current);
+
+        const punctuationDelay = /[.!?]$/.test(word) ? 220 : /[,;:]$/.test(word) ? 120 : 0;
+        if (!(await waitForIntroStep(INTRO_WORD_DELAY_MS + punctuationDelay, sequenceId))) {
+          return false;
+        }
+      }
+
+      return true;
     }
 
     function getMatchupLine(matchupMap, speakerId, targetId, fallbackPool, fallbackLine) {
@@ -1629,21 +1784,21 @@
       const player = state.selectedCharacter;
       const enemy = state.enemyCharacter;
 
-      const playerOpening = getMatchupLine(
+      const playerOpeningRaw = getMatchupLine(
         openingTauntsByMatchup,
         player.id,
         enemy.id,
         openingTauntsByCharacter[player.id],
         "You are going down."
       );
-      const enemyReply = getMatchupLine(
+      const enemyReplyRaw = getMatchupLine(
         openingComebacksByMatchup,
         enemy.id,
         player.id,
         openingComebacksByCharacter[enemy.id],
         "We will see about that."
       );
-      const playerFinal = getMatchupLine(
+      const playerFinalRaw = getMatchupLine(
         openingFinalByMatchup,
         player.id,
         enemy.id,
@@ -1651,32 +1806,55 @@
         "Let's fight."
       );
 
+      const playerOpening = makeIntroLineLonger(playerOpeningRaw, player.id);
+      const enemyReply = makeIntroLineLonger(enemyReplyRaw, enemy.id);
+      const playerFinal = makeIntroLineLonger(playerFinalRaw, player.id);
+
       setWinnerDialogue("");
-      setMessage(`${player.name}: "${playerOpening}"`);
-      if (!(await waitForIntroStep(1500, sequenceId))) {
+      setIntroSkipVisible(true);
+
+      if (!(await typeMessageWords(`${player.name}: "${playerOpening}"`, sequenceId))) {
+        setIntroSkipVisible(false);
+        return false;
+      }
+      if (!(await waitForIntroStep(INTRO_LINE_PAUSE_MS, sequenceId))) {
+        setIntroSkipVisible(false);
         return false;
       }
 
-      setMessage(`${enemy.name}: "${enemyReply}"`);
-      if (!(await waitForIntroStep(1500, sequenceId))) {
+      if (!(await typeMessageWords(`${enemy.name}: "${enemyReply}"`, sequenceId))) {
+        setIntroSkipVisible(false);
+        return false;
+      }
+      if (!(await waitForIntroStep(INTRO_LINE_PAUSE_MS, sequenceId))) {
+        setIntroSkipVisible(false);
         return false;
       }
 
-      setMessage(`${player.name}: "${playerFinal}"`);
-      if (!(await waitForIntroStep(1200, sequenceId))) {
+      if (!(await typeMessageWords(`${player.name}: "${playerFinal}"`, sequenceId))) {
+        setIntroSkipVisible(false);
+        return false;
+      }
+      if (!(await waitForIntroStep(INTRO_LINE_PAUSE_MS, sequenceId))) {
+        setIntroSkipVisible(false);
         return false;
       }
 
       setMessage("Fight!");
+      setIntroSkipVisible(false);
       return true;
     }
 
-    function getWinnerDialogue(character) {
-      if (!character || !character.id) {
+    function getWinnerDialogue(winnerCharacter, loserCharacter) {
+      if (!winnerCharacter || !winnerCharacter.id) {
         return "";
       }
 
-      const lines = winnerDialoguesByCharacter[character.id] || ["Round won."];
+      const loserId = loserCharacter && loserCharacter.id ? loserCharacter.id : "";
+      const matchupPool = (winnerDialoguesByMatchup[winnerCharacter.id] || {})[loserId] || [];
+      const lines = matchupPool.length > 0
+        ? matchupPool
+        : (winnerDialoguesByCharacter[winnerCharacter.id] || ["Round won."]);
       return lines[Math.floor(Math.random() * lines.length)];
     }
 
@@ -1764,9 +1942,43 @@
       }, 560);
     }
 
+    function performEnemyJump() {
+      if (!state.roundActive || state.enemyJumpLock) {
+        return;
+      }
+
+      state.enemyJumpLock = true;
+      enemyEl.classList.add("jumping");
+
+      const maxX = state.arenaWidth - 78;
+      const toPlayer = Math.sign((state.playerX + 36) - (state.enemyX + 36));
+      if (toPlayer !== 0) {
+        state.enemyFacingScaleX = toPlayer;
+      }
+      const leapDistance = clamp(58 + Math.abs((state.playerX + 36) - (state.enemyX + 36)) * 0.06, 48, 92);
+      state.enemyX = clamp(state.enemyX + toPlayer * leapDistance, 0, maxX);
+      renderPositions();
+
+      if (state.enemyCharacter && spriteAnimators[state.enemyCharacter.id]) {
+        const enemyAnimator = spriteAnimators[state.enemyCharacter.id];
+        enemyAnimator.playSequence(getJumpSequenceName(state.enemyCharacter.id), false);
+      }
+
+      setTimeout(() => {
+        enemyEl.classList.remove("jumping");
+        if (state.enemyCharacter && spriteAnimators[state.enemyCharacter.id]) {
+          spriteAnimators[state.enemyCharacter.id].playIdle();
+        }
+        state.enemyJumpLock = false;
+      }, ENEMY_JUMP_TIME_MS);
+    }
+
     function movePlayer(direction) {
       if (!state.roundActive) {
         return;
+      }
+      if (direction !== 0) {
+        state.playerFacingScaleX = direction;
       }
       const maxX = state.arenaWidth - 78;
       state.playerX = clamp(state.playerX + direction * state.moveStep, 0, maxX);
@@ -1775,6 +1987,13 @@
 
     function isPlayerInRange(range) {
       return Math.abs((state.playerX + 36) - (state.enemyX + 36)) <= range;
+    }
+
+    function getEffectiveAttackRange(characterId, actionType, baseRange) {
+      if (characterId === "green-lantern" && (actionType === "punch" || actionType === "kick")) {
+        return Math.max(baseRange, GREEN_LANTERN_LASER_RANGE);
+      }
+      return baseRange;
     }
 
     function runAttackAnimation(element, className, duration) {
@@ -1801,6 +2020,24 @@
       return animationMap[actionType] || "sequence-01";
     }
 
+    function getJumpSequenceName(characterId) {
+      const animator = spriteAnimators[characterId];
+      if (!animator || !animator.sequences) {
+        return animationMap.jump || "sequence-01";
+      }
+
+      if (animator.sequences["sequence-04"]) {
+        return "sequence-04";
+      }
+      if (animator.sequences["sequence-jump"]) {
+        return "sequence-jump";
+      }
+      if (animator.sequences["sequence-idle"]) {
+        return "sequence-idle";
+      }
+      return animationMap.jump || "sequence-01";
+    }
+
     function playerAttack(type) {
       if (!state.roundActive || !state.canAttack) {
         return;
@@ -1813,6 +2050,11 @@
 
       const damageBonus = type === "kick" ? state.playerKickBonus : state.playerPunchBonus;
       const damage = clamp(attack.damage + damageBonus, 2, 12);
+      const effectiveRange = getEffectiveAttackRange(
+        state.selectedCharacter ? state.selectedCharacter.id : "",
+        type,
+        attack.range
+      );
 
       state.canAttack = false;
       runAttackAnimation(playerEl, attack.className, attack.cooldown - 80);
@@ -1829,7 +2071,7 @@
         triggerDoomsdayGroundExplosion(state.selectedCharacter.id, type, playerEl);
       }
 
-      if (isPlayerInRange(attack.range)) {
+      if (isPlayerInRange(effectiveRange)) {
         state.enemyHealth = clamp(state.enemyHealth - damage, 0, 100);
         updateHealthBars();
         setHitFlash(enemyEl);
@@ -1853,6 +2095,11 @@
       const attack = attackConfig[type];
       const damageBonus = type === "kick" ? state.enemyKickBonus : state.enemyPunchBonus;
       const damage = clamp(attack.damage + damageBonus, 2, 12);
+      const effectiveRange = getEffectiveAttackRange(
+        state.enemyCharacter ? state.enemyCharacter.id : "",
+        type,
+        attack.range
+      );
       state.enemyCanAttack = false;
       runAttackAnimation(enemyEl, attack.className, attack.cooldown - 90);
 
@@ -1860,7 +2107,7 @@
         triggerDoomsdayGroundExplosion(state.enemyCharacter.id, type, enemyEl);
       }
 
-      if (Math.abs((state.enemyX + 36) - (state.playerX + 36)) <= attack.range) {
+      if (Math.abs((state.enemyX + 36) - (state.playerX + 36)) <= effectiveRange) {
               // Play enemy sprite attack animation
               if (state.enemyCharacter && spriteAnimators[state.enemyCharacter.id]) {
                 const anim = spriteAnimators[state.enemyCharacter.id];
@@ -1879,7 +2126,7 @@
 
       setTimeout(() => {
         state.enemyCanAttack = true;
-      }, attack.cooldown + 120);
+      }, attack.cooldown + 40);
     }
 
     function enemyAI() {
@@ -1891,17 +2138,83 @@
       const distance = (state.playerX + 36) - (state.enemyX + 36);
       const absDistance = Math.abs(distance);
 
-      if (absDistance > 96) {
-        const step = absDistance > 220 ? 24 : 16;
-        state.enemyX = clamp(state.enemyX + Math.sign(distance) * step, 0, maxX);
-        renderPositions();
-      } else if (state.enemyCanAttack) {
-        const move = Math.random();
-        if (move < 0.55) {
-          enemyAttack("punch");
-        } else {
-          enemyAttack("kick");
+      const enemyId = state.enemyCharacter ? state.enemyCharacter.id : "";
+      const enemyPunchRange = getEffectiveAttackRange(enemyId, "punch", attackConfig.punch.range);
+      const enemyKickRange = getEffectiveAttackRange(enemyId, "kick", attackConfig.kick.range);
+      const enemyBestRange = Math.max(enemyPunchRange, enemyKickRange);
+      const healthEdge = (100 - state.playerHealth) - (100 - state.enemyHealth);
+
+      // Slight timing variation so movement feels less robotic.
+      if (Math.random() < 0.07) {
+        return;
+      }
+
+      if (absDistance > enemyBestRange + 36) {
+        const shouldLeap = !state.enemyJumpLock && absDistance > 180 && Math.random() < 0.2;
+        if (shouldLeap) {
+          performEnemyJump();
+          return;
         }
+
+        const paceSwing = Math.round((Math.random() - 0.35) * 10);
+        const pressureBonus = healthEdge < 0 ? 4 : healthEdge > 20 ? -2 : 0;
+        const chaseStepBase = absDistance > 320 ? 34 : absDistance > 220 ? 26 : 20;
+        const chaseStep = clamp(chaseStepBase + paceSwing + pressureBonus, 14, 42);
+        const chaseDirection = Math.sign(distance);
+        if (chaseDirection !== 0) {
+          state.enemyFacingScaleX = chaseDirection;
+        }
+        state.enemyX = clamp(state.enemyX + chaseDirection * chaseStep, 0, maxX);
+        renderPositions();
+        return;
+      }
+
+      if (!state.enemyCanAttack) {
+        if (absDistance > enemyBestRange - 18) {
+          const pressureStep = absDistance > enemyBestRange + 20 ? 14 : 8;
+          const pressureDirection = Math.sign(distance);
+          if (pressureDirection !== 0) {
+            state.enemyFacingScaleX = pressureDirection;
+          }
+          state.enemyX = clamp(state.enemyX + pressureDirection * pressureStep, 0, maxX);
+          renderPositions();
+        } else if (!state.enemyJumpLock && Math.random() < 0.16) {
+          // Small footwork feint while waiting for cooldown.
+          const feintDirection = Math.random() < 0.55 ? -Math.sign(distance || 1) : Math.sign(distance || 1);
+          const feintStep = Math.random() < 0.6 ? 10 : 16;
+          state.enemyFacingScaleX = feintDirection;
+          state.enemyX = clamp(state.enemyX + feintDirection * feintStep, 0, maxX);
+          renderPositions();
+        }
+
+        if (!state.enemyJumpLock && absDistance > 210 && Math.random() < 0.08) {
+          performEnemyJump();
+        }
+        return;
+      }
+
+      // If barely out of range, step in first so attacks don't whiff repeatedly.
+      if (absDistance > enemyBestRange) {
+        const closeStep = clamp(absDistance - enemyBestRange + 10, 12, 30);
+        const closeDirection = Math.sign(distance);
+        if (closeDirection !== 0) {
+          state.enemyFacingScaleX = closeDirection;
+        }
+        state.enemyX = clamp(state.enemyX + closeDirection * closeStep, 0, maxX);
+        renderPositions();
+      }
+
+      const postDistance = Math.abs((state.playerX + 36) - (state.enemyX + 36));
+      if (postDistance > enemyBestRange + 6) {
+        return;
+      }
+
+      const attackRoll = Math.random();
+      const shouldKick = postDistance > enemyPunchRange - 12 || attackRoll > 0.54 || state.playerHealth <= 35;
+      if (shouldKick) {
+        enemyAttack("kick");
+      } else {
+        enemyAttack("punch");
       }
     }
 
@@ -1939,16 +2252,18 @@
       }
 
       if (roundWinnerCharacter) {
-        const line = getWinnerDialogue(roundWinnerCharacter);
+        const loserCharacter = roundWinnerCharacter === state.selectedCharacter
+          ? state.enemyCharacter
+          : state.selectedCharacter;
+        const line = getWinnerDialogue(roundWinnerCharacter, loserCharacter);
         setWinnerDialogue(`${roundWinnerName}: "${line}"`);
       } else {
         setWinnerDialogue("");
       }
 
-      const reachedTargetWins = state.playerRoundsWon >= roundsToWin() || state.enemyRoundsWon >= roundsToWin();
       const reachedRoundLimit = state.currentRound >= state.maxRounds;
 
-      if (reachedTargetWins || reachedRoundLimit) {
+      if (reachedRoundLimit) {
         state.matchOver = true;
         if (state.playerRoundsWon > state.enemyRoundsWon) {
           setMessage(`${roundResult} Match won ${state.playerRoundsWon}-${state.enemyRoundsWon}.`);
@@ -1970,7 +2285,7 @@
 
     function startEnemyBrain() {
       clearInterval(state.enemyBrain);
-      state.enemyBrain = setInterval(enemyAI, 420);
+      state.enemyBrain = setInterval(enemyAI, ENEMY_AI_TICK_MS);
     }
 
     function resetRound() {
@@ -1996,9 +2311,12 @@
 
       state.playerX = 100;
       state.enemyX = Math.max(state.arenaWidth - 210, 380);
+      state.playerFacingScaleX = 1;
+      state.enemyFacingScaleX = -1;
       state.playerHealth = 100;
       state.enemyHealth = 100;
       state.jumpLock = false;
+      state.enemyJumpLock = false;
       state.movingLeft = false;
       state.movingRight = false;
       state.isRunning = false;
@@ -2013,6 +2331,7 @@
       updateHealthBars();
       setMessage(`Round ${state.currentRound}: Fight! (${state.playerRoundsWon}-${state.enemyRoundsWon})`);
       setWinnerDialogue("");
+      setIntroSkipVisible(false);
       startEnemyBrain();
     }
 
@@ -2228,6 +2547,9 @@
       if (!state.roundActive || !state.selectedCharacter) {
         return;
       }
+      if (playerEl.classList.contains("jumping")) {
+        return;
+      }
       const animator = spriteAnimators[state.selectedCharacter.id];
       if (!animator) {
         return;
@@ -2257,6 +2579,7 @@
         directionToEnemy = getFacingScaleXForFighter(playerEl);
       }
       if (directionToEnemy !== 0) {
+        state.playerFacingScaleX = directionToEnemy;
         const step = Math.max(34, Math.round(state.moveStep * 1.8));
         state.playerX = clamp(state.playerX + directionToEnemy * step, 0, maxX);
         renderPositions();
@@ -2366,6 +2689,20 @@
       const action = button.getAttribute("data-action");
       button.addEventListener("click", () => handleInputAction(action));
     });
+
+    if (introSkipBtn) {
+      introSkipBtn.addEventListener("click", () => {
+        if (!state.selectionLocked) {
+          return;
+        }
+        state.introSequenceId += 1;
+        clearIntroTimers();
+        setIntroSkipVisible(false);
+        setWinnerDialogue("");
+        setMessage("Fight!");
+        resetRound();
+      });
+    }
 
     characterCards.forEach((card) => {
       card.addEventListener("click", () => {
@@ -3686,13 +4023,10 @@
     };
 
     function getFacingScaleXForFighter(fighterEl) {
-      const playerCenter = state.playerX + 36;
-      const enemyCenter = state.enemyX + 36;
-
       if (fighterEl === playerEl) {
-        return playerCenter <= enemyCenter ? 1 : -1;
+        return state.playerFacingScaleX || 1;
       }
-      return enemyCenter <= playerCenter ? 1 : -1;
+      return state.enemyFacingScaleX || -1;
     }
 
     // Render sprite frame to fighter element
@@ -3755,12 +4089,14 @@
     const originalRenderPositions = renderPositions;
     renderPositions = function() {
       originalRenderPositions();
+
+      const canRenderFightSprites = state.selectionLocked || state.roundActive;
       
-      if (state.roundActive && state.selectedCharacter && spriteAnimators[state.selectedCharacter.id]) {
+      if (canRenderFightSprites && state.selectedCharacter && spriteAnimators[state.selectedCharacter.id]) {
         renderSpriteFrame(playerEl, state.selectedCharacter.id, spriteAnimators[state.selectedCharacter.id]);
       }
       
-      if (state.roundActive && state.enemyCharacter && spriteAnimators[state.enemyCharacter.id]) {
+      if (canRenderFightSprites && state.enemyCharacter && spriteAnimators[state.enemyCharacter.id]) {
         renderSpriteFrame(enemyEl, state.enemyCharacter.id, spriteAnimators[state.enemyCharacter.id]);
       }
     };
@@ -3810,7 +4146,7 @@
       originalPerformPlayerJump.call(this);
       if (state.selectedCharacter && spriteAnimators[state.selectedCharacter.id]) {
         const animator = spriteAnimators[state.selectedCharacter.id];
-        animator.playSequence(animationMap.jump || "sequence-01", false);
+        animator.playSequence(getJumpSequenceName(state.selectedCharacter.id), false);
         setTimeout(() => {
           animator.playIdle();
         }, 560);

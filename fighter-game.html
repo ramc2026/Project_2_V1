@@ -396,6 +396,7 @@
       overflow: hidden;
       isolation: isolate;
       border-bottom: 2px solid var(--panel-border);
+      --fighter-floor: 28%;
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 34%),
         repeating-linear-gradient(90deg, rgba(255, 209, 102, 0.06) 0 16px, rgba(10, 14, 24, 0.04) 16px 32px),
@@ -404,32 +405,50 @@
 
     /* Venue-specific arena styles */
     .arena.venue-rig {
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 34%),
-        repeating-linear-gradient(90deg, rgba(255, 209, 102, 0.06) 0 16px, rgba(10, 14, 24, 0.04) 16px 32px),
-        linear-gradient(180deg, #274c79 0 58%, #65461f 58% 100%);
+      --fighter-floor: 6%;
+      background: url("images/memorialstation.PNG") center center / 100% 100% no-repeat;
+    }
+
+    .arena.venue-rig .crowd,
+    .arena.venue-rig .ground {
+      display: none;
     }
 
     .arena.venue-street {
-      background:
-        linear-gradient(180deg, rgba(100, 50, 50, 0.3), transparent 40%),
-        repeating-linear-gradient(45deg, rgba(255, 100, 100, 0.1) 0 20px, rgba(50, 50, 50, 0.08) 20px 40px),
-        linear-gradient(180deg, #3d2d2d 0 50%, #5a4a3a 50% 100%);
+      --fighter-floor: 7%;
+      background: url("images/fortressofsolitude.PNG?v=1") center center / 100% 100% no-repeat !important;
+    }
+
+    .arena.venue-street .crowd,
+    .arena.venue-street .ground {
+      display: none;
     }
 
     .arena.venue-stadium {
-      background:
-        radial-gradient(ellipse at center 20%, rgba(255, 240, 100, 0.2), transparent 50%),
-        linear-gradient(180deg, rgba(100, 150, 200, 0.4), transparent 30%),
-        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 10px, transparent 10px 20px),
-        linear-gradient(180deg, #4a5f7f 0 60%, #8a7a5a 60% 100%);
+      --fighter-floor: 8%;
+      background: url("images/slaughter swamp.PNG?v=1") center center / 100% 100% no-repeat !important;
+    }
+
+    .arena.venue-stadium .crowd {
+      display: none;
+    }
+
+    .arena.venue-stadium .ground {
+      display: none;
     }
 
     .arena.venue-underground {
-      background:
-        linear-gradient(180deg, rgba(30, 30, 50, 0.6), transparent 30%),
-        repeating-linear-gradient(90deg, rgba(100, 100, 120, 0.1) 0 25px, rgba(40, 40, 60, 0.1) 25px 50px),
-        linear-gradient(180deg, #1a1a2a 0 60%, #3a2a2a 60% 100%);
+      --fighter-floor: 9%;
+      background: url("images/redsunprison.PNG?v=1") center center / 100% 100% no-repeat !important;
+      border-bottom-color: transparent;
+    }
+
+    .arena.venue-underground .crowd {
+      display: none;
+    }
+
+    .arena.venue-underground .ground {
+      display: none;
     }
 
     .arena.venue-beach {
@@ -440,6 +459,7 @@
     }
 
     .stage-sign {
+      display: none;
       position: absolute;
       top: 18px;
       left: 50%;
@@ -511,7 +531,7 @@
 
     .fighter {
       position: absolute;
-      bottom: 30%;
+      bottom: var(--fighter-floor);
       width: 200px;
       height: 280px;
       transition: filter 0.08s linear;
@@ -662,6 +682,42 @@
       animation: impactFlash 0.22s ease;
     }
 
+    .ground-burst {
+      position: absolute;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.42);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 2;
+      background:
+        radial-gradient(circle at 50% 48%, rgba(255, 235, 170, 0.85), rgba(255, 166, 76, 0.38) 46%, rgba(0, 0, 0, 0) 72%),
+        conic-gradient(from 0deg, rgba(255, 220, 145, 0.7), rgba(255, 120, 72, 0.45), rgba(245, 235, 195, 0.65), rgba(255, 220, 145, 0.7));
+      box-shadow:
+        0 0 14px rgba(255, 184, 98, 0.42),
+        0 0 24px rgba(255, 148, 84, 0.28);
+      mix-blend-mode: screen;
+    }
+
+    .ground-burst.show {
+      animation: groundBurst 0.42s cubic-bezier(0.15, 0.78, 0.24, 0.98) forwards;
+    }
+
+    .ground-debris {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 10px;
+      height: 5px;
+      border-radius: 3px;
+      transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
+      background: linear-gradient(90deg, #ffe5b0, #ff8d5a);
+      box-shadow: 0 0 7px rgba(255, 178, 102, 0.5);
+      opacity: 0.92;
+      animation: debrisFly 0.42s ease-out forwards;
+    }
+
     @keyframes impactFlash {
       0% {
         opacity: 1;
@@ -670,6 +726,31 @@
       100% {
         opacity: 0;
         transform: translate(-50%, -50%) scale(1.35);
+      }
+    }
+
+    @keyframes groundBurst {
+      0% {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(0.42);
+      }
+      75% {
+        opacity: 0.44;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.4);
+      }
+    }
+
+    @keyframes debrisFly {
+      0% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px))) rotate(calc(var(--rot, 0deg) + 72deg)) scale(0.55);
       }
     }
 
@@ -735,7 +816,7 @@
 
     .mobile-controls {
       display: none;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       gap: 8px;
       padding: 0 14px 16px;
     }
@@ -753,6 +834,16 @@
 
     .mobile-controls button.kick {
       background: linear-gradient(180deg, #f6b84c, #ce8a1d);
+    }
+
+    .mobile-controls button.run {
+      background: linear-gradient(180deg, #69d0ff, #2c86d9);
+    }
+
+    .mobile-controls button.run.active {
+      border-color: #ffef99;
+      box-shadow: 0 0 0 2px rgba(255, 239, 153, 0.22);
+      filter: brightness(1.12);
     }
 
     .mobile-controls button.jump {
@@ -845,16 +936,6 @@
             <p class="card-stats">Punch: Ultra | Kick: Ultra | Speed: Low</p>
           </div>
         </button>
-        <button class="character-card" type="button" data-character="sinestro">
-          <div class="card-sprite">
-            <img src="images/thesinestro.PNG" alt="Sinestro" />
-          </div>
-          <div class="card-text">
-            <p class="card-title">Sinestro</p>
-            <p class="card-tag">Yellow Fear Ring</p>
-            <p class="card-stats">Punch: High | Kick: Medium | Speed: Medium</p>
-          </div>
-        </button>
         <button class="character-card" type="button" data-character="doomsday">
           <div class="card-sprite">
             <img src="images/thedoomsday.PNG" alt="Doomsday" />
@@ -869,11 +950,10 @@
       <div class="venue-select">
         <p class="venue-label">Choose Your Venue</p>
         <div class="venue-grid">
-          <button class="venue-option active" data-venue="rig" type="button">Rig Arena</button>
-          <button class="venue-option" data-venue="street" type="button">Street Fight</button>
-          <button class="venue-option" data-venue="stadium" type="button">Stadium</button>
-          <button class="venue-option" data-venue="underground" type="button">Underground</button>
-          <button class="venue-option" data-venue="beach" type="button">Beach</button>
+          <button class="venue-option active" data-venue="rig" type="button">Memorial Station</button>
+          <button class="venue-option" data-venue="street" type="button">Fortress of Solitude</button>
+          <button class="venue-option" data-venue="stadium" type="button">Slaughter Swamp</button>
+          <button class="venue-option" data-venue="underground" type="button">Red Sun Prison</button>
         </div>
       </div>
       <div class="select-actions">
@@ -884,19 +964,19 @@
 
     <section class="hud">
       <article class="fighter-panel">
-        <h1 class="fighter-name" id="playerName">RIG RUNNER</h1>
+        <h1 class="fighter-name" id="playerName">PLAYER ONE</h1>
         <div class="health-bar" aria-label="Player health">
           <div class="health-fill" id="playerHealth"></div>
         </div>
       </article>
 
       <article class="timer-box" aria-live="polite">
-        <p class="timer-label">ROUND TIMER</p>
-        <p class="timer" id="timer">60</p>
+        <p class="timer-label">ROUND</p>
+        <p class="timer" id="timer">1/5</p>
       </article>
 
       <article class="fighter-panel">
-        <h2 class="fighter-name" id="enemyName" style="text-align:right;">NIGHT RAIDER</h2>
+        <h2 class="fighter-name" id="enemyName" style="text-align:right;">OPPONENT</h2>
         <div class="health-bar" aria-label="Enemy health">
           <div class="health-fill" id="enemyHealth"></div>
         </div>
@@ -904,7 +984,7 @@
     </section>
 
     <section class="arena" id="arena" aria-label="Fight arena">
-      <div class="stage-sign" id="stageSign">RIG ARENA</div>
+      <div class="stage-sign" id="stageSign">MEMORIAL STATION</div>
       <div class="crowd" aria-hidden="true"></div>
       <div class="ground" aria-hidden="true"></div>
 
@@ -936,7 +1016,7 @@
     <section class="controls">
       <p class="keys">
         <strong>Desktop Controls:</strong>
-        A/D move, W jump, F punch, G kick
+        A/D move, S run (Killer Croc: sequence-02), W jump, F punch, G kick
       </p>
       <div class="action-row">
         <button id="resetBtn" type="button">Reset Round</button>
@@ -946,6 +1026,7 @@
     <section class="mobile-controls" aria-label="Touch controls">
       <button data-action="left" type="button">Left</button>
       <button data-action="right" type="button">Right</button>
+      <button class="run" data-action="run" type="button">Run Off</button>
       <button class="jump" data-action="jump" type="button">Jump</button>
       <button class="punch" data-action="punch" type="button">Punch</button>
       <button class="kick" data-action="kick" type="button">Kick</button>
@@ -957,6 +1038,7 @@
     const playerEl = document.getElementById("player");
     const enemyEl = document.getElementById("enemy");
     const timerEl = document.getElementById("timer");
+    const timerLabelEl = document.querySelector(".timer-label");
     const playerHealthEl = document.getElementById("playerHealth");
     const enemyHealthEl = document.getElementById("enemyHealth");
     const playerNameEl = document.getElementById("playerName");
@@ -1009,15 +1091,6 @@
         moveBonus: -2
       },
       {
-        id: "sinestro",
-        name: "Sinestro",
-        bodyColor: "#d9c019",
-        limbColor: "#5f4f00",
-        punchBonus: 3,
-        kickBonus: 2,
-        moveBonus: 2
-      },
-      {
         id: "doomsday",
         name: "Doomsday",
         bodyColor: "#7f7f7f",
@@ -1032,7 +1105,9 @@
       arenaWidth: 920,
       playerX: 100,
       enemyX: 640,
+      baseMoveStep: 26,
       moveStep: 26,
+      runMultiplier: 1.5,
       jumpLock: false,
       playerHealth: 100,
       enemyHealth: 100,
@@ -1046,22 +1121,38 @@
       enemyKickBonus: 0,
       canAttack: true,
       enemyCanAttack: true,
-      timer: 60,
+      currentRound: 1,
+      maxRounds: 5,
+      playerRoundsWon: 0,
+      enemyRoundsWon: 0,
       roundActive: false,
+      matchOver: false,
       selectionLocked: false,
       movingLeft: false,
       movingRight: false,
+      isRunning: false,
       enemyBrain: null,
-      timerInterval: null
+      nextRoundTimeout: null
     };
 
     const attackConfig = {
-      punch: { damage: 10, range: 105, cooldown: 360, className: "punching" },
-      kick: { damage: 14, range: 120, cooldown: 560, className: "kicking" }
+      punch: { damage: 4, range: 105, cooldown: 360, className: "punching" },
+      kick: { damage: 6, range: 120, cooldown: 560, className: "kicking" }
     };
 
     function clamp(val, min, max) {
       return Math.max(min, Math.min(max, val));
+    }
+
+    function roundsToWin() {
+      return Math.ceil(state.maxRounds / 2);
+    }
+
+    function updateRoundDisplay() {
+      timerEl.textContent = `${state.currentRound}/${state.maxRounds}`;
+      if (timerLabelEl) {
+        timerLabelEl.textContent = `ROUND (${state.playerRoundsWon}-${state.enemyRoundsWon})`;
+      }
     }
 
     function getCharacterById(id) {
@@ -1099,7 +1190,8 @@
       state.playerKickBonus = selected.kickBonus;
       state.enemyPunchBonus = enemy.punchBonus;
       state.enemyKickBonus = enemy.kickBonus;
-      state.moveStep = clamp(26 + selected.moveBonus, 20, 34);
+      state.baseMoveStep = clamp(26 + selected.moveBonus, 20, 34);
+      updatePlayerMoveSpeed();
 
       playerNameEl.textContent = selected.name.toUpperCase();
       enemyNameEl.textContent = enemy.name.toUpperCase();
@@ -1123,6 +1215,11 @@
       state.selectionLocked = true;
       state.movingLeft = false;
       state.movingRight = false;
+      state.isRunning = false;
+      state.currentRound = 1;
+      state.playerRoundsWon = 0;
+      state.enemyRoundsWon = 0;
+      state.matchOver = false;
       characterSelectEl.classList.add("hidden");
       
       // Initialize sprite rendering for this fight
@@ -1130,6 +1227,20 @@
       
       setMessage("Fight! Use movement and combo attacks.");
       resetRound();
+    }
+
+    function updateRunButtonState() {
+      mobileButtons.forEach((button) => {
+        if (button.getAttribute("data-action") === "run") {
+          button.classList.toggle("active", state.isRunning);
+          button.textContent = state.isRunning ? "Run On" : "Run Off";
+        }
+      });
+    }
+
+    function updatePlayerMoveSpeed() {
+      const multiplier = state.isRunning ? state.runMultiplier : 1;
+      state.moveStep = clamp(Math.round(state.baseMoveStep * multiplier), 20, 52);
     }
 
     function initializeSpritesForFight() {
@@ -1195,6 +1306,63 @@
       impactEl.classList.add("show");
     }
 
+    function showGroundBurst(sourceX, intensity = 1) {
+      const arenaRect = arena.getBoundingClientRect();
+      const burst = document.createElement("div");
+      burst.className = "ground-burst";
+
+      const burstX = clamp(sourceX, 20, state.arenaWidth - 20);
+      burst.style.left = burstX + "px";
+      burst.style.top = Math.round(arenaRect.height * 0.75) + "px";
+
+      const scale = clamp(intensity, 0.7, 1.35);
+      burst.style.width = Math.round(88 * scale) + "px";
+      burst.style.height = Math.round(88 * scale) + "px";
+
+      const debrisCount = Math.round(8 + (scale * 4));
+      for (let i = 0; i < debrisCount; i += 1) {
+        const debris = document.createElement("span");
+        debris.className = "ground-debris";
+        const angle = (-75 + Math.random() * 150) * (Math.PI / 180);
+        const distance = 26 + Math.random() * 36 * scale;
+        const dx = Math.cos(angle) * distance;
+        const dy = -(Math.abs(Math.sin(angle)) * (14 + Math.random() * 22 * scale));
+        debris.style.setProperty("--dx", `${dx.toFixed(1)}px`);
+        debris.style.setProperty("--dy", `${dy.toFixed(1)}px`);
+        debris.style.setProperty("--rot", `${Math.round(Math.random() * 150 - 75)}deg`);
+        burst.appendChild(debris);
+      }
+
+      arena.appendChild(burst);
+      requestAnimationFrame(() => burst.classList.add("show"));
+      burst.addEventListener("animationend", () => burst.remove(), { once: true });
+    }
+
+    function getFighterGroundContactX(fighterEl) {
+      const arenaRect = arena.getBoundingClientRect();
+      const fighterRect = fighterEl.getBoundingClientRect();
+      const localCenterX = (fighterRect.left - arenaRect.left) + (fighterRect.width / 2);
+      return clamp(localCenterX, 20, state.arenaWidth - 20);
+    }
+
+    function triggerDoomsdayGroundExplosion(characterId, actionType, fighterEl) {
+      // Doomsday sequence-03 maps to kick; trigger a two-phase burst on impact.
+      if (characterId !== "doomsday" || actionType !== "kick") {
+        return;
+      }
+
+      setTimeout(() => {
+        if (!state.roundActive) {
+          return;
+        }
+        const baseX = getFighterGroundContactX(fighterEl);
+        showGroundBurst(baseX, 1.12);
+        setTimeout(() => {
+          showGroundBurst(baseX + (Math.random() * 22 - 11), 0.92);
+        }, 95);
+      }, 170);
+    }
+
     function setHitFlash(element) {
       element.classList.add("hit");
       setTimeout(() => element.classList.remove("hit"), 120);
@@ -1230,6 +1398,25 @@
       setTimeout(() => element.classList.remove(className), duration);
     }
 
+    function getAttackReturnDelay(animator, actionType) {
+      if (!animator) {
+        return 500;
+      }
+
+      const sequenceName = animationMap[actionType] || "sequence-01";
+      const sequence = animator.sequences && animator.sequences[sequenceName];
+      const frameCount = sequence && sequence.frames ? sequence.frames.length : 1;
+      const frameDelay = animator.defaultFrameDelay || animator.frameDelay || 80;
+      return Math.max(380, frameCount * frameDelay + 120);
+    }
+
+    function getPlayerActionSequenceName(actionType) {
+      if (state.selectedCharacter && state.selectedCharacter.id === "killercroc" && actionType === "punch") {
+        return "sequence-03";
+      }
+      return animationMap[actionType] || "sequence-01";
+    }
+
     function playerAttack(type) {
       if (!state.roundActive || !state.canAttack) {
         return;
@@ -1241,10 +1428,22 @@
       }
 
       const damageBonus = type === "kick" ? state.playerKickBonus : state.playerPunchBonus;
-      const damage = clamp(attack.damage + damageBonus, 4, 24);
+      const damage = clamp(attack.damage + damageBonus, 2, 12);
 
       state.canAttack = false;
       runAttackAnimation(playerEl, attack.className, attack.cooldown - 80);
+
+      // Play player sprite attack animation even if the strike misses.
+      if (state.selectedCharacter && spriteAnimators[state.selectedCharacter.id]) {
+        const anim = spriteAnimators[state.selectedCharacter.id];
+        const sequenceName = getPlayerActionSequenceName(type);
+        anim.playSequence(sequenceName, false);
+        setTimeout(() => anim.playIdle(), getAttackReturnDelay(anim, type));
+      }
+
+      if (state.selectedCharacter) {
+        triggerDoomsdayGroundExplosion(state.selectedCharacter.id, type, playerEl);
+      }
 
       if (isPlayerInRange(attack.range)) {
         state.enemyHealth = clamp(state.enemyHealth - damage, 0, 100);
@@ -1269,23 +1468,28 @@
 
       const attack = attackConfig[type];
       const damageBonus = type === "kick" ? state.enemyKickBonus : state.enemyPunchBonus;
-      const damage = clamp(attack.damage + damageBonus, 4, 24);
+      const damage = clamp(attack.damage + damageBonus, 2, 12);
       state.enemyCanAttack = false;
       runAttackAnimation(enemyEl, attack.className, attack.cooldown - 90);
+
+      if (state.enemyCharacter) {
+        triggerDoomsdayGroundExplosion(state.enemyCharacter.id, type, enemyEl);
+      }
 
       if (Math.abs((state.enemyX + 36) - (state.playerX + 36)) <= attack.range) {
               // Play enemy sprite attack animation
               if (state.enemyCharacter && spriteAnimators[state.enemyCharacter.id]) {
                 const anim = spriteAnimators[state.enemyCharacter.id];
-                anim.playSequence(animationMap[type] || 'sequence-01', false);
-                setTimeout(() => anim.playIdle(), 500);
+                const sequenceName = animationMap[type] || 'sequence-01';
+                anim.playSequence(sequenceName, false);
+                setTimeout(() => anim.playIdle(), getAttackReturnDelay(anim, type));
               }
 
         state.playerHealth = clamp(state.playerHealth - damage, 0, 100);
         updateHealthBars();
         setHitFlash(playerEl);
         showImpact(state.playerX + 36);
-        setMessage(type === "kick" ? "Night Raider lands a kick!" : "Night Raider punches!");
+        setMessage(type === "kick" ? "Opponent lands a kick!" : "Opponent punches!");
         evaluateRoundEnd();
       }
 
@@ -1318,7 +1522,7 @@
     }
 
     function evaluateRoundEnd() {
-      if (state.playerHealth <= 0 || state.enemyHealth <= 0 || state.timer <= 0) {
+      if (state.playerHealth <= 0 || state.enemyHealth <= 0) {
         finishRound();
       }
     }
@@ -1330,34 +1534,41 @@
 
       state.roundActive = false;
       clearInterval(state.enemyBrain);
-      clearInterval(state.timerInterval);
-
-      if (state.playerHealth === state.enemyHealth) {
-        setMessage("Draw game. Reset and run it back.");
-      } else if (state.playerHealth > state.enemyHealth) {
-        setMessage("You win the round! Arena champion.");
-      } else {
-        setMessage("Night Raider wins. Try a rematch.");
+      if (state.nextRoundTimeout) {
+        clearTimeout(state.nextRoundTimeout);
+        state.nextRoundTimeout = null;
       }
-    }
 
-    function startRoundClock() {
-      clearInterval(state.timerInterval);
-      state.timerInterval = setInterval(() => {
-        if (!state.roundActive) {
-          return;
+      let roundResult = "Round drawn.";
+      if (state.playerHealth > state.enemyHealth) {
+        state.playerRoundsWon += 1;
+        roundResult = "You win the round!";
+      } else if (state.enemyHealth > state.playerHealth) {
+        state.enemyRoundsWon += 1;
+        roundResult = "Opponent wins the round.";
+      }
+
+      const reachedTargetWins = state.playerRoundsWon >= roundsToWin() || state.enemyRoundsWon >= roundsToWin();
+      const reachedRoundLimit = state.currentRound >= state.maxRounds;
+
+      if (reachedTargetWins || reachedRoundLimit) {
+        state.matchOver = true;
+        if (state.playerRoundsWon > state.enemyRoundsWon) {
+          setMessage(`${roundResult} Match won ${state.playerRoundsWon}-${state.enemyRoundsWon}.`);
+        } else if (state.enemyRoundsWon > state.playerRoundsWon) {
+          setMessage(`${roundResult} Match lost ${state.playerRoundsWon}-${state.enemyRoundsWon}.`);
+        } else {
+          setMessage(`Match draw ${state.playerRoundsWon}-${state.enemyRoundsWon}.`);
         }
-        state.timer -= 1;
-        timerEl.textContent = state.timer;
-        if (state.timer <= 10) {
-          timerEl.style.color = "#ff6f6f";
-        }
-        if (state.timer <= 0) {
-          state.timer = 0;
-          timerEl.textContent = "0";
-          finishRound();
-        }
-      }, 1000);
+        return;
+      }
+
+      state.currentRound += 1;
+      updateRoundDisplay();
+      setMessage(`${roundResult} Next round starting... (${state.playerRoundsWon}-${state.enemyRoundsWon})`);
+      state.nextRoundTimeout = setTimeout(() => {
+        resetRound();
+      }, 1100);
     }
 
     function startEnemyBrain() {
@@ -1371,7 +1582,17 @@
       }
 
       clearInterval(state.enemyBrain);
-      clearInterval(state.timerInterval);
+      if (state.nextRoundTimeout) {
+        clearTimeout(state.nextRoundTimeout);
+        state.nextRoundTimeout = null;
+      }
+
+      if (state.matchOver) {
+        state.currentRound = 1;
+        state.playerRoundsWon = 0;
+        state.enemyRoundsWon = 0;
+        state.matchOver = false;
+      }
 
       state.playerX = 100;
       state.enemyX = Math.max(state.arenaWidth - 210, 380);
@@ -1380,17 +1601,17 @@
       state.jumpLock = false;
       state.movingLeft = false;
       state.movingRight = false;
+      state.isRunning = false;
+      updatePlayerMoveSpeed();
+      updateRunButtonState();
       state.canAttack = true;
       state.enemyCanAttack = true;
-      state.timer = 60;
       state.roundActive = true;
 
-      timerEl.textContent = "60";
-      timerEl.style.color = "#ffd166";
+      updateRoundDisplay();
       renderPositions();
       updateHealthBars();
-      setMessage("Fight! Use movement and combo attacks.");
-      startRoundClock();
+      setMessage(`Round ${state.currentRound}: Fight! (${state.playerRoundsWon}-${state.enemyRoundsWon})`);
       startEnemyBrain();
     }
 
@@ -1583,6 +1804,11 @@
         case "right":
           movePlayer(1);
           break;
+        case "run":
+          state.isRunning = !state.isRunning;
+          updatePlayerMoveSpeed();
+          updateRunButtonState();
+          break;
         case "jump":
           performPlayerJump();
           break;
@@ -1598,7 +1824,7 @@
     }
 
     function updatePlayerRunState() {
-      if (!state.roundActive || !state.selectedCharacter || state.selectedCharacter.id !== "flash") {
+      if (!state.roundActive || !state.selectedCharacter) {
         return;
       }
       const animator = spriteAnimators[state.selectedCharacter.id];
@@ -1613,10 +1839,60 @@
       }
     }
 
+    function triggerKillerCrocSequenceTwo() {
+      if (!state.roundActive || !state.selectedCharacter || state.selectedCharacter.id !== "killercroc") {
+        return;
+      }
+
+      const animator = spriteAnimators[state.selectedCharacter.id];
+      if (!animator || !animator.sequences || !animator.sequences["sequence-02"]) {
+        return;
+      }
+
+      // Make S-driven sequence-02 advance Croc toward the opponent.
+      const maxX = state.arenaWidth - 78;
+      let directionToEnemy = Math.sign((state.enemyX + 36) - (state.playerX + 36));
+      if (directionToEnemy === 0) {
+        directionToEnemy = getFacingScaleXForFighter(playerEl);
+      }
+      if (directionToEnemy !== 0) {
+        const step = Math.max(34, Math.round(state.moveStep * 1.8));
+        state.playerX = clamp(state.playerX + directionToEnemy * step, 0, maxX);
+        renderPositions();
+      }
+
+      animator.playSequence("sequence-02", false);
+      const sequence = animator.sequences["sequence-02"];
+      const frameCount = sequence && sequence.frames ? sequence.frames.length : 1;
+      const frameDelay = animator.defaultFrameDelay || animator.frameDelay || 80;
+      const duration = Math.max(320, frameCount * frameDelay + 120);
+      setTimeout(() => {
+        if (!state.roundActive || !state.selectedCharacter || state.selectedCharacter.id !== "killercroc") {
+          return;
+        }
+
+        if (state.movingLeft || state.movingRight) {
+          updatePlayerRunState();
+        } else {
+          animator.playIdle();
+        }
+      }, duration);
+    }
+
     window.addEventListener("keydown", (event) => {
       const key = event.key.toLowerCase();
-      if (["a", "d", "w", "f", "g"].includes(key)) {
+      if (["a", "d", "s", "w", "f", "g"].includes(key)) {
         event.preventDefault();
+      }
+
+      if (key === "s") {
+        if (state.selectedCharacter && state.selectedCharacter.id === "killercroc") {
+          triggerKillerCrocSequenceTwo();
+        } else if (!state.isRunning) {
+          state.isRunning = true;
+          updatePlayerMoveSpeed();
+          updateRunButtonState();
+        }
       }
 
       if (key === "a") {
@@ -1646,7 +1922,7 @@
 
     // Continuous held-key movement for Flash so running frames can cycle smoothly.
     setInterval(() => {
-      if (!state.roundActive || !state.selectedCharacter || state.selectedCharacter.id !== "flash") {
+      if (!state.roundActive || !state.selectedCharacter) {
         return;
       }
       const movingLeftOnly = state.movingLeft && !state.movingRight;
@@ -1668,6 +1944,21 @@
         state.movingRight = false;
         updatePlayerRunState();
       }
+      if (key === "s" && (!state.selectedCharacter || state.selectedCharacter.id !== "killercroc")) {
+        state.isRunning = false;
+        updatePlayerMoveSpeed();
+        updateRunButtonState();
+      }
+
+      if (
+        state.selectedCharacter
+        && state.selectedCharacter.id === "killercroc"
+        && !state.movingLeft
+        && !state.movingRight
+        && spriteAnimators[state.selectedCharacter.id]
+      ) {
+        spriteAnimators[state.selectedCharacter.id].playIdle();
+      }
     });
 
     mobileButtons.forEach((button) => {
@@ -1685,6 +1976,49 @@
 
     // Venue selection handlers
     const venueOptions = Array.from(document.querySelectorAll(".venue-option"));
+    function applyVenueAppearance(venue) {
+      arena.className = "arena";
+      arena.classList.add(`venue-${venue}`);
+
+      const crowdEl = arena.querySelector(".crowd");
+      const groundEl = arena.querySelector(".ground");
+      if (crowdEl) {
+        crowdEl.style.display = "";
+      }
+      if (groundEl) {
+        groundEl.style.display = "";
+      }
+
+      // Runtime hard override: ensure image venues fully fill and overlays do not cover them.
+      if (venue === "stadium") {
+        arena.style.background = 'url("images/slaughter swamp.PNG?v=2") center center / 100% 100% no-repeat';
+        if (crowdEl) {
+          crowdEl.style.display = "none";
+        }
+        if (groundEl) {
+          groundEl.style.display = "none";
+        }
+      } else if (venue === "underground") {
+        arena.style.background = 'url("images/redsunprison.PNG?v=2") center center / 100% 100% no-repeat';
+        if (crowdEl) {
+          crowdEl.style.display = "none";
+        }
+        if (groundEl) {
+          groundEl.style.display = "none";
+        }
+      } else {
+        arena.style.background = "";
+      }
+
+      const venueNames = {
+        rig: "MEMORIAL STATION",
+        street: "FORTRESS OF SOLITUDE",
+        stadium: "SLAUGHTER SWAMP",
+        underground: "RED SUN PRISON"
+      };
+      stageSignEl.textContent = venueNames[venue] || "MEMORIAL STATION";
+    }
+
     venueOptions.forEach((option) => {
       option.addEventListener("click", () => {
         const venue = option.getAttribute("data-venue");
@@ -1695,22 +2029,14 @@
           opt.classList.remove("active");
         });
         option.classList.add("active");
-        
-        // Apply venue styling to arena
-        arena.className = "arena";
-        arena.classList.add(`venue-${venue}`);
-        
-        // Update stage sign text
-        const venueNames = {
-          rig: "RIG ARENA",
-          street: "STREET FIGHT",
-          stadium: "MAIN STADIUM",
-          underground: "UNDERGROUND",
-          beach: "BEACH BATTLE"
-        };
-        stageSignEl.textContent = venueNames[venue] || "RIG ARENA";
+
+        // Apply venue styling to arena.
+        applyVenueAppearance(venue);
       });
     });
+
+    // Ensure default selected venue background is applied on first load.
+    applyVenueAppearance(state.selectedVenue);
 
     resetBtn.addEventListener("click", resetRound);
     startFightBtn.addEventListener("click", beginFight);
@@ -1743,8 +2069,47 @@
     // ====== SPRITE RENDERING SYSTEM ======
     const spriteSequences = {};
     const spriteAnimators = {};
+    const characterSpriteScale = {};
     const cleanedFrameSrcCache = new Map();
     const frameCleanupInProgress = new Set();
+
+    function calculateCharacterSpriteScale(sequences) {
+      const heights = [];
+
+      Object.values(sequences || {}).forEach((seq) => {
+        (seq.frames || []).forEach((frame) => {
+          const box = frame && frame.bbox ? frame.bbox : null;
+          const h = box && typeof box.height === "number" ? box.height : 0;
+          if (h >= 60) {
+            heights.push(h);
+          }
+        });
+      });
+
+      if (heights.length === 0) {
+        return 1;
+      }
+
+      heights.sort((a, b) => a - b);
+      const medianHeight = heights[Math.floor(heights.length / 2)] || heights[0];
+      const targetVisualHeight = 185;
+      return clamp(targetVisualHeight / medianHeight, 0.72, 1.35);
+    }
+
+    function sanitizeFlashSequences(sequences) {
+      const flashIdleFrame = {
+        frame: "idle-placeholder",
+        file: "flash-placeholder.png",
+        path: "images/flash-placeholder.png"
+      };
+
+      sequences["sequence-idle"] = {
+        name: "sequence-idle",
+        frames: [{ ...flashIdleFrame }, { ...flashIdleFrame }]
+      };
+
+      return sequences;
+    }
 
     function sanitizeGreenLanternSequences(sequences) {
       const runSeq = sequences["sequence-01"];
@@ -1752,48 +2117,58 @@
         return sequences;
       }
 
-      // Keep only plausible full-body frames for standing/walking.
+      // Keep plausible full-body movement frames from the fresh sprite extraction.
       const stableWalkFrames = runSeq.frames.filter((frame) => {
         const box = frame.bbox || {};
-        return (box.width || 0) >= 95 && (box.height || 0) >= 150;
+        return (box.width || 0) >= 60 && (box.height || 0) >= 135;
       });
 
       const walkFrames = stableWalkFrames.length > 0 ? stableWalkFrames : [runSeq.frames[0]];
-      const idleFrame = walkFrames[Math.floor(walkFrames.length / 2)] || walkFrames[0];
+      const hoverFrame = walkFrames.reduce((best, frame) => {
+        const bestArea = (best && best.area) || 0;
+        const frameArea = frame && frame.area ? frame.area : 0;
+        return frameArea > bestArea ? frame : best;
+      }, walkFrames[0]);
+      const seq2Frames = (sequences["sequence-02"] && sequences["sequence-02"].frames) || [];
+      const constructFrames = seq2Frames.filter((frame) => {
+        const box = frame.bbox || {};
+        return (box.width || 0) >= 65 && (box.height || 0) >= 130;
+      });
 
-      // Ring blast frame from source sheet if present.
-      const ringFrame = sequences["sequence-02"]
-        && sequences["sequence-02"].frames
-        && sequences["sequence-02"].frames[0]
-          ? sequences["sequence-02"].frames[0]
-          : null;
+      const seq3Frames = (sequences["sequence-03"] && sequences["sequence-03"].frames) || [];
+      const kickFrames = seq3Frames.filter((frame) => {
+        const box = frame.bbox || {};
+        return (box.width || 0) >= 60 && (box.height || 0) >= 118;
+      });
 
       sequences["sequence-01"] = {
         name: "sequence-01",
-        frames: walkFrames.map((frame) => ({ ...frame }))
+        frames: [{ ...hoverFrame }]
       };
 
-      // Punch mapped to visible ring attack: wind-up -> ring blast -> recover.
+      sequences["sequence-idle"] = {
+        name: "sequence-idle",
+        frames: [{ ...hoverFrame }, { ...hoverFrame }]
+      };
+
+      // Use the actual ring-construct attack sequence from the sprite sheet.
       sequences["sequence-02"] = {
         name: "sequence-02",
-        frames: ringFrame
-          ? [
-              { ...walkFrames[0] },
-              { ...ringFrame },
-              { ...(walkFrames[1] || walkFrames[0]) }
-            ]
-          : [{ ...idleFrame }]
+        frames: constructFrames.length >= 3
+          ? constructFrames.map((frame) => ({ ...frame }))
+          : [{ ...hoverFrame }]
       };
 
-      // Sequence-03 should remain full-body motion; avoid cropped ring frame that hides the head.
       sequences["sequence-03"] = {
         name: "sequence-03",
-        frames: [
-          { ...walkFrames[0] },
-          { ...(walkFrames[1] || walkFrames[0]) },
-          { ...(walkFrames[2] || walkFrames[0]) },
-          { ...idleFrame }
-        ]
+        frames: kickFrames.length >= 3
+          ? kickFrames.map((frame) => ({ ...frame }))
+          : [
+              { ...walkFrames[0] },
+              { ...(walkFrames[1] || walkFrames[0]) },
+              { ...(walkFrames[2] || walkFrames[0]) },
+              { ...hoverFrame }
+            ]
       };
 
       return sequences;
@@ -1815,6 +2190,234 @@
         sequences["sequence-03"] = {
           name: "sequence-03",
           frames: fullBodyFrames.map((frame) => ({ ...frame }))
+        };
+      }
+
+      const specialSeq = sequences["sequence-04"];
+      if (specialSeq && specialSeq.frames && specialSeq.frames.length > 0) {
+        // Drop cropped lower-body frames that hide the head in sequence-04.
+        const visibleHeadFrames = specialSeq.frames.filter((frame) => {
+          const box = frame.bbox || {};
+          return (box.height || 0) >= 150;
+        });
+
+        if (visibleHeadFrames.length > 0) {
+          sequences["sequence-04"] = {
+            name: "sequence-04",
+            frames: visibleHeadFrames.map((frame) => ({ ...frame }))
+          };
+        }
+      }
+
+      const walkSeq = sequences["sequence-01"];
+      if (walkSeq && walkSeq.frames && walkSeq.frames.length > 1) {
+        const cleanWalkFrames = walkSeq.frames.filter((frame) => {
+          const frameRef = frame.path || frame.framePath || frame.file || "";
+          return !/frame-01\.png$/i.test(frameRef);
+        });
+        if (cleanWalkFrames.length > 0) {
+          sequences["sequence-01"] = {
+            name: "sequence-01",
+            frames: cleanWalkFrames.map((frame) => ({ ...frame }))
+          };
+        }
+
+        // Keep Killer Croc perfectly still at idle; legs should only move while walking.
+        const idleBase = sequences["sequence-01"].frames;
+        const standFrame = idleBase[0];
+        sequences["sequence-idle"] = {
+          name: "sequence-idle",
+          frames: [{ ...standFrame }, { ...standFrame }]
+        };
+      }
+
+      return sequences;
+    }
+
+    function sanitizeDoomsdaySequences(sequences) {
+      const moveSeq = sequences["sequence-01"];
+      if (!moveSeq || !moveSeq.frames || moveSeq.frames.length === 0) {
+        return sequences;
+      }
+
+      const moveFrames = moveSeq.frames.filter((frame) => {
+        const frameRef = frame.path || frame.framePath || frame.file || "";
+        if (/frame-(09|10)\.png$/i.test(frameRef)) {
+          return false;
+        }
+        const box = frame.bbox || {};
+        return (box.width || 0) >= 95 && (box.height || 0) >= 150;
+      });
+
+      const selectedMoveFrames = moveFrames.length >= 4 ? moveFrames : moveSeq.frames;
+      sequences["sequence-01"] = {
+        name: "sequence-01",
+        frames: selectedMoveFrames.map((frame) => ({ ...frame }))
+      };
+
+      const punchSeq = sequences["sequence-02"];
+      if (punchSeq && punchSeq.frames && punchSeq.frames.length > 0) {
+        const attackFrames = punchSeq.frames.filter((frame) => {
+          const box = frame.bbox || {};
+          return (box.height || 0) >= 145 && (box.width || 0) >= 110 && (box.width || 0) <= 230;
+        });
+
+        sequences["sequence-02"] = {
+          name: "sequence-02",
+          frames: (attackFrames.length >= 3 ? attackFrames : punchSeq.frames).map((frame) => ({ ...frame }))
+        };
+      }
+
+      const kickSeq = sequences["sequence-03"];
+      if (kickSeq && kickSeq.frames && kickSeq.frames.length > 0) {
+        const heavyFrames = kickSeq.frames.filter((frame) => {
+          const box = frame.bbox || {};
+          return (box.height || 0) >= 160 && (box.width || 0) >= 110;
+        });
+
+        sequences["sequence-03"] = {
+          name: "sequence-03",
+          frames: (heavyFrames.length >= 3 ? heavyFrames : kickSeq.frames).map((frame) => ({ ...frame }))
+        };
+      }
+
+      const idleBase = sequences["sequence-01"].frames;
+      const standFrame = idleBase[0];
+      const settleFrame = idleBase[Math.min(1, idleBase.length - 1)] || standFrame;
+      sequences["sequence-idle"] = {
+        name: "sequence-idle",
+        frames: [{ ...standFrame }, { ...settleFrame }]
+      };
+
+      return sequences;
+    }
+
+    function sanitizeHawkgirlSequences(sequences) {
+      const runSeq = sequences["sequence-01"];
+      if (!runSeq || !runSeq.frames || runSeq.frames.length === 0) {
+        return sequences;
+      }
+
+      const flapFrames = [
+        {
+          frame: "frame-01",
+          file: "frame-01.png",
+          path: "images/sprites/hawkgirl/frames/sequence-idle/frame-01.png"
+        },
+        {
+          frame: "frame-02",
+          file: "frame-02.png",
+          path: "images/sprites/hawkgirl/frames/sequence-idle/frame-02.png"
+        },
+        {
+          frame: "frame-01",
+          file: "frame-01.png",
+          path: "images/sprites/hawkgirl/frames/sequence-idle/frame-01.png"
+        },
+        {
+          frame: "frame-02",
+          file: "frame-02.png",
+          path: "images/sprites/hawkgirl/frames/sequence-idle/frame-02.png"
+        }
+      ];
+
+      sequences["sequence-01"] = {
+        name: "sequence-01",
+        frames: flapFrames.map((frame) => ({ ...frame }))
+      };
+
+      sequences["sequence-idle"] = {
+        name: "sequence-idle",
+        frames: flapFrames.map((frame) => ({ ...frame }))
+      };
+
+      const seq2 = sequences["sequence-02"];
+      if (seq2 && seq2.frames && seq2.frames.length > 0) {
+        const attackFrames = seq2.frames.filter((frame) => {
+          const box = frame.bbox || {};
+          return (box.width || 0) >= 160 && (box.height || 0) >= 180;
+        });
+        if (attackFrames.length >= 3) {
+          sequences["sequence-02"] = {
+            name: "sequence-02",
+            frames: attackFrames.map((frame) => ({ ...frame }))
+          };
+        }
+      }
+
+      const seq3 = sequences["sequence-03"];
+      if (seq3 && seq3.frames && seq3.frames.length > 0) {
+        const strikeFrames = seq3.frames.filter((frame) => {
+          const box = frame.bbox || {};
+          return (box.width || 0) >= 140 && (box.height || 0) >= 170;
+        });
+        if (strikeFrames.length >= 3) {
+          sequences["sequence-03"] = {
+            name: "sequence-03",
+            frames: strikeFrames.map((frame) => ({ ...frame }))
+          };
+        }
+      }
+
+      return sequences;
+    }
+
+    function sanitizeSinestroSequences(sequences) {
+      const walkSeq = sequences["sequence-01"];
+      const runSeq = sequences["sequence-02"];
+      const clawSeq = sequences["sequence-03"];
+      const blastSeq = sequences["sequence-04"];
+      if (!walkSeq || !runSeq || !clawSeq || !blastSeq) {
+        return sequences;
+      }
+
+      const runFrames = (runSeq.frames || []).filter((frame) => {
+        const box = frame.bbox || {};
+        return (box.width || 0) >= 150 && (box.height || 0) >= 165;
+      });
+      const selectedRun = runFrames.length >= 3 ? runFrames : (runSeq.frames || []);
+
+      const clawFrames = (clawSeq.frames || []).filter((frame) => {
+        const box = frame.bbox || {};
+        return (box.width || 0) >= 200 && (box.height || 0) >= 220;
+      });
+
+      const blastFrames = (blastSeq.frames || []).filter((frame) => {
+        const box = frame.bbox || {};
+        return (box.width || 0) >= 200 && (box.height || 0) >= 220;
+      });
+
+      if (selectedRun.length > 0) {
+        sequences["sequence-01"] = {
+          name: "sequence-01",
+          frames: selectedRun.map((frame) => ({ ...frame }))
+        };
+      }
+
+      if (clawFrames.length > 0) {
+        sequences["sequence-02"] = {
+          name: "sequence-02",
+          frames: clawFrames.map((frame) => ({ ...frame }))
+        };
+      }
+
+      if (blastFrames.length > 0) {
+        sequences["sequence-03"] = {
+          name: "sequence-03",
+          frames: blastFrames.map((frame) => ({ ...frame }))
+        };
+      }
+
+      const idlePool = (walkSeq.frames || []).filter((frame) => {
+        const box = frame.bbox || {};
+        return (box.width || 0) >= 150 && (box.height || 0) >= 175;
+      });
+      const idleA = idlePool[0] || selectedRun[0] || (walkSeq.frames || [])[0];
+      const idleB = idlePool[1] || idleA;
+      if (idleA) {
+        sequences["sequence-idle"] = {
+          name: "sequence-idle",
+          frames: [{ ...idleA }, { ...idleB }]
         };
       }
 
@@ -1923,6 +2526,13 @@
       if (cleanedFrameSrcCache.has(framePath) || frameCleanupInProgress.has(framePath)) {
         return;
       }
+
+      // Sequence-01 now uses only clean source frames; skip runtime cleanup to avoid head clipping.
+      if (framePath.includes("killercroc/frames/sequence-01/")) {
+        cleanedFrameSrcCache.set(framePath, framePath);
+        return;
+      }
+
       frameCleanupInProgress.add(framePath);
 
       const sourceImage = new Image();
@@ -1998,6 +2608,415 @@
           }
         }
 
+        if (framePath.includes("killercroc/frames/sequence-01/")) {
+          const textTopLimit = Math.min(21, height);
+          const textLeft = Math.max(0, Math.floor(width * 0.35));
+          const textRight = Math.min(width - 1, Math.ceil(width * 0.82));
+          for (let y = 0; y < textTopLimit; y += 1) {
+            for (let x = textLeft; x <= textRight; x += 1) {
+              const i = (y * width + x) * 4;
+              if (pixels[i + 3] > 20) {
+                pixels[i + 3] = 0;
+              }
+            }
+          }
+
+          const remnantTop = Math.min(20, height);
+          const remnantLeft = Math.max(0, Math.floor(width * 0.40));
+          const remnantRight = Math.min(width - 1, Math.ceil(width * 0.90));
+          for (let y = 0; y < remnantTop; y += 1) {
+            for (let x = remnantLeft; x <= remnantRight; x += 1) {
+              const i = (y * width + x) * 4;
+              if (pixels[i + 3] > 20) {
+                pixels[i + 3] = 0;
+              }
+            }
+          }
+
+          const finalTop = Math.min(17, height);
+          const finalLeft = Math.max(0, Math.floor(width * 0.47));
+          const finalRight = Math.min(width - 1, Math.ceil(width * 0.74));
+          for (let y = 0; y < finalTop; y += 1) {
+            for (let x = finalLeft; x <= finalRight; x += 1) {
+              const i = (y * width + x) * 4;
+              if (pixels[i + 3] > 20) {
+                pixels[i + 3] = 0;
+              }
+            }
+          }
+
+          const brightTop = Math.min(24, height);
+          const brightLeft = Math.max(0, Math.floor(width * 0.45));
+          const brightRight = Math.min(width - 1, Math.ceil(width * 0.76));
+          for (let y = 0; y < brightTop; y += 1) {
+            for (let x = brightLeft; x <= brightRight; x += 1) {
+              const i = (y * width + x) * 4;
+              if (pixels[i + 3] <= 20) {
+                continue;
+              }
+              const r = pixels[i];
+              const g = pixels[i + 1];
+              const b = pixels[i + 2];
+              const spread = Math.max(r, g, b) - Math.min(r, g, b);
+              if (r >= 150 && g >= 150 && b >= 150 && spread <= 40) {
+                pixels[i + 3] = 0;
+              }
+            }
+          }
+
+          const rowOpaque = new Uint16Array(height);
+          for (let y = 0; y < height; y += 1) {
+            let count = 0;
+            for (let x = 0; x < width; x += 1) {
+              if (getAlpha(x, y) > 20) {
+                count += 1;
+              }
+            }
+            rowOpaque[y] = count;
+          }
+
+          let bodyStartY = 0;
+          for (let y = 0; y < height; y += 1) {
+            if (rowOpaque[y] >= 14) {
+              bodyStartY = y;
+              break;
+            }
+          }
+
+          const clearUntilY = 0;
+          for (let y = 0; y < clearUntilY; y += 1) {
+            for (let x = 0; x < width; x += 1) {
+              const i = (y * width + x) * 4;
+              pixels[i + 3] = 0;
+            }
+          }
+
+          const visitedAll = new Uint8Array(width * height);
+          const components = [];
+
+          for (let y = 0; y < height; y += 1) {
+            for (let x = 0; x < width; x += 1) {
+              const startIdx = y * width + x;
+              if (visitedAll[startIdx] || getAlpha(x, y) <= 20) {
+                continue;
+              }
+
+              const stack = [[x, y]];
+              const pixelsInComponent = [];
+              let minY = y;
+              let maxY = y;
+              visitedAll[startIdx] = 1;
+
+              while (stack.length > 0) {
+                const [cx, cy] = stack.pop();
+                pixelsInComponent.push([cx, cy]);
+                if (cy < minY) minY = cy;
+                if (cy > maxY) maxY = cy;
+
+                for (const [dx, dy] of neighbors) {
+                  const nx = cx + dx;
+                  const ny = cy + dy;
+                  if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+                    continue;
+                  }
+                  const nIdx = ny * width + nx;
+                  if (visitedAll[nIdx] || getAlpha(nx, ny) <= 20) {
+                    continue;
+                  }
+                  visitedAll[nIdx] = 1;
+                  stack.push([nx, ny]);
+                }
+              }
+
+              components.push({
+                area: pixelsInComponent.length,
+                minY,
+                maxY,
+                pixels: pixelsInComponent
+              });
+            }
+          }
+
+          if (components.length > 1) {
+            const primary = components.reduce((best, comp) => (comp.area > best.area ? comp : best), components[0]);
+            const smallLimit = Math.max(220, Math.round(primary.area * 0.18));
+
+            components.forEach((comp) => {
+              if (comp === primary) {
+                return;
+              }
+
+              const detachedAboveHead = comp.maxY < primary.minY - 2;
+
+              if (detachedAboveHead) {
+                comp.pixels.forEach(([px, py]) => {
+                  const i = (py * width + px) * 4;
+                  pixels[i + 3] = 0;
+                });
+              }
+            });
+          }
+
+          // Second pass on strong-alpha mask to break anti-aliased bridges from text to body.
+          const strongVisited = new Uint8Array(width * height);
+          const strongComponents = [];
+          const strongThreshold = 140;
+
+          for (let y = 0; y < height; y += 1) {
+            for (let x = 0; x < width; x += 1) {
+              const startIdx = y * width + x;
+              if (strongVisited[startIdx] || getAlpha(x, y) < strongThreshold) {
+                continue;
+              }
+
+              const stack = [[x, y]];
+              const componentPixels = [];
+              let minX = x;
+              let maxX = x;
+              let minY = y;
+              let maxY = y;
+              strongVisited[startIdx] = 1;
+
+              while (stack.length > 0) {
+                const [cx, cy] = stack.pop();
+                componentPixels.push([cx, cy]);
+                if (cx < minX) minX = cx;
+                if (cx > maxX) maxX = cx;
+                if (cy < minY) minY = cy;
+                if (cy > maxY) maxY = cy;
+
+                for (const [dx, dy] of neighbors) {
+                  const nx = cx + dx;
+                  const ny = cy + dy;
+                  if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+                    continue;
+                  }
+                  const nIdx = ny * width + nx;
+                  if (strongVisited[nIdx] || getAlpha(nx, ny) < strongThreshold) {
+                    continue;
+                  }
+                  strongVisited[nIdx] = 1;
+                  stack.push([nx, ny]);
+                }
+              }
+
+              strongComponents.push({
+                area: componentPixels.length,
+                minX,
+                maxX,
+                minY,
+                maxY
+              });
+            }
+          }
+
+          if (strongComponents.length > 1) {
+            const strongPrimary = strongComponents.reduce((best, comp) => (comp.area > best.area ? comp : best), strongComponents[0]);
+            strongComponents.forEach((comp) => {
+              if (comp === strongPrimary) {
+                return;
+              }
+
+              if (comp.maxY < strongPrimary.minY - 1) {
+                const sx0 = Math.max(0, comp.minX - 1);
+                const sx1 = Math.min(width - 1, comp.maxX + 1);
+                const sy0 = Math.max(0, comp.minY - 1);
+                const sy1 = Math.min(height - 1, comp.maxY + 1);
+
+                for (let sy = sy0; sy <= sy1; sy += 1) {
+                  for (let sx = sx0; sx <= sx1; sx += 1) {
+                    const i = (sy * width + sx) * 4;
+                    pixels[i + 3] = 0;
+                  }
+                }
+              }
+            });
+          }
+        }
+
+        context.putImageData(frame, 0, 0);
+        cleanedFrameSrcCache.set(framePath, canvas.toDataURL("image/png"));
+        frameCleanupInProgress.delete(framePath);
+      };
+
+      sourceImage.onerror = () => {
+        frameCleanupInProgress.delete(framePath);
+      };
+
+      sourceImage.src = framePath;
+    }
+
+    function requestSinestroFrameCleanup(framePath) {
+      if (cleanedFrameSrcCache.has(framePath) || frameCleanupInProgress.has(framePath)) {
+        return;
+      }
+      const isSequence01 = framePath.includes("sinestro/frames/sequence-01/");
+      if (!isSequence01) {
+        cleanedFrameSrcCache.set(framePath, framePath);
+        return;
+      }
+      frameCleanupInProgress.add(framePath);
+
+      const sourceImage = new Image();
+      sourceImage.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = sourceImage.naturalWidth;
+        canvas.height = sourceImage.naturalHeight;
+        const context = canvas.getContext("2d");
+        if (!context) {
+          frameCleanupInProgress.delete(framePath);
+          return;
+        }
+
+        context.drawImage(sourceImage, 0, 0);
+        const frame = context.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = frame.data;
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const isBackgroundLike = (r, g, b, a) => {
+          if (a <= 20) {
+            return false;
+          }
+          const spread = Math.max(r, g, b) - Math.min(r, g, b);
+          const darkGrid = r < 125 && g < 132 && b < 145 && spread <= 20;
+          const brightGuide = r > 165 && g > 165 && b > 165 && spread <= 18;
+          return darkGrid || brightGuide;
+        };
+
+        if (isSequence01) {
+          const visitedBg = new Uint8Array(width * height);
+          const stack = [];
+          const canClear = (x, y) => {
+            const i = (y * width + x) * 4;
+            return isBackgroundLike(pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]);
+          };
+
+          for (let x = 0; x < width; x += 1) {
+            if (canClear(x, 0)) stack.push([x, 0]);
+            if (height > 1 && canClear(x, height - 1)) stack.push([x, height - 1]);
+          }
+          for (let y = 1; y < height - 1; y += 1) {
+            if (canClear(0, y)) stack.push([0, y]);
+            if (width > 1 && canClear(width - 1, y)) stack.push([width - 1, y]);
+          }
+
+          while (stack.length > 0) {
+            const [cx, cy] = stack.pop();
+            const idx = cy * width + cx;
+            if (visitedBg[idx]) {
+              continue;
+            }
+            visitedBg[idx] = 1;
+            if (!canClear(cx, cy)) {
+              continue;
+            }
+
+            const i = idx * 4;
+            pixels[i + 3] = 0;
+
+            if (cx > 0) stack.push([cx - 1, cy]);
+            if (cx < width - 1) stack.push([cx + 1, cy]);
+            if (cy > 0) stack.push([cx, cy - 1]);
+            if (cy < height - 1) stack.push([cx, cy + 1]);
+          }
+        } else {
+          for (let y = 0; y < height; y += 1) {
+            for (let x = 0; x < width; x += 1) {
+              const i = (y * width + x) * 4;
+              if (isBackgroundLike(pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3])) {
+                pixels[i + 3] = 0;
+              }
+            }
+          }
+        }
+
+        const visited = new Uint8Array(width * height);
+        const components = [];
+        const neighbors = [
+          [-1, -1], [0, -1], [1, -1],
+          [-1, 0],           [1, 0],
+          [-1, 1],  [0, 1],  [1, 1]
+        ];
+
+        const getAlpha = (x, y) => pixels[(y * width + x) * 4 + 3];
+
+        for (let y = 0; y < height; y += 1) {
+          for (let x = 0; x < width; x += 1) {
+            const start = y * width + x;
+            if (visited[start] || getAlpha(x, y) <= 20) {
+              continue;
+            }
+
+            const stack = [[x, y]];
+            visited[start] = 1;
+            const points = [];
+            let minX = x;
+            let maxX = x;
+            let minY = y;
+            let maxY = y;
+
+            while (stack.length > 0) {
+              const [cx, cy] = stack.pop();
+              points.push([cx, cy]);
+              if (cx < minX) minX = cx;
+              if (cx > maxX) maxX = cx;
+              if (cy < minY) minY = cy;
+              if (cy > maxY) maxY = cy;
+
+              for (const [dx, dy] of neighbors) {
+                const nx = cx + dx;
+                const ny = cy + dy;
+                if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+                  continue;
+                }
+                const idx = ny * width + nx;
+                if (visited[idx] || getAlpha(nx, ny) <= 20) {
+                  continue;
+                }
+                visited[idx] = 1;
+                stack.push([nx, ny]);
+              }
+            }
+
+            components.push({
+              area: points.length,
+              minX,
+              maxX,
+              minY,
+              maxY,
+              points
+            });
+          }
+        }
+
+        if (!isSequence01 && components.length > 1) {
+          const primary = components.reduce((best, comp) => (comp.area > best.area ? comp : best), components[0]);
+          const keep = new Set([primary]);
+
+          components.forEach((comp) => {
+            if (comp === primary) {
+              return;
+            }
+            const nearPrimaryX = comp.maxX >= primary.minX - 12 && comp.minX <= primary.maxX + 12;
+            const nearPrimaryY = comp.maxY >= primary.minY - 12 && comp.minY <= primary.maxY + 12;
+            const notTiny = comp.area >= Math.max(90, Math.round(primary.area * 0.035));
+            if (nearPrimaryX && nearPrimaryY && notTiny) {
+              keep.add(comp);
+            }
+          });
+
+          components.forEach((comp) => {
+            if (keep.has(comp)) {
+              return;
+            }
+            comp.points.forEach(([px, py]) => {
+              const i = (py * width + px) * 4;
+              pixels[i + 3] = 0;
+            });
+          });
+        }
+
         context.putImageData(frame, 0, 0);
         cleanedFrameSrcCache.set(framePath, canvas.toDataURL("image/png"));
         frameCleanupInProgress.delete(framePath);
@@ -2011,7 +3030,7 @@
     }
 
     function resolveFrameSrc(characterId, framePath) {
-      if (characterId !== "green-lantern" && characterId !== "killercroc") {
+      if (characterId !== "green-lantern" && characterId !== "killercroc" && characterId !== "sinestro") {
         return framePath;
       }
 
@@ -2023,6 +3042,8 @@
         requestGreenLanternFrameCleanup(framePath);
       } else if (characterId === "killercroc") {
         requestKillerCrocFrameCleanup(framePath);
+      } else if (characterId === "sinestro") {
+        requestSinestroFrameCleanup(framePath);
       }
       return framePath;
     }
@@ -2035,7 +3056,9 @@
         this.currentSequence = null;
         this.currentFrame = 0;
         this.frameTime = 0;
-        this.frameDelay = 80; // ms per frame
+        this.defaultFrameDelay = 80;
+        this.idleFrameDelay = 220;
+        this.frameDelay = this.defaultFrameDelay; // ms per frame
         this.isPlaying = false;
         this.loop = true;
         this.isIdle = false;
@@ -2060,10 +3083,25 @@
         this.isIdle = false;
         this.pingPong = pingPong;
         this.frameDirection = 1;
+        this.frameDelay = this.defaultFrameDelay;
       }
 
       playIdle() {
-        // Idle is a still pose: first frame only.
+        const idleSeq = this.sequences["sequence-idle"];
+        if (idleSeq && idleSeq.frames && idleSeq.frames.length > 1) {
+          this.currentSequence = "sequence-idle";
+          this.currentFrame = 0;
+          this.frameTime = 0;
+          this.loop = true;
+          this.isPlaying = true;
+          this.isIdle = true;
+          this.pingPong = true;
+          this.frameDirection = 1;
+          this.frameDelay = this.idleFrameDelay;
+          return;
+        }
+
+        // Default idle is a still pose: first frame only.
         const seq = this.sequences["sequence-01"];
         if (!seq || !seq.frames || seq.frames.length === 0) {
           return;
@@ -2076,6 +3114,7 @@
         this.isIdle = true;
         this.pingPong = false;
         this.frameDirection = 1;
+        this.frameDelay = this.defaultFrameDelay;
       }
 
       update(deltaTime) {
@@ -2083,7 +3122,7 @@
           return;
         }
         const seq = this.sequences[this.currentSequence];
-        if (!seq || this.isIdle) return;
+        if (!seq) return;
         this.frameTime += deltaTime;
         if (this.frameTime >= this.frameDelay) {
           this.frameTime -= this.frameDelay;
@@ -2131,7 +3170,7 @@
 
     // Load all sprite sequences
     async function loadSpriteSequences() {
-      const characters = ['flash', 'green-lantern', 'hawkgirl', 'killercroc', 'sinestro', 'doomsday'];
+      const characters = ['flash', 'green-lantern', 'hawkgirl', 'killercroc', 'doomsday'];
       
       for (const char of characters) {
         try {
@@ -2150,6 +3189,10 @@
               }))
             };
           });
+
+          if (char === "flash") {
+            sanitizeFlashSequences(sequences);
+          }
 
           if (char === "green-lantern") {
             sanitizeGreenLanternSequences(sequences);
@@ -2177,7 +3220,17 @@
             });
             framePaths.forEach((framePath) => requestKillerCrocFrameCleanup(framePath));
           }
-          
+
+          if (char === "doomsday") {
+            sanitizeDoomsdaySequences(sequences);
+          }
+
+          if (char === "hawkgirl") {
+            sanitizeHawkgirlSequences(sequences);
+          }
+
+          characterSpriteScale[char] = calculateCharacterSpriteScale(sequences);
+
           spriteSequences[char] = sequences;
           spriteAnimators[char] = new SpriteAnimator(char, sequences);
         } catch (error) {
@@ -2199,6 +3252,16 @@
       'victory': 'sequence-01'
     };
 
+    function getFacingScaleXForFighter(fighterEl) {
+      const playerCenter = state.playerX + 36;
+      const enemyCenter = state.enemyX + 36;
+
+      if (fighterEl === playerEl) {
+        return playerCenter <= enemyCenter ? 1 : -1;
+      }
+      return enemyCenter <= playerCenter ? 1 : -1;
+    }
+
     // Render sprite frame to fighter element
     function renderSpriteFrame(fighterEl, characterId, animator) {
       const frame = animator.getCurrentFrame();
@@ -2219,6 +3282,39 @@
       const nextSrc = resolveFrameSrc(characterId, frame.path);
       if (imgEl.src !== nextSrc) {
         imgEl.src = nextSrc;
+      }
+
+      const facingScaleX = getFacingScaleXForFighter(fighterEl);
+      const normalizedScale = characterSpriteScale[characterId] || 1;
+      const isFlashPlaceholderFrame = characterId === "flash" && frame.path === "images/flash-placeholder.png";
+      const effectiveScale = isFlashPlaceholderFrame ? normalizedScale * 1.9 : normalizedScale;
+      imgEl.style.transformOrigin = "center bottom";
+
+      const isGreenLanternIdle = characterId === "green-lantern"
+        && animator.isIdle
+        && !fighterEl.classList.contains("jumping");
+
+      const isHawkgirlIdle = characterId === "hawkgirl"
+        && animator.isIdle
+        && !fighterEl.classList.contains("jumping");
+
+      const isDoomsdayIdle = characterId === "doomsday"
+        && animator.isIdle
+        && !fighterEl.classList.contains("jumping");
+
+      const appliedScale = isDoomsdayIdle ? Math.min(effectiveScale, 0.86) : effectiveScale;
+      const horizontalOffset = isDoomsdayIdle ? 14 : 0;
+
+      if (isGreenLanternIdle) {
+        const phaseOffset = fighterEl === enemyEl ? Math.PI : 0;
+        const floatOffset = Math.sin(Date.now() * 0.005 + phaseOffset) * 4;
+        imgEl.style.transform = `translateX(${horizontalOffset}px) translateY(${floatOffset.toFixed(2)}px) scale(${appliedScale.toFixed(3)}) scaleX(${facingScaleX})`;
+      } else if (isHawkgirlIdle) {
+        const phaseOffset = fighterEl === enemyEl ? Math.PI : 0;
+        const floatOffset = Math.sin(Date.now() * 0.006 + phaseOffset) * 6;
+        imgEl.style.transform = `translateX(${horizontalOffset}px) translateY(${floatOffset.toFixed(2)}px) scale(${appliedScale.toFixed(3)}) scaleX(${facingScaleX})`;
+      } else {
+        imgEl.style.transform = `translateX(${horizontalOffset}px) scale(${appliedScale.toFixed(3)}) scaleX(${facingScaleX})`;
       }
     }
 
@@ -2256,7 +3352,7 @@
       originalPlayerAttack.call(this, type);
       if (state.selectedCharacter && spriteAnimators[state.selectedCharacter.id]) {
         const animator = spriteAnimators[state.selectedCharacter.id];
-        const sequenceName = animationMap[type] || "sequence-01";
+        const sequenceName = getPlayerActionSequenceName(type);
         animator.playSequence(sequenceName, false);
 
         // Return to static idle after the action sequence.
@@ -2270,19 +3366,9 @@
     const originalMovePlayer = movePlayer;
     movePlayer = function(direction) {
       originalMovePlayer.call(this, direction);
-      // Flash should loop run frames while movement keys are held.
-      if (state.selectedCharacter && state.selectedCharacter.id === "flash") {
-        updatePlayerRunState();
-        return;
-      }
-
-      // Other characters: brief movement animation, then return to idle.
+      // Keep run cycle active for any moving character while keys are held.
       if (state.selectedCharacter && direction !== 0 && spriteAnimators[state.selectedCharacter.id]) {
-        const animator = spriteAnimators[state.selectedCharacter.id];
-        animator.playSequence(animationMap.run || "sequence-01", false);
-        setTimeout(() => {
-          animator.playIdle();
-        }, 120);
+        updatePlayerRunState();
       }
     };
 

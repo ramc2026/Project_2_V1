@@ -235,7 +235,7 @@
         const BASE_PATH = 'images/sprites';
         const CHARACTERS = [
             'flash', 'green-lantern', 'hawkgirl',
-            'killercroc', 'sinestro', 'doomsday'
+            'killercroc', 'doomsday'
         ];
 
         class UnifiedSpriteAnimator {
@@ -260,6 +260,23 @@
                 this.bindEvents();
             }
 
+            refreshIfShowingFrame(framePath) {
+                const active = this.getActiveSequence();
+                if (!active || !active.frames || active.frames.length === 0) {
+                    return;
+                }
+
+                const frame = active.frames[Math.min(this.currentFrame, active.frames.length - 1)];
+                if (!frame) {
+                    return;
+                }
+
+                const activeFramePath = frame.framePath || `${BASE_PATH}/${active.character}/frames/${active.sequenceName}/${frame.file}`;
+                if (activeFramePath === framePath) {
+                    this.displayFrame();
+                }
+            }
+
             sanitizeGreenLanternSequenceList(sequenceList) {
                 const byName = Object.fromEntries(sequenceList.map((seq) => [seq.sequence, seq]));
                 const runSeq = byName['sequence-01'];
@@ -269,42 +286,52 @@
 
                 const stableWalkFrames = runSeq.frames.filter((frame) => {
                     const box = frame.bbox || {};
-                    return (box.width || 0) >= 95 && (box.height || 0) >= 150;
+                    return (box.width || 0) >= 60 && (box.height || 0) >= 135;
                 });
 
                 const walkFrames = stableWalkFrames.length > 0 ? stableWalkFrames : [runSeq.frames[0]];
-                const idleFrame = walkFrames[Math.floor(walkFrames.length / 2)] || walkFrames[0];
-                const ringFrame = byName['sequence-02'] && byName['sequence-02'].frames && byName['sequence-02'].frames[0]
-                    ? byName['sequence-02'].frames[0]
-                    : null;
+                const hoverFrame = walkFrames.reduce((best, frame) => {
+                    const bestArea = (best && best.area) || 0;
+                    const frameArea = frame && frame.area ? frame.area : 0;
+                    return frameArea > bestArea ? frame : best;
+                }, walkFrames[0]);
+                const seq2Frames = (byName['sequence-02'] && byName['sequence-02'].frames) || [];
+                const constructFrames = seq2Frames.filter((frame) => {
+                    const box = frame.bbox || {};
+                    return (box.width || 0) >= 65 && (box.height || 0) >= 130;
+                });
+
+                const seq3Frames = (byName['sequence-03'] && byName['sequence-03'].frames) || [];
+                const kickFrames = seq3Frames.filter((frame) => {
+                    const box = frame.bbox || {};
+                    return (box.width || 0) >= 60 && (box.height || 0) >= 118;
+                });
 
                 byName['sequence-01'] = {
                     ...byName['sequence-01'],
-                    frames: walkFrames.map((frame) => ({ ...frame })),
-                    frameCount: walkFrames.length
+                    frames: [{ ...hoverFrame }],
+                    frameCount: 1
                 };
 
                 byName['sequence-02'] = {
                     ...(byName['sequence-02'] || { sequence: 'sequence-02' }),
-                    frames: ringFrame
-                        ? [
-                            { ...walkFrames[0] },
-                            { ...ringFrame },
-                            { ...(walkFrames[1] || walkFrames[0]) }
-                        ]
-                        : [{ ...idleFrame }],
-                    frameCount: ringFrame ? 3 : 1
+                    frames: constructFrames.length >= 3
+                        ? constructFrames.map((frame) => ({ ...frame }))
+                        : [{ ...hoverFrame }],
+                    frameCount: constructFrames.length >= 3 ? constructFrames.length : 1
                 };
 
                 byName['sequence-03'] = {
                     ...(byName['sequence-03'] || { sequence: 'sequence-03' }),
-                    frames: [
-                        { ...walkFrames[0] },
-                        { ...(walkFrames[1] || walkFrames[0]) },
-                        { ...(walkFrames[2] || walkFrames[0]) },
-                        { ...idleFrame }
-                    ],
-                    frameCount: 4
+                    frames: kickFrames.length >= 3
+                        ? kickFrames.map((frame) => ({ ...frame }))
+                        : [
+                            { ...walkFrames[0] },
+                            { ...(walkFrames[1] || walkFrames[0]) },
+                            { ...(walkFrames[2] || walkFrames[0]) },
+                            { ...hoverFrame }
+                        ],
+                    frameCount: kickFrames.length >= 3 ? kickFrames.length : 4
                 };
 
                 return Object.values(byName);
@@ -327,6 +354,197 @@
                         ...byName['sequence-03'],
                         frames: fullBodyFrames.map((frame) => ({ ...frame })),
                         frameCount: fullBodyFrames.length
+                    };
+                }
+
+                const specialSeq = byName['sequence-04'];
+                if (specialSeq && specialSeq.frames && specialSeq.frames.length > 0) {
+                    const visibleHeadFrames = specialSeq.frames.filter((frame) => {
+                        const box = frame.bbox || {};
+                        return (box.height || 0) >= 150;
+                    });
+
+                    if (visibleHeadFrames.length > 0) {
+                        byName['sequence-04'] = {
+                            ...byName['sequence-04'],
+                            frames: visibleHeadFrames.map((frame) => ({ ...frame })),
+                            frameCount: visibleHeadFrames.length
+                        };
+                    }
+                }
+
+                const loopSeq = byName['sequence-01'];
+                if (loopSeq && loopSeq.frames && loopSeq.frames.length > 1) {
+                    const cleanWalkFrames = loopSeq.frames.filter((frame) => {
+                        const frameRef = frame.framePath || frame.path || frame.file || '';
+                        return !/frame-01\.png$/i.test(frameRef);
+                    });
+                    if (cleanWalkFrames.length > 0) {
+                        byName['sequence-01'] = {
+                            ...byName['sequence-01'],
+                            frames: cleanWalkFrames.map((frame) => ({ ...frame })),
+                            frameCount: cleanWalkFrames.length
+                        };
+                    }
+                }
+
+                return Object.values(byName);
+            }
+
+            sanitizeDoomsdaySequenceList(sequenceList) {
+                const byName = Object.fromEntries(sequenceList.map((seq) => [seq.sequence, seq]));
+                const moveSeq = byName['sequence-01'];
+                if (!moveSeq || !moveSeq.frames || moveSeq.frames.length === 0) {
+                    return sequenceList;
+                }
+
+                const moveFrames = moveSeq.frames.filter((frame) => {
+                    const frameRef = frame.framePath || frame.path || frame.file || '';
+                    if (/frame-(09|10)\.png$/i.test(frameRef)) {
+                        return false;
+                    }
+                    const box = frame.bbox || {};
+                    return (box.width || 0) >= 95 && (box.height || 0) >= 150;
+                });
+
+                byName['sequence-01'] = {
+                    ...byName['sequence-01'],
+                    frames: (moveFrames.length >= 4 ? moveFrames : moveSeq.frames).map((frame) => ({ ...frame })),
+                    frameCount: moveFrames.length >= 4 ? moveFrames.length : moveSeq.frames.length
+                };
+
+                const punchSeq = byName['sequence-02'];
+                if (punchSeq && punchSeq.frames && punchSeq.frames.length > 0) {
+                    const attackFrames = punchSeq.frames.filter((frame) => {
+                        const box = frame.bbox || {};
+                        return (box.height || 0) >= 145 && (box.width || 0) >= 110 && (box.width || 0) <= 230;
+                    });
+
+                    byName['sequence-02'] = {
+                        ...byName['sequence-02'],
+                        frames: (attackFrames.length >= 3 ? attackFrames : punchSeq.frames).map((frame) => ({ ...frame })),
+                        frameCount: attackFrames.length >= 3 ? attackFrames.length : punchSeq.frames.length
+                    };
+                }
+
+                const kickSeq = byName['sequence-03'];
+                if (kickSeq && kickSeq.frames && kickSeq.frames.length > 0) {
+                    const heavyFrames = kickSeq.frames.filter((frame) => {
+                        const box = frame.bbox || {};
+                        return (box.height || 0) >= 160 && (box.width || 0) >= 110;
+                    });
+
+                    byName['sequence-03'] = {
+                        ...byName['sequence-03'],
+                        frames: (heavyFrames.length >= 3 ? heavyFrames : kickSeq.frames).map((frame) => ({ ...frame })),
+                        frameCount: heavyFrames.length >= 3 ? heavyFrames.length : kickSeq.frames.length
+                    };
+                }
+
+                return Object.values(byName);
+            }
+
+            sanitizeHawkgirlSequenceList(sequenceList) {
+                const byName = Object.fromEntries(sequenceList.map((seq) => [seq.sequence, seq]));
+                if (!byName['sequence-01']) {
+                    return sequenceList;
+                }
+
+                const baseBox = { x: 0, y: 0, width: 560, height: 780 };
+                const baseArea = 520 * 780;
+                const baseFill = 0.48;
+
+                const flapFrames = [
+                    {
+                        frame: 'frame-01',
+                        file: 'frame-01.png',
+                        framePath: `${BASE_PATH}/hawkgirl/frames/sequence-idle/frame-01.png`,
+                        bbox: { ...baseBox },
+                        area: baseArea,
+                        fill: baseFill
+                    },
+                    {
+                        frame: 'frame-02',
+                        file: 'frame-02.png',
+                        framePath: `${BASE_PATH}/hawkgirl/frames/sequence-idle/frame-02.png`,
+                        bbox: { ...baseBox },
+                        area: baseArea,
+                        fill: baseFill
+                    },
+                    {
+                        frame: 'frame-01',
+                        file: 'frame-01.png',
+                        framePath: `${BASE_PATH}/hawkgirl/frames/sequence-idle/frame-01.png`,
+                        bbox: { ...baseBox },
+                        area: baseArea,
+                        fill: baseFill
+                    },
+                    {
+                        frame: 'frame-02',
+                        file: 'frame-02.png',
+                        framePath: `${BASE_PATH}/hawkgirl/frames/sequence-idle/frame-02.png`,
+                        bbox: { ...baseBox },
+                        area: baseArea,
+                        fill: baseFill
+                    }
+                ];
+
+                byName['sequence-01'] = {
+                    ...byName['sequence-01'],
+                    frames: flapFrames,
+                    frameCount: flapFrames.length
+                };
+
+                return Object.values(byName);
+            }
+
+            sanitizeSinestroSequenceList(sequenceList) {
+                const byName = Object.fromEntries(sequenceList.map((seq) => [seq.sequence, seq]));
+                const walkSeq = byName['sequence-01'];
+                const runSeq = byName['sequence-02'];
+                const clawSeq = byName['sequence-03'];
+                const blastSeq = byName['sequence-04'];
+                if (!walkSeq || !runSeq || !clawSeq || !blastSeq) {
+                    return sequenceList;
+                }
+
+                const runFrames = (runSeq.frames || []).filter((frame) => {
+                    const box = frame.bbox || {};
+                    return (box.width || 0) >= 150 && (box.height || 0) >= 165;
+                });
+                const selectedRun = runFrames.length >= 3 ? runFrames : (runSeq.frames || []);
+
+                const clawFrames = (clawSeq.frames || []).filter((frame) => {
+                    const box = frame.bbox || {};
+                    return (box.width || 0) >= 200 && (box.height || 0) >= 220;
+                });
+
+                const blastFrames = (blastSeq.frames || []).filter((frame) => {
+                    const box = frame.bbox || {};
+                    return (box.width || 0) >= 200 && (box.height || 0) >= 220;
+                });
+
+                if (selectedRun.length > 0) {
+                    byName['sequence-01'] = {
+                        ...byName['sequence-01'],
+                        frames: selectedRun.map((frame) => ({ ...frame })),
+                        frameCount: selectedRun.length
+                    };
+                }
+
+                if (clawFrames.length > 0) {
+                    byName['sequence-02'] = {
+                        ...byName['sequence-02'],
+                        frames: clawFrames.map((frame) => ({ ...frame })),
+                        frameCount: clawFrames.length
+                    };
+                }
+
+                if (blastFrames.length > 0) {
+                    byName['sequence-03'] = {
+                        ...(byName['sequence-03'] || { sequence: 'sequence-03' }),
+                        frames: blastFrames.map((frame) => ({ ...frame })),
+                        frameCount: blastFrames.length
                     };
                 }
 
@@ -427,6 +645,7 @@
                     context.putImageData(frame, 0, 0);
                     this.cleanedFrameSrcCache.set(framePath, canvas.toDataURL('image/png'));
                     this.frameCleanupInProgress.delete(framePath);
+                    this.refreshIfShowingFrame(framePath);
                 };
 
                 sourceImage.onerror = () => {
@@ -440,6 +659,13 @@
                 if (this.cleanedFrameSrcCache.has(framePath) || this.frameCleanupInProgress.has(framePath)) {
                     return;
                 }
+
+                // Sequence-01 now uses only clean source frames; skip runtime cleanup to avoid head clipping.
+                if (framePath.includes('killercroc/frames/sequence-01/')) {
+                    this.cleanedFrameSrcCache.set(framePath, framePath);
+                    return;
+                }
+
                 this.frameCleanupInProgress.add(framePath);
 
                 const sourceImage = new Image();
@@ -512,9 +738,419 @@
                         }
                     }
 
+                    if (framePath.includes('killercroc/frames/sequence-01/')) {
+                        const textTopLimit = Math.min(21, height);
+                        const textLeft = Math.max(0, Math.floor(width * 0.35));
+                        const textRight = Math.min(width - 1, Math.ceil(width * 0.82));
+                        for (let y = 0; y < textTopLimit; y += 1) {
+                            for (let x = textLeft; x <= textRight; x += 1) {
+                                const i = (y * width + x) * 4;
+                                if (pixels[i + 3] > 20) {
+                                    pixels[i + 3] = 0;
+                                }
+                            }
+                        }
+
+                        const remnantTop = Math.min(20, height);
+                        const remnantLeft = Math.max(0, Math.floor(width * 0.40));
+                        const remnantRight = Math.min(width - 1, Math.ceil(width * 0.90));
+                        for (let y = 0; y < remnantTop; y += 1) {
+                            for (let x = remnantLeft; x <= remnantRight; x += 1) {
+                                const i = (y * width + x) * 4;
+                                if (pixels[i + 3] > 20) {
+                                    pixels[i + 3] = 0;
+                                }
+                            }
+                        }
+
+                        const finalTop = Math.min(17, height);
+                        const finalLeft = Math.max(0, Math.floor(width * 0.47));
+                        const finalRight = Math.min(width - 1, Math.ceil(width * 0.74));
+                        for (let y = 0; y < finalTop; y += 1) {
+                            for (let x = finalLeft; x <= finalRight; x += 1) {
+                                const i = (y * width + x) * 4;
+                                if (pixels[i + 3] > 20) {
+                                    pixels[i + 3] = 0;
+                                }
+                            }
+                        }
+
+                        const brightTop = Math.min(24, height);
+                        const brightLeft = Math.max(0, Math.floor(width * 0.45));
+                        const brightRight = Math.min(width - 1, Math.ceil(width * 0.76));
+                        for (let y = 0; y < brightTop; y += 1) {
+                            for (let x = brightLeft; x <= brightRight; x += 1) {
+                                const i = (y * width + x) * 4;
+                                if (pixels[i + 3] <= 20) {
+                                    continue;
+                                }
+                                const r = pixels[i];
+                                const g = pixels[i + 1];
+                                const b = pixels[i + 2];
+                                const spread = Math.max(r, g, b) - Math.min(r, g, b);
+                                if (r >= 150 && g >= 150 && b >= 150 && spread <= 40) {
+                                    pixels[i + 3] = 0;
+                                }
+                            }
+                        }
+
+                        const rowOpaque = new Uint16Array(height);
+                        for (let y = 0; y < height; y += 1) {
+                            let count = 0;
+                            for (let x = 0; x < width; x += 1) {
+                                if (getAlpha(x, y) > 20) {
+                                    count += 1;
+                                }
+                            }
+                            rowOpaque[y] = count;
+                        }
+
+                        let bodyStartY = 0;
+                        for (let y = 0; y < height; y += 1) {
+                            if (rowOpaque[y] >= 14) {
+                                bodyStartY = y;
+                                break;
+                            }
+                        }
+
+                        const clearUntilY = 0;
+                        for (let y = 0; y < clearUntilY; y += 1) {
+                            for (let x = 0; x < width; x += 1) {
+                                const i = (y * width + x) * 4;
+                                pixels[i + 3] = 0;
+                            }
+                        }
+
+                        const visitedAll = new Uint8Array(width * height);
+                        const components = [];
+
+                        for (let y = 0; y < height; y += 1) {
+                            for (let x = 0; x < width; x += 1) {
+                                const startIdx = y * width + x;
+                                if (visitedAll[startIdx] || getAlpha(x, y) <= 20) {
+                                    continue;
+                                }
+
+                                const stack = [[x, y]];
+                                const pixelsInComponent = [];
+                                let minY = y;
+                                let maxY = y;
+                                visitedAll[startIdx] = 1;
+
+                                while (stack.length > 0) {
+                                    const [cx, cy] = stack.pop();
+                                    pixelsInComponent.push([cx, cy]);
+                                    if (cy < minY) minY = cy;
+                                    if (cy > maxY) maxY = cy;
+
+                                    for (const [dx, dy] of neighbors) {
+                                        const nx = cx + dx;
+                                        const ny = cy + dy;
+                                        if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+                                            continue;
+                                        }
+                                        const nIdx = ny * width + nx;
+                                        if (visitedAll[nIdx] || getAlpha(nx, ny) <= 20) {
+                                            continue;
+                                        }
+                                        visitedAll[nIdx] = 1;
+                                        stack.push([nx, ny]);
+                                    }
+                                }
+
+                                components.push({
+                                    area: pixelsInComponent.length,
+                                    minY,
+                                    maxY,
+                                    pixels: pixelsInComponent
+                                });
+                            }
+                        }
+
+                        if (components.length > 1) {
+                            const primary = components.reduce((best, comp) => (comp.area > best.area ? comp : best), components[0]);
+                            const smallLimit = Math.max(220, Math.round(primary.area * 0.18));
+
+                            components.forEach((comp) => {
+                                if (comp === primary) {
+                                    return;
+                                }
+
+                                const detachedAboveHead = comp.maxY < primary.minY - 2;
+
+                                if (detachedAboveHead) {
+                                    comp.pixels.forEach(([px, py]) => {
+                                        const i = (py * width + px) * 4;
+                                        pixels[i + 3] = 0;
+                                    });
+                                }
+                            });
+                        }
+
+                        // Second pass on strong-alpha mask to break anti-aliased bridges from text to body.
+                        const strongVisited = new Uint8Array(width * height);
+                        const strongComponents = [];
+                        const strongThreshold = 140;
+
+                        for (let y = 0; y < height; y += 1) {
+                            for (let x = 0; x < width; x += 1) {
+                                const startIdx = y * width + x;
+                                if (strongVisited[startIdx] || getAlpha(x, y) < strongThreshold) {
+                                    continue;
+                                }
+
+                                const stack = [[x, y]];
+                                const componentPixels = [];
+                                let minX = x;
+                                let maxX = x;
+                                let minY = y;
+                                let maxY = y;
+                                strongVisited[startIdx] = 1;
+
+                                while (stack.length > 0) {
+                                    const [cx, cy] = stack.pop();
+                                    componentPixels.push([cx, cy]);
+                                    if (cx < minX) minX = cx;
+                                    if (cx > maxX) maxX = cx;
+                                    if (cy < minY) minY = cy;
+                                    if (cy > maxY) maxY = cy;
+
+                                    for (const [dx, dy] of neighbors) {
+                                        const nx = cx + dx;
+                                        const ny = cy + dy;
+                                        if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+                                            continue;
+                                        }
+                                        const nIdx = ny * width + nx;
+                                        if (strongVisited[nIdx] || getAlpha(nx, ny) < strongThreshold) {
+                                            continue;
+                                        }
+                                        strongVisited[nIdx] = 1;
+                                        stack.push([nx, ny]);
+                                    }
+                                }
+
+                                strongComponents.push({
+                                    area: componentPixels.length,
+                                    minX,
+                                    maxX,
+                                    minY,
+                                    maxY
+                                });
+                            }
+                        }
+
+                        if (strongComponents.length > 1) {
+                            const strongPrimary = strongComponents.reduce((best, comp) => (comp.area > best.area ? comp : best), strongComponents[0]);
+                            strongComponents.forEach((comp) => {
+                                if (comp === strongPrimary) {
+                                    return;
+                                }
+
+                                if (comp.maxY < strongPrimary.minY - 1) {
+                                    const sx0 = Math.max(0, comp.minX - 1);
+                                    const sx1 = Math.min(width - 1, comp.maxX + 1);
+                                    const sy0 = Math.max(0, comp.minY - 1);
+                                    const sy1 = Math.min(height - 1, comp.maxY + 1);
+
+                                    for (let sy = sy0; sy <= sy1; sy += 1) {
+                                        for (let sx = sx0; sx <= sx1; sx += 1) {
+                                            const i = (sy * width + sx) * 4;
+                                            pixels[i + 3] = 0;
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+
                     context.putImageData(frame, 0, 0);
                     this.cleanedFrameSrcCache.set(framePath, canvas.toDataURL('image/png'));
                     this.frameCleanupInProgress.delete(framePath);
+                    this.refreshIfShowingFrame(framePath);
+                };
+
+                sourceImage.onerror = () => {
+                    this.frameCleanupInProgress.delete(framePath);
+                };
+
+                sourceImage.src = framePath;
+            }
+
+            requestSinestroFrameCleanup(framePath) {
+                if (this.cleanedFrameSrcCache.has(framePath) || this.frameCleanupInProgress.has(framePath)) {
+                    return;
+                }
+                const isSequence01 = framePath.includes('sinestro/frames/sequence-01/');
+                if (!isSequence01) {
+                    this.cleanedFrameSrcCache.set(framePath, framePath);
+                    return;
+                }
+                this.frameCleanupInProgress.add(framePath);
+
+                const sourceImage = new Image();
+                sourceImage.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = sourceImage.naturalWidth;
+                    canvas.height = sourceImage.naturalHeight;
+                    const context = canvas.getContext('2d');
+                    if (!context) {
+                        this.frameCleanupInProgress.delete(framePath);
+                        return;
+                    }
+
+                    context.drawImage(sourceImage, 0, 0);
+                    const frame = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const pixels = frame.data;
+                    const width = canvas.width;
+                    const height = canvas.height;
+
+                    const isBackgroundLike = (r, g, b, a) => {
+                        if (a <= 20) {
+                            return false;
+                        }
+                        const spread = Math.max(r, g, b) - Math.min(r, g, b);
+                        const darkGrid = r < 125 && g < 132 && b < 145 && spread <= 20;
+                        const brightGuide = r > 165 && g > 165 && b > 165 && spread <= 18;
+                        return darkGrid || brightGuide;
+                    };
+
+                    if (isSequence01) {
+                        const visitedBg = new Uint8Array(width * height);
+                        const stack = [];
+                        const canClear = (x, y) => {
+                            const i = (y * width + x) * 4;
+                            return isBackgroundLike(pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]);
+                        };
+
+                        for (let x = 0; x < width; x += 1) {
+                            if (canClear(x, 0)) stack.push([x, 0]);
+                            if (height > 1 && canClear(x, height - 1)) stack.push([x, height - 1]);
+                        }
+                        for (let y = 1; y < height - 1; y += 1) {
+                            if (canClear(0, y)) stack.push([0, y]);
+                            if (width > 1 && canClear(width - 1, y)) stack.push([width - 1, y]);
+                        }
+
+                        while (stack.length > 0) {
+                            const [cx, cy] = stack.pop();
+                            const idx = cy * width + cx;
+                            if (visitedBg[idx]) {
+                                continue;
+                            }
+                            visitedBg[idx] = 1;
+                            if (!canClear(cx, cy)) {
+                                continue;
+                            }
+
+                            const i = idx * 4;
+                            pixels[i + 3] = 0;
+
+                            if (cx > 0) stack.push([cx - 1, cy]);
+                            if (cx < width - 1) stack.push([cx + 1, cy]);
+                            if (cy > 0) stack.push([cx, cy - 1]);
+                            if (cy < height - 1) stack.push([cx, cy + 1]);
+                        }
+                    } else {
+                        for (let y = 0; y < height; y += 1) {
+                            for (let x = 0; x < width; x += 1) {
+                                const i = (y * width + x) * 4;
+                                if (isBackgroundLike(pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3])) {
+                                    pixels[i + 3] = 0;
+                                }
+                            }
+                        }
+                    }
+
+                    const visited = new Uint8Array(width * height);
+                    const components = [];
+                    const neighbors = [
+                        [-1, -1], [0, -1], [1, -1],
+                        [-1, 0],           [1, 0],
+                        [-1, 1],  [0, 1],  [1, 1]
+                    ];
+                    const getAlpha = (x, y) => pixels[(y * width + x) * 4 + 3];
+
+                    for (let y = 0; y < height; y += 1) {
+                        for (let x = 0; x < width; x += 1) {
+                            const start = y * width + x;
+                            if (visited[start] || getAlpha(x, y) <= 20) {
+                                continue;
+                            }
+
+                            const stack = [[x, y]];
+                            visited[start] = 1;
+                            const points = [];
+                            let minX = x;
+                            let maxX = x;
+                            let minY = y;
+                            let maxY = y;
+
+                            while (stack.length > 0) {
+                                const [cx, cy] = stack.pop();
+                                points.push([cx, cy]);
+                                if (cx < minX) minX = cx;
+                                if (cx > maxX) maxX = cx;
+                                if (cy < minY) minY = cy;
+                                if (cy > maxY) maxY = cy;
+
+                                for (const [dx, dy] of neighbors) {
+                                    const nx = cx + dx;
+                                    const ny = cy + dy;
+                                    if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+                                        continue;
+                                    }
+                                    const idx = ny * width + nx;
+                                    if (visited[idx] || getAlpha(nx, ny) <= 20) {
+                                        continue;
+                                    }
+                                    visited[idx] = 1;
+                                    stack.push([nx, ny]);
+                                }
+                            }
+
+                            components.push({
+                                area: points.length,
+                                minX,
+                                maxX,
+                                minY,
+                                maxY,
+                                points
+                            });
+                        }
+                    }
+
+                    if (!isSequence01 && components.length > 1) {
+                        const primary = components.reduce((best, comp) => (comp.area > best.area ? comp : best), components[0]);
+                        const keep = new Set([primary]);
+
+                        components.forEach((comp) => {
+                            if (comp === primary) {
+                                return;
+                            }
+                            const nearPrimaryX = comp.maxX >= primary.minX - 12 && comp.minX <= primary.maxX + 12;
+                            const nearPrimaryY = comp.maxY >= primary.minY - 12 && comp.minY <= primary.maxY + 12;
+                            const notTiny = comp.area >= Math.max(90, Math.round(primary.area * 0.035));
+                            if (nearPrimaryX && nearPrimaryY && notTiny) {
+                                keep.add(comp);
+                            }
+                        });
+
+                        components.forEach((comp) => {
+                            if (keep.has(comp)) {
+                                return;
+                            }
+                            comp.points.forEach(([px, py]) => {
+                                const i = (py * width + px) * 4;
+                                pixels[i + 3] = 0;
+                            });
+                        });
+                    }
+
+                    context.putImageData(frame, 0, 0);
+                    this.cleanedFrameSrcCache.set(framePath, canvas.toDataURL('image/png'));
+                    this.frameCleanupInProgress.delete(framePath);
+                    this.refreshIfShowingFrame(framePath);
                 };
 
                 sourceImage.onerror = () => {
@@ -525,7 +1161,7 @@
             }
 
             resolveFrameSrc(character, framePath) {
-                if (character !== 'green-lantern' && character !== 'killercroc') {
+                if (character !== 'green-lantern' && character !== 'killercroc' && character !== 'sinestro') {
                     return framePath;
                 }
                 if (this.cleanedFrameSrcCache.has(framePath)) {
@@ -535,6 +1171,8 @@
                     this.requestGreenLanternFrameCleanup(framePath);
                 } else if (character === 'killercroc') {
                     this.requestKillerCrocFrameCleanup(framePath);
+                } else if (character === 'sinestro') {
+                    this.requestSinestroFrameCleanup(framePath);
                 }
                 return framePath;
             }
@@ -595,6 +1233,27 @@
                                 });
                             });
                             framePaths.forEach((framePath) => this.requestKillerCrocFrameCleanup(framePath));
+                        }
+
+                        if (character === 'doomsday') {
+                            sequences = this.sanitizeDoomsdaySequenceList(sequences);
+                        }
+
+                        if (character === 'hawkgirl') {
+                            sequences = this.sanitizeHawkgirlSequenceList(sequences);
+                        }
+
+                        if (character === 'sinestro') {
+                            sequences = this.sanitizeSinestroSequenceList(sequences);
+                            const framePaths = new Set();
+                            sequences.forEach((seq) => {
+                                (seq.frames || []).forEach((frame) => {
+                                    if (frame && frame.framePath) {
+                                        framePaths.add(frame.framePath);
+                                    }
+                                });
+                            });
+                            framePaths.forEach((framePath) => this.requestSinestroFrameCleanup(framePath));
                         }
 
                         sequences.forEach((seq, seqIndex) => {
@@ -676,7 +1335,12 @@
                             1
                         );
                         const x = (this.canvas.width - img.width * scale) / 2;
-                        const y = (this.canvas.height - img.height * scale) / 2;
+                        let y = (this.canvas.height - img.height * scale) / 2;
+
+                        const isGreenLanternHover = active.character === 'green-lantern' && active.sequenceName === 'sequence-01';
+                        if (isGreenLanternHover) {
+                            y += Math.sin(Date.now() * 0.005) * 6;
+                        }
 
                         this.ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
 
@@ -742,6 +1406,9 @@
 
                     this.displayFrame();
                     this.lastFrameTime = now;
+                } else if (active.character === 'green-lantern' && active.sequenceName === 'sequence-01') {
+                    // Repaint continuously so hover bob remains smooth even with one frame.
+                    this.displayFrame();
                 }
 
                 if (this.isPlaying) {

@@ -102,6 +102,10 @@
       display: none;
     }
 
+    .character-select.forced-venue-only .character-grid {
+      display: none;
+    }
+
     .select-title {
       margin: 0;
       text-align: center;
@@ -1069,6 +1073,8 @@
     const stageSignEl = document.getElementById("stageSign");
     const mobileButtons = Array.from(document.querySelectorAll(".mobile-controls button"));
     const characterSelectEl = document.getElementById("characterSelect");
+    const selectTitleEl = document.querySelector(".select-title");
+    const selectSubtitleEl = document.querySelector(".select-subtitle");
     const selectHintEl = document.getElementById("selectHint");
     const startFightBtn = document.getElementById("startFightBtn");
     const characterCards = Array.from(document.querySelectorAll(".character-card"));
@@ -1080,8 +1086,8 @@
         name: "Flash",
         bodyColor: "#cc0000",
         limbColor: "#990000",
-        punchBonus: -1,
-        kickBonus: -1,
+        punchBonus: 0,
+        kickBonus: 0,
         moveBonus: 8
       },
       {
@@ -1155,7 +1161,9 @@
       movingRight: false,
       isRunning: false,
       enemyBrain: null,
-      nextRoundTimeout: null
+      nextRoundTimeout: null,
+      introSequenceId: 0,
+      introTimers: []
     };
 
     const attackConfig = {
@@ -1191,6 +1199,188 @@
       ]
     };
 
+    const openingTauntsByCharacter = {
+      flash: [
+        "Try to keep up. This will be over before you blink.",
+        "I can end this fight in a heartbeat.",
+        "You brought fists to a speed war."
+      ],
+      "green-lantern": [
+        "My will is stronger than anything you can throw at me.",
+        "The ring says you are outmatched.",
+        "This ends with your surrender."
+      ],
+      hawkgirl: [
+        "You picked the wrong warrior to challenge.",
+        "Stand tall while you can.",
+        "I have ended stronger foes than you."
+      ],
+      killercroc: [
+        "Come closer. I dare you.",
+        "You smell scared already.",
+        "This arena is my hunting ground."
+      ],
+      doomsday: [
+        "There is only destruction.",
+        "You will break.",
+        "Nothing survives me."
+      ]
+    };
+
+    const openingComebacksByCharacter = {
+      flash: [
+        "Big talk. Let's see you catch me.",
+        "I only need one opening.",
+        "You are slower than your confidence."
+      ],
+      "green-lantern": [
+        "Willpower beats noise.",
+        "You are not ready for this ring.",
+        "I have heard better threats."
+      ],
+      hawkgirl: [
+        "You are all talk and no steel.",
+        "I fight to finish.",
+        "I do not miss twice."
+      ],
+      killercroc: [
+        "You are already prey.",
+        "I break bones for fun.",
+        "You should have run when you could."
+      ],
+      doomsday: [
+        "Your fate is already sealed.",
+        "Struggle if you want. It changes nothing.",
+        "I will reduce this arena to rubble."
+      ]
+    };
+
+    const openingFinalByCharacter = {
+      flash: [
+        "Enough talking. Try to survive.",
+        "Clock is ticking."
+      ],
+      "green-lantern": [
+        "By my will, this fight is mine.",
+        "Then let's settle this."
+      ],
+      hawkgirl: [
+        "Words are done. Now fight.",
+        "Show me what you have."
+      ],
+      killercroc: [
+        "Time to feed.",
+        "Now I tear through you."
+      ],
+      doomsday: [
+        "Now you fall.",
+        "Begin your ruin."
+      ]
+    };
+
+    const openingTauntsByMatchup = {
+      flash: {
+        "green-lantern": [
+          "Ring tricks won't help when you cannot even track me.",
+          "Let's see if your will can keep up with my speed."
+        ],
+        killercroc: [
+          "You are big, Croc. Big targets are easy.",
+          "Try snapping at lightning, Croc."
+        ],
+        doomsday: [
+          "You hit hard, but only if you land one.",
+          "You cannot smash what you cannot catch."
+        ]
+      },
+      "green-lantern": {
+        flash: [
+          "Speed means nothing without control, Flash.",
+          "I can cage even lightning."
+        ],
+        doomsday: [
+          "I have contained monsters worse than you.",
+          "Your rage ends in a construct prison."
+        ]
+      },
+      hawkgirl: {
+        killercroc: [
+          "Stay in the sewer, beast.",
+          "I have hunted creatures fiercer than you."
+        ]
+      },
+      killercroc: {
+        flash: [
+          "You can run, but I only need one bite.",
+          "Fast food, Flash."
+        ],
+        "green-lantern": [
+          "That ring won't stop these jaws.",
+          "I break constructs and bones."
+        ]
+      },
+      doomsday: {
+        "green-lantern": [
+          "Your ring will crack like the rest.",
+          "Willpower breaks under extinction."
+        ],
+        flash: [
+          "Run all you want. You still fall.",
+          "I will catch you eventually."
+        ]
+      }
+    };
+
+    const openingComebacksByMatchup = {
+      "green-lantern": {
+        flash: [
+          "I have captured faster threats than you.",
+          "Your speed will not outrun my will."
+        ]
+      },
+      killercroc: {
+        flash: [
+          "Keep talking, little man. I am still hungry.",
+          "I do not need speed. I need one grab."
+        ]
+      },
+      flash: {
+        doomsday: [
+          "You are still swinging at afterimages.",
+          "By the time you roar, I am already gone."
+        ],
+        killercroc: [
+          "You are too slow and too loud, Croc.",
+          "Try biting the wind."
+        ]
+      },
+      doomsday: {
+        "green-lantern": [
+          "No cage holds me.",
+          "You cannot contain annihilation."
+        ]
+      }
+    };
+
+    const openingFinalByMatchup = {
+      flash: {
+        "green-lantern": [
+          "Show me that ring can handle this pace.",
+          "Let's test your will against velocity."
+        ],
+        killercroc: [
+          "Heads up, Croc. Here comes the storm.",
+          "Try not to trip over your own tail."
+        ]
+      },
+      "green-lantern": {
+        flash: [
+          "Then prove your speed, Flash.",
+          "Enough. Let's settle this properly."
+        ]
+      }
+    };
+
     function clamp(val, min, max) {
       return Math.max(min, Math.min(max, val));
     }
@@ -1220,6 +1410,26 @@
 
       const options = characterRoster.filter((character) => character.id !== playerCharacterId);
       return options[Math.floor(Math.random() * options.length)] || characterRoster[0];
+    }
+
+    function prepareVenueSelectionOnlyMode() {
+      if (!state.forcedCharacterId) {
+        return;
+      }
+
+      if (!configureSelectedFighters()) {
+        return;
+      }
+
+      characterSelectEl.classList.add("forced-venue-only");
+      if (selectTitleEl) {
+        selectTitleEl.textContent = "Choose Your Venue";
+      }
+      if (selectSubtitleEl) {
+        selectSubtitleEl.textContent = `${state.selectedCharacter.name} vs ${state.enemyCharacter.name} locked in.`;
+      }
+      selectHintEl.textContent = "Character locked. Choose a venue and press Start Fight.";
+      setMessage("Choose a venue, then press Start Fight.");
     }
 
     function applyFighterStyle(element, character) {
@@ -1286,10 +1496,14 @@
       
       // Initialize sprite rendering for this fight
       initializeSpritesForFight();
-      
-      setMessage("Fight! Use movement and combo attacks.");
+
       setWinnerDialogue("");
-      resetRound();
+      runOpeningIntroSequence().then((completed) => {
+        if (!completed) {
+          return;
+        }
+        resetRound();
+      });
     }
 
     function updateRunButtonState() {
@@ -1366,6 +1580,95 @@
 
       winnerDialogueEl.textContent = text || "";
       winnerDialogueEl.classList.toggle("show", Boolean(text));
+    }
+
+    function clearIntroTimers() {
+      state.introTimers.forEach((timerId) => clearTimeout(timerId));
+      state.introTimers = [];
+    }
+
+    function waitForIntroStep(delayMs, sequenceId) {
+      return new Promise((resolve) => {
+        const timerId = setTimeout(() => {
+          resolve(state.introSequenceId === sequenceId);
+        }, delayMs);
+        state.introTimers.push(timerId);
+      });
+    }
+
+    function pickRandomLine(pool, fallback) {
+      if (!pool || pool.length === 0) {
+        return fallback;
+      }
+      return pool[Math.floor(Math.random() * pool.length)] || fallback;
+    }
+
+    function getMatchupLine(matchupMap, speakerId, targetId, fallbackPool, fallbackLine) {
+      const pairPool = matchupMap
+        && matchupMap[speakerId]
+        && matchupMap[speakerId][targetId]
+        ? matchupMap[speakerId][targetId]
+        : null;
+
+      if (pairPool && pairPool.length > 0) {
+        return pickRandomLine(pairPool, fallbackLine);
+      }
+
+      return pickRandomLine(fallbackPool, fallbackLine);
+    }
+
+    async function runOpeningIntroSequence() {
+      if (!state.selectedCharacter || !state.enemyCharacter) {
+        return true;
+      }
+
+      state.introSequenceId += 1;
+      const sequenceId = state.introSequenceId;
+      clearIntroTimers();
+
+      const player = state.selectedCharacter;
+      const enemy = state.enemyCharacter;
+
+      const playerOpening = getMatchupLine(
+        openingTauntsByMatchup,
+        player.id,
+        enemy.id,
+        openingTauntsByCharacter[player.id],
+        "You are going down."
+      );
+      const enemyReply = getMatchupLine(
+        openingComebacksByMatchup,
+        enemy.id,
+        player.id,
+        openingComebacksByCharacter[enemy.id],
+        "We will see about that."
+      );
+      const playerFinal = getMatchupLine(
+        openingFinalByMatchup,
+        player.id,
+        enemy.id,
+        openingFinalByCharacter[player.id],
+        "Let's fight."
+      );
+
+      setWinnerDialogue("");
+      setMessage(`${player.name}: "${playerOpening}"`);
+      if (!(await waitForIntroStep(1500, sequenceId))) {
+        return false;
+      }
+
+      setMessage(`${enemy.name}: "${enemyReply}"`);
+      if (!(await waitForIntroStep(1500, sequenceId))) {
+        return false;
+      }
+
+      setMessage(`${player.name}: "${playerFinal}"`);
+      if (!(await waitForIntroStep(1200, sequenceId))) {
+        return false;
+      }
+
+      setMessage("Fight!");
+      return true;
     }
 
     function getWinnerDialogue(character) {
@@ -1674,6 +1977,9 @@
       if (!state.selectionLocked) {
         return;
       }
+
+      state.introSequenceId += 1;
+      clearIntroTimers();
 
       clearInterval(state.enemyBrain);
       if (state.nextRoundTimeout) {
@@ -2063,6 +2369,9 @@
 
     characterCards.forEach((card) => {
       card.addEventListener("click", () => {
+        if (state.forcedCharacterId) {
+          return;
+        }
         state.selectedCharacterId = card.getAttribute("data-character") || "";
         selectHintEl.textContent = "";
         highlightSelectedCard();
@@ -2138,6 +2447,8 @@
           : "Random Opponent";
         selectHintEl.textContent = `Loaded matchup: ${getCharacterById(state.forcedCharacterId)?.name || "Player"} vs ${opponentLabel}`;
       }
+
+      prepareVenueSelectionOnlyMode();
     }
 
     venueOptions.forEach((option) => {
